@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>System Architect Prompt — Runtime Audit</title>
+<style>
+:root{
+  --page:#eef2f6; --card:#fff; --border:#e2e8f0; --text:#0f172a; --muted:#64748b;
+  --accent:#0f766e; --accent-soft:#ccfbf1;
+  --good:#15803d; --good-tint:#dcfce7; --warn:#b45309; --warn-tint:#fef3c7;
+  --risk:#b91c1c; --risk-tint:#fee2e2; --info:#1d4ed8; --info-tint:#dbeafe;
+  --slate:#475569; --slate-tint:#f1f5f9;
+  --shadow:0 1px 2px rgba(15,23,42,.05),0 4px 12px rgba(15,23,42,.05);
+  color-scheme:light;
+}
+html[data-theme="dark"]{
+  --page:#0b1220; --card:#131c2b; --border:#243044; --text:#e6edf6; --muted:#94a3b8;
+  --accent:#2dd4bf; --accent-soft:#0f3b38;
+  --good:#4ade80; --good-tint:#123020; --warn:#fbbf24; --warn-tint:#3a2c0a;
+  --risk:#f87171; --risk-tint:#3a1a1e; --info:#60a5fa; --info-tint:#152740;
+  --slate:#94a3b8; --slate-tint:#1b2536; --shadow:0 1px 2px rgba(0,0,0,.4);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--text);line-height:1.6;
+  font-family:"Segoe UI",system-ui,-apple-system,sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:44px 24px 90px}
+h1,h2,h3{line-height:1.2;margin:0}
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px}
+h1{font-size:clamp(28px,4vw,40px);letter-spacing:-.025em;margin-bottom:12px}
+.sub{font-size:18px;color:var(--muted);max-width:70ch}
+h2{font-size:23px;letter-spacing:-.02em;margin:46px 0 8px;padding-top:22px;border-top:1px solid var(--border)}
+h2 + .lede{color:var(--muted);margin:0 0 18px;max-width:74ch}
+h3{font-size:16px;margin:22px 0 8px}
+p{margin:0 0 13px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:22px;box-shadow:var(--shadow);margin-bottom:15px}
+.headline{border-left:4px solid var(--accent)}
+.kpis{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin:18px 0}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
+.kpi .v{font-size:31px;font-weight:700;letter-spacing:-.03em;color:var(--accent);line-height:1}
+.kpi .l{font-size:13.5px;font-weight:600;margin-top:7px}
+.kpi .n{font-size:12.5px;color:var(--muted);margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);padding:0 10px 10px;font-weight:700}
+td{padding:10px;border-top:1px solid var(--border);vertical-align:top}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;
+  text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.p-good{background:var(--good-tint);color:var(--good)}
+.p-warn{background:var(--warn-tint);color:var(--warn)}
+.p-risk{background:var(--risk-tint);color:var(--risk)}
+.p-info{background:var(--info-tint);color:var(--info)}
+.callout{border-radius:12px;padding:18px 21px;margin:16px 0}
+.c-warn{background:var(--warn-tint);border:1px solid var(--warn)}
+.c-good{background:var(--good-tint);border:1px solid var(--good)}
+.c-info{background:var(--info-tint);border:1px solid var(--info)}
+.callout .lbl{font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:6px}
+.c-warn .lbl{color:var(--warn)} .c-good .lbl{color:var(--good)} .c-info .lbl{color:var(--info)}
+.callout p:last-child{margin-bottom:0}
+svg.fig{width:100%;height:auto;display:block;margin:6px 0}
+code{background:var(--slate-tint);padding:2px 6px;border-radius:5px;font-size:12.5px}
+.scroll{overflow-x:auto}
+.sched{display:grid;gap:10px}
+.slot{display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:start;
+  background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 16px}
+.slot b{color:var(--accent);font-variant-numeric:tabular-nums}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--border);
+  font-size:13px;color:var(--muted);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+#theme{position:fixed;top:18px;right:18px;width:36px;height:36px;border:1px solid var(--border);
+  background:var(--card);color:var(--muted);border-radius:9px;cursor:pointer;font-size:15px}
+@media print{#theme{display:none}body{background:#fff}.card{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<button id="theme" title="Toggle theme">◐</button>
+<div class="wrap">
+
+<div class="eyebrow">Audit · 2026-08-06</div>
+<h1>How long will the blueprint prompt take in class?</h1>
+<p class="sub">Five ideas run end to end through the locked v1.0 prompt, on a real clock. The short answer is
+that the design work is fast and consistent, and the scaffolding is what costs you the session.</p>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">1m 52s</div><div class="l">Design + data object</div>
+    <div class="n">Mean across 5 ideas. Range 1:42 – 2:14.</div></div>
+  <div class="kpi"><div class="v">5m 30s</div><div class="l">Site scaffolding</div>
+    <div class="n">Measured for one build. Nearly identical every time.</div></div>
+  <div class="kpi"><div class="v">75%</div><div class="l">Of runtime is scaffolding</div>
+    <div class="n">And almost none of it depends on the student's idea.</div></div>
+  <div class="kpi"><div class="v">25–35m</div><div class="l">Per student, first run</div>
+    <div class="n">Model time plus human time. Plan 45 minutes.</div></div>
+</div>
+
+<div class="card headline">
+  <h3>The finding in one paragraph</h3>
+  <p style="margin:0">Producing the actual <em>design</em> — deriving components from the paragraph, writing
+  <code>architecture.md</code>, building the <code>BLUEPRINT</code> object — took between 1:42 and 2:14 for every
+  idea tested, from a five-component CRUD app to a twelve-component real-time AI system. Idea complexity barely
+  moved it. What took time was regenerating roughly 1,900 lines of site scaffolding that is <strong>the same for
+  every student</strong>: 3 minutes 39 seconds for <code>site.js</code> alone. Three quarters of the class's
+  waiting is spent recreating identical plumbing.</p>
+</div>
+
+<h2>Method, and what it does not tell you</h2>
+<p class="lede">Read this before quoting any number downstream.</p>
+
+<div class="card">
+  <p><strong>What was actually measured.</strong> Five idea paragraphs, each written with a day-one sentence as the
+  prompt requires, were run through phases 1–2 of the prompt (design the system, write <code>architecture.md</code>,
+  build the data object) with wall-clock timestamps taken between each. The scaffolding phase was then measured once
+  in full, by generating a complete working <code>site.js</code> for one of the five.</p>
+
+  <p><strong>What was modelled rather than measured.</strong> <code>site.css</code> is byte-identical across ideas,
+  so it was copied rather than regenerated; its cost is estimated at 86 seconds from the measured generation rate of
+  <code>site.js</code> (4.3 s/KB × 19.8 KB). The nine page shells were script-generated in 15 seconds; hand-generated
+  they would be nearer 40. Both estimates are stated inline wherever they appear.</p>
+
+  <p><strong>Why your students will be slower, not faster.</strong> These timings come from one operator on Claude
+  Opus 5 who had already built this system twice and therefore knew the target shape. That is a real confound and it
+  runs in one direction: <strong>treat every machine-time number here as a floor.</strong> A cold run has to make the
+  same decisions from scratch, and a student will re-run at least once.</p>
+
+  <p style="margin-bottom:0"><strong>Not measured at all:</strong> student typing speed, how long it takes somebody to
+  write a good paragraph, how many will get it wrong on the first attempt, and rate-limit behaviour if a cohort shares
+  one API organisation. The last one is the biggest unknown and is called out at the end.</p>
+</div>
+
+<h2>The five ideas</h2>
+<p class="lede">Chosen to stress different branches of the prompt rather than to look representative.</p>
+
+<div class="card scroll">
+<table>
+<thead><tr><th>Run</th><th>Idea</th><th>What it was testing</th><th class="num">Components</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td><b>R1</b></td><td>Shift Swap Board<br><span style="color:var(--muted);font-size:12.5px">40-person restaurant group</span></td>
+  <td>Does the prompt correctly <strong>omit</strong> an AI layer?</td><td class="num">5</td>
+  <td><span class="pill p-good">passed</span><br><span style="font-size:12px;color:var(--muted)">no AI layer, no queue, no object store</span></td></tr>
+<tr><td><b>R2</b></td><td>License Compliance Digest<br><span style="color:var(--muted);font-size:12.5px">nightly job, emails a digest</span></td>
+  <td>Does it correctly <strong>omit a frontend</strong> and add a scheduler?</td><td class="num">8</td>
+  <td><span class="pill p-good">passed</span><br><span style="font-size:12px;color:var(--muted)">0 entry points — no UI invented</span></td></tr>
+<tr><td><b>R3</b></td><td>Live Call Coaching<br><span style="color:var(--muted);font-size:12.5px">real-time, grounded in a playbook</span></td>
+  <td>The complex end — streaming, retrieval, a grounding gate.</td><td class="num">8</td>
+  <td><span class="pill p-good">passed</span><br><span style="font-size:12px;color:var(--muted)">only run where a model appears</span></td></tr>
+<tr><td><b>R4</b></td><td>Warehouse Data Quality Watchdog<br><span style="color:var(--muted);font-size:12.5px">Colaberry's own domain</span></td>
+  <td>A mid-size idea in the domain these students work in.</td><td class="num">9</td>
+  <td><span class="pill p-good">passed</span><br><span style="font-size:12px;color:var(--muted)">no ML reflex — all arithmetic</span></td></tr>
+<tr><td><b>R5</b></td><td>Neighborhood Tool Library<br><span style="color:var(--muted);font-size:12.5px">payments, double-booking</span></td>
+  <td>Third-party services, and a day-one bar that is really a concurrency constraint.</td><td class="num">7</td>
+  <td><span class="pill p-good">passed</span><br><span style="font-size:12px;color:var(--muted)">chose a DB constraint, not app-level checks</span></td></tr>
+</tbody></table>
+</div>
+
+<h2>Where the time actually goes</h2>
+<p class="lede">The proportions matter more than the absolute numbers, because the proportions will hold on any model.</p>
+
+<div class="card">
+<svg class="fig" viewBox="0 0 960 190" role="img" aria-label="Time split: design 112 seconds versus scaffolding 330 seconds">
+  <text x="20" y="26" font-size="12.5" font-weight="700" fill="var(--muted)">ONE FULL RUN — 442 SECONDS OF MODEL TIME</text>
+  <rect x="20" y="42" width="223" height="54" rx="8" fill="var(--accent)"/>
+  <text x="131" y="68" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">Design + data</text>
+  <text x="131" y="86" font-size="11.5" fill="#fff" text-anchor="middle" opacity=".9">112 s · 25%</text>
+  <rect x="247" y="42" width="693" height="54" rx="8" fill="var(--slate)" opacity=".85"/>
+  <text x="593" y="62" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">Site scaffolding — identical for every student</text>
+  <text x="593" y="80" font-size="11.5" fill="#fff" text-anchor="middle" opacity=".9">330 s · 75%</text>
+  <line x1="20" y1="108" x2="243" y2="108" stroke="var(--accent)" stroke-width="2"/>
+  <text x="20" y="126" font-size="11.5" fill="var(--accent)" font-weight="600">depends on the idea</text>
+  <line x1="247" y1="108" x2="940" y2="108" stroke="var(--slate)" stroke-width="2"/>
+  <text x="247" y="126" font-size="11.5" fill="var(--slate)" font-weight="600">does not depend on the idea at all</text>
+  <rect x="247" y="140" width="460" height="30" rx="6" fill="var(--slate-tint)" stroke="var(--border)"/>
+  <text x="261" y="159" font-size="11.5" fill="var(--text)" font-weight="600">site.js — 219 s measured (50.7 KB)</text>
+  <rect x="713" y="140" width="180" height="30" rx="6" fill="var(--slate-tint)" stroke="var(--border)"/>
+  <text x="725" y="159" font-size="11.5" fill="var(--text)" font-weight="600">css 86 s (est.)</text>
+  <rect x="899" y="140" width="41" height="30" rx="6" fill="var(--slate-tint)" stroke="var(--border)"/>
+  <text x="919" y="159" font-size="10.5" fill="var(--muted)" text-anchor="middle">shells</text>
+</svg>
+</div>
+
+<div class="card scroll">
+<h3>Per-idea design time</h3>
+<table>
+<thead><tr><th>Run</th><th>Idea</th><th class="num">Components</th><th class="num">Output</th><th class="num">Design + data</th></tr></thead>
+<tbody>
+<tr><td>R1</td><td>Shift Swap Board</td><td class="num">5</td><td class="num">15.0 KB</td><td class="num"><b>1:42</b></td></tr>
+<tr><td>R2</td><td>License Compliance Digest</td><td class="num">8</td><td class="num">17.9 KB</td><td class="num"><b>1:42</b></td></tr>
+<tr><td>R3</td><td>Live Call Coaching</td><td class="num">8</td><td class="num">19.0 KB</td><td class="num"><b>1:48</b></td></tr>
+<tr><td>R4</td><td>Warehouse Data Quality Watchdog</td><td class="num">9</td><td class="num">19.8 KB</td><td class="num"><b>1:53</b></td></tr>
+<tr><td>R5</td><td>Neighborhood Tool Library</td><td class="num">7</td><td class="num">18.4 KB</td><td class="num"><b>2:14</b></td></tr>
+<tr style="background:var(--slate-tint)"><td colspan="4"><b>Mean</b></td><td class="num"><b>1:52</b></td></tr>
+</tbody></table>
+<p style="margin:14px 0 0;font-size:13.5px;color:var(--muted)">The spread is 32 seconds across a range of ideas from
+5 to 9 components. Note that R5 — neither the largest nor the most complex — was the slowest. Variance here is
+generation noise, not idea difficulty, which means <strong>you cannot make the prompt faster by asking students for
+simpler ideas.</strong></p>
+</div>
+
+<h2>What to plan for</h2>
+<p class="lede">Machine time is only part of it. These are elapsed-time estimates for a student sitting at a laptop.</p>
+
+<div class="card scroll">
+<table>
+<thead><tr><th>Stage</th><th>First run (cold)</th><th>Second run</th><th>Basis</th></tr></thead>
+<tbody>
+<tr><td>Read the prompt, understand the ask</td><td class="num">4–6 min</td><td class="num">—</td><td><span class="pill p-warn">estimated</span></td></tr>
+<tr><td>Write the idea paragraph <em>with a real day-one sentence</em></td><td class="num">6–12 min</td><td class="num">2–4 min</td><td><span class="pill p-warn">estimated</span></td></tr>
+<tr><td>Model generates the design + data</td><td class="num">2 min</td><td class="num">2 min</td><td><span class="pill p-good">measured ×5</span></td></tr>
+<tr><td>Model generates the scaffolding</td><td class="num">6 min</td><td class="num">6 min</td><td><span class="pill p-good">measured ×1</span></td></tr>
+<tr><td>Open it, click through, read it</td><td class="num">6–10 min</td><td class="num">3–5 min</td><td><span class="pill p-warn">estimated</span></td></tr>
+<tr><td>One revision of the paragraph and re-run</td><td class="num">+8 min</td><td class="num">+8 min</td><td><span class="pill p-warn">estimated</span></td></tr>
+<tr style="background:var(--accent-soft)"><td><b>Total elapsed</b></td><td class="num"><b>25–35 min</b></td><td class="num"><b>12–18 min</b></td><td></td></tr>
+</tbody></table>
+</div>
+
+<div class="callout c-good">
+  <div class="lbl">Recommended class block</div>
+  <p><strong>Budget 45 minutes</strong> for the first supervised run. That absorbs one revision, a slow paragraph
+  writer, and the two or three students who will need help. Anything under 30 minutes will leave a third of the room
+  unfinished.</p>
+</div>
+
+<div class="sched">
+  <div class="slot"><b>0–8 min</b><div><strong>You talk, nobody types.</strong> Explain the day-one sentence and why it
+    is the only part of the paragraph that matters. Show one finished blueprint. Do not distribute the prompt yet.</div></div>
+  <div class="slot"><b>8–20 min</b><div><strong>Paragraphs only.</strong> Students write and you read over shoulders.
+    This is the highest-leverage twelve minutes in the session — a weak paragraph produces a generic diagram no amount
+    of runtime fixes.</div></div>
+  <div class="slot"><b>20–28 min</b><div><strong>Paste and run.</strong> Roughly eight minutes of machine time. Use it:
+    walk the room, or have students predict their own component list and compare afterwards.</div></div>
+  <div class="slot"><b>28–40 min</b><div><strong>Read the output.</strong> Command Center, then Architecture, then
+    Assumptions. The open question is usually the most interesting thing on the page.</div></div>
+  <div class="slot"><b>40–45 min</b><div><strong>Buffer.</strong> Re-runs and stragglers.</div></div>
+</div>
+
+<h2>Audit: does the prompt hold up?</h2>
+<p class="lede">Every run was checked mechanically against the rules the prompt sets, not just eyeballed.</p>
+
+<div class="card scroll">
+<table>
+<thead><tr><th>Check</th><th>What it proves</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>Every component states the words that required it</td><td>The "no padding" rule is being followed, not just stated</td><td><span class="pill p-good">5 / 5</span></td></tr>
+<tr><td>Every mermaid arrow carries a label</td><td>Diagrams are data flows, not boxes-and-lines decoration</td><td><span class="pill p-good">5 / 5</span></td></tr>
+<tr><td>Gantt task names contain no commas; subgraphs closed</td><td>The diagrams actually parse</td><td><span class="pill p-good">5 / 5</span></td></tr>
+<tr><td>Every KPI re-derives from the array behind it</td><td>The "no number typed twice" rule holds</td><td><span class="pill p-good">20 / 20</span></td></tr>
+<tr><td>AI layer appears only where the idea needs one</td><td>The hardest rule in the prompt to follow</td><td><span class="pill p-good">1 of 5, correctly</span></td></tr>
+<tr><td>Frontend omitted where no human uses one</td><td>R2 produced zero entry points</td><td><span class="pill p-good">passed</span></td></tr>
+<tr><td>Generated site loads, searches, and draws</td><td>R4's full build: 8 sections, 47 index entries, 9 illustrations</td><td><span class="pill p-good">passed</span></td></tr>
+</tbody></table>
+</div>
+
+<div class="callout c-info">
+  <div class="lbl">The rule that impressed me most</div>
+  <p style="margin-bottom:0">Four of five ideas came back with <strong>no AI layer at all</strong> — including the
+  warehouse watchdog, where "detect anomalies" is exactly the phrase that makes people reach for a model. The design
+  came back as counts, null ratios and comparisons against a stored baseline, with an explicit note that reaching for
+  a model would add cost and unexplainability to a problem arithmetic solves exactly. That is the single most
+  valuable thing this prompt teaches, and it is surviving contact with real ideas.</p>
+</div>
+
+<h2>The one change that would halve your class time</h2>
+
+<div class="callout c-warn">
+  <div class="lbl">Decision for the DRI</div>
+  <p><code>site.js</code> and <code>site.css</code> are <strong>idea-independent</strong>. Every student generates
+  roughly 1,900 identical lines and waits five and a half minutes for them. Shipping those two files as a starter kit
+  — so students generate only <code>architecture.md</code>, <code>blueprint.js</code> and nine tiny shells — would cut
+  model time from about <strong>7½ minutes to under 2½</strong>, and cut the class block from 45 minutes to roughly 30.</p>
+  <p style="margin-bottom:0"><strong>The trade-off is real and it is the one you deliberately locked.</strong> A starter
+  kit means the prompt is no longer self-contained: it needs files distributed to every machine, versioned, and kept in
+  step with the prompt. That is exactly the coupling v1.0 was written to avoid. This is a scheduling-versus-portability
+  call, not a technical one, and it is yours.</p>
+</div>
+
+<div class="card">
+<h3>If you keep v1.0 as locked</h3>
+<p style="margin-bottom:0">Nothing needs to change — just budget the 45 minutes and use the generation window as teaching
+time rather than dead time. The scaffolding wait is genuinely idle for the student, so fill it deliberately.</p>
+</div>
+
+<h2>Risks worth naming before you run this with twenty people</h2>
+
+<div class="card scroll">
+<table>
+<thead><tr><th>Risk</th><th>Why it matters</th><th>Mitigation</th></tr></thead>
+<tbody>
+<tr><td><span class="pill p-risk">high</span> Shared API organisation</td>
+  <td>Twenty simultaneous runs each generating ~50 KB is the one thing not tested here. Rate limiting would hit the
+  whole room at once, mid-generation.</td>
+  <td>Run a three-student pilot at the same moment before the full session, or stagger starts by five minutes.</td></tr>
+<tr><td><span class="pill p-risk">high</span> Weak paragraphs</td>
+  <td>A paragraph with no day-one sentence produces a generic three-tier diagram. Runtime is unaffected — the student
+  simply gets a worse result and does not know why.</td>
+  <td>Gate on the paragraph. Nobody pastes the prompt until someone has read their sentence.</td></tr>
+<tr><td><span class="pill p-warn">medium</span> No internet</td>
+  <td>Mermaid and Chart.js come from a CDN. Illustrations, search and the keyless Ask mode work offline; the three
+  CDN diagrams degrade to an explanatory message.</td>
+  <td>Ask for the offline build in advance if the room's connection is unreliable.</td></tr>
+<tr><td><span class="pill p-warn">medium</span> Model and effort settings vary</td>
+  <td>All numbers here are Claude Opus 5. A student on a different model or effort setting will not match them.</td>
+  <td>Standardise the setting at the start of the session, or accept a wider spread.</td></tr>
+<tr><td><span class="pill p-info">low</span> Scaffolding bugs</td>
+  <td>1,900 lines regenerated per student is 1,900 chances for a defect. One was found during development: a
+  <code>const</code> at top level is not a <code>window</code> property, and every page threw until it was fixed.</td>
+  <td>The prompt now warns about that specific trap. Others may exist.</td></tr>
+</tbody></table>
+</div>
+
+<h2>What this audit did not do</h2>
+<div class="card">
+<p style="margin-bottom:0">Only one of the five ideas was built all the way to a running site; the other four stopped
+after the data object, because the scaffolding phase is demonstrably idea-independent and building it five times would
+have measured the same thing five times. No student ran anything — every timing is one operator's. Nothing was measured
+under concurrency. And no judgement is offered here on whether the <em>designs</em> are good, only that they are
+structurally valid and internally consistent.</p>
+</div>
+
+<footer>
+  <div>Audit run 2026-08-06 · 5 ideas · 820 s of measured wall clock · prompt v1.0 (locked)</div>
+  <div>Colaberry · System Architect</div>
+</footer>
+</div>
+<script>
+(function(){
+  var r=document.documentElement;
+  try{var s=localStorage.getItem("audit-theme");
+    if(s)r.dataset.theme=s;
+    else if(matchMedia("(prefers-color-scheme: dark)").matches)r.dataset.theme="dark";}catch(e){}
+  document.getElementById("theme").onclick=function(){
+    r.dataset.theme=r.dataset.theme==="dark"?"light":"dark";
+    try{localStorage.setItem("audit-theme",r.dataset.theme);}catch(e){}
+  };
+})();
+</script>
+</body>
+</html>

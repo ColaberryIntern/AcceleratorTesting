@@ -1,0 +1,10 @@
+# Scratch space — never relevant to Claude's working context
+tmp/
+
+# Portal-owned generated state maps — read-only, DO NOT edit (see CLAUDE.md "Folder Responsibilities")
+system/
+
+# Standard build/dependency output, once dependencies exist
+node_modules/
+build/
+dist/

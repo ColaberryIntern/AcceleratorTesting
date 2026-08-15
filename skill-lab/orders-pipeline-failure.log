@@ -1,0 +1,15 @@
+2026-08-03T13:02:10Z INFO  [orders_pipeline] run_id=run-20260803-0742 stage=INIT message="starting scheduled run, trigger=cron, schedule=0 13 * * *"
+2026-08-03T13:02:11Z INFO  [orders_pipeline] run_id=run-20260803-0742 stage=EXTRACT source=orders_raw.csv status=SUCCESS rows_extracted=12 duration_ms=420
+2026-08-03T13:02:12Z WARN  [orders_pipeline] run_id=run-20260803-0742 stage=SCHEMA_VALIDATE column=region message="expected type=enum(region_code) values=[W,E,S,N] but observed free-text values in sample (e.g. 'West', 'East')" severity=WARN action=continue
+2026-08-03T13:02:12Z INFO  [orders_pipeline] run_id=run-20260803-0742 stage=TRANSFORM_MAP step=map_region_code message="loaded region_code_map v3 (4 entries: W,E,S,N)"
+2026-08-03T13:02:13Z ERROR [orders_pipeline] run_id=run-20260803-0742 stage=TRANSFORM_MAP step=map_region_code row=1 order_id=ORD-1001 field=region value="West" error="MappingLookupError: no mapping found for value 'West' in region_code_map (expected one of: W,E,S,N)"
+2026-08-03T13:02:13Z ERROR [orders_pipeline] run_id=run-20260803-0742 stage=TRANSFORM_MAP step=map_region_code row=2 order_id=ORD-1002 field=region value="East" error="MappingLookupError: no mapping found for value 'East' in region_code_map (expected one of: W,E,S,N)"
+2026-08-03T13:02:13Z ERROR [orders_pipeline] run_id=run-20260803-0742 stage=TRANSFORM_MAP step=map_region_code row=6 order_id=ORD-1006 field=region value="" error="MappingLookupError: no mapping found for value '' in region_code_map (expected one of: W,E,S,N)"
+2026-08-03T13:02:13Z ERROR [orders_pipeline] run_id=run-20260803-0742 stage=TRANSFORM_MAP status=FAILED rows_failed=11 rows_ok=1 message="11 of 12 rows failed region mapping; halting before LOAD"
+2026-08-03T13:02:13Z WARN  [orders_pipeline] run_id=run-20260803-0742 stage=RETRY_POLICY message="transient-failure retry triggered: attempt 2 of 2, backoff=30s, reason=TRANSFORM_MAP_FAILED"
+2026-08-03T13:02:43Z INFO  [orders_pipeline] run_id=run-20260803-0742 stage=EXTRACT source=orders_raw.csv status=SUCCESS rows_extracted=12 duration_ms=395
+2026-08-03T13:02:44Z INFO  [orders_pipeline] run_id=run-20260803-0742 stage=TRANSFORM_MAP step=map_region_code message="loaded region_code_map v3 (4 entries: W,E,S,N)"
+2026-08-03T13:02:44Z ERROR [orders_pipeline] run_id=run-20260803-0742 stage=TRANSFORM_MAP step=map_region_code row=1 order_id=ORD-1001 field=region value="West" error="MappingLookupError: no mapping found for value 'West' in region_code_map (expected one of: W,E,S,N)"
+2026-08-03T13:02:44Z ERROR [orders_pipeline] run_id=run-20260803-0742 stage=TRANSFORM_MAP status=FAILED rows_failed=11 rows_ok=1 message="retry attempt 2 failed with identical error signature as attempt 1"
+2026-08-03T13:02:44Z ERROR [orders_pipeline] run_id=run-20260803-0742 stage=PIPELINE status=FAILED message="max retries exhausted (2/2); pipeline halted before LOAD stage; 0 rows written to orders_fact"
+2026-08-03T13:02:44Z INFO  [orders_pipeline] run_id=run-20260803-0742 stage=NOTIFY message="failure notification queued for #data-pipeline-alerts"
