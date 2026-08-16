@@ -1,141 +1,645 @@
 {
-  "agents": [
+  "schema_version": 2,
+  "project_name": "Student Engagement Monitoring Tool",
+  "descriptor": "A tool to help instructors identify students who are falling behind by analyzing portal activity, build progress, and attendance, and providing a weekly report with recommendations.",
+  "requirements": [
     {
-      "id": "AGENT-001",
-      "name": "Data Aggregator",
-      "owns": [
+      "id": "REQ-001",
+      "kind": "FUNC",
+      "cluster": "Data Analysis",
+      "priority": "must",
+      "statement": "The system must analyze student portal login activity to identify inactivity.",
+      "fulfilled_by": [
+        "STORY-005"
+      ]
+    },
+    {
+      "id": "REQ-002",
+      "kind": "FUNC",
+      "cluster": "Data Analysis",
+      "priority": "must",
+      "statement": "The system must analyze student build progress to identify lack of progress.",
+      "fulfilled_by": [
+        "STORY-005"
+      ]
+    },
+    {
+      "id": "REQ-003",
+      "kind": "FUNC",
+      "cluster": "Data Analysis",
+      "priority": "must",
+      "statement": "The system must analyze attendance records to identify missed live sessions.",
+      "fulfilled_by": [
+        "STORY-005"
+      ]
+    },
+    {
+      "id": "REQ-004",
+      "kind": "FUNC",
+      "cluster": "Reporting",
+      "priority": "must",
+      "statement": "The system must generate a weekly report every Monday morning for each instructor.",
+      "fulfilled_by": [
+        "STORY-004"
+      ]
+    },
+    {
+      "id": "REQ-005",
+      "kind": "FUNC",
+      "cluster": "Reporting",
+      "priority": "must",
+      "statement": "The system must include a list of three or four students in the weekly report who may need attention.",
+      "fulfilled_by": [
+        "STORY-014"
+      ]
+    },
+    {
+      "id": "REQ-006",
+      "kind": "FUNC",
+      "cluster": "Reporting",
+      "priority": "must",
+      "statement": "The system must suggest an opening line for each student listed in the report.",
+      "fulfilled_by": [
+        "STORY-009"
+      ]
+    },
+    {
+      "id": "REQ-007",
+      "kind": "FUNC",
+      "cluster": "Instructor Review",
+      "priority": "must",
+      "statement": "The system must allow instructors to review and approve the list before sending recommendations.",
+      "fulfilled_by": [
+        "STORY-007"
+      ]
+    },
+    {
+      "id": "REQ-008",
+      "kind": "FUNC",
+      "cluster": "Instructor Review",
+      "priority": "must",
+      "statement": "The system must flag students for instructor review if unsure about recommending them.",
+      "fulfilled_by": [
+        "STORY-006"
+      ]
+    },
+    {
+      "id": "REQ-009",
+      "kind": "CONSTRAINT",
+      "cluster": "Integration",
+      "priority": "must",
+      "statement": "The system must integrate with the Student Portal to read login data.",
+      "fulfilled_by": [
+        "STORY-001"
+      ]
+    },
+    {
+      "id": "REQ-010",
+      "kind": "CONSTRAINT",
+      "cluster": "Integration",
+      "priority": "must",
+      "statement": "The system must integrate with the Learning Management System to read build progress data.",
+      "fulfilled_by": [
+        "STORY-002"
+      ]
+    },
+    {
+      "id": "REQ-011",
+      "kind": "CONSTRAINT",
+      "cluster": "Integration",
+      "priority": "must",
+      "statement": "The system must integrate with the Attendance Tracking System to read attendance data.",
+      "fulfilled_by": [
+        "STORY-003"
+      ]
+    },
+    {
+      "id": "REQ-012",
+      "kind": "CONSTRAINT",
+      "cluster": "Integration",
+      "priority": "must",
+      "statement": "The system must integrate with the Email Platform to send reports.",
+      "fulfilled_by": [
+        "STORY-008"
+      ]
+    },
+    {
+      "id": "REQ-013",
+      "kind": "SAFE",
+      "cluster": "Data Integrity",
+      "priority": "must",
+      "statement": "The system must ensure data accuracy and consistency across all integrations.",
+      "fulfilled_by": [
         "STORY-001",
         "STORY-002",
         "STORY-003"
-      ],
-      "inputs": [
-        "Student Portal",
-        "Learning Management System",
-        "Attendance Tracking System"
-      ],
-      "skills": [
-        "read data from APIs",
-        "display data on dashboard"
-      ],
-      "outputs": [
-        "Instructor Dashboard"
-      ],
-      "purpose": "Collects and displays student data from various systems for instructor review.",
-      "trigger": "Instructor logs in via Student Portal",
-      "trigger_type": "manual",
-      "approval_gates": [],
-      "autonomy_level": "acts_autonomously",
-      "escalation_rules": []
+      ]
     },
     {
-      "id": "AGENT-002",
-      "name": "Report Generator",
-      "owns": [
+      "id": "REQ-014",
+      "kind": "NFR",
+      "cluster": "Instructor Interface",
+      "priority": "should",
+      "statement": "Every instructor interface must allow review of recommendations in three clicks or fewer.",
+      "fulfilled_by": [
+        "STORY-010"
+      ]
+    },
+    {
+      "id": "REQ-015",
+      "kind": "SAFE",
+      "cluster": "Error Handling",
+      "priority": "must",
+      "statement": "The system must handle exceptions where data is incomplete or unavailable.",
+      "fulfilled_by": [
+        "STORY-011"
+      ]
+    },
+    {
+      "id": "REQ-016",
+      "kind": "OBS",
+      "cluster": "Audit",
+      "priority": "must",
+      "statement": "The system must log all actions taken for audit purposes.",
+      "fulfilled_by": [
+        "STORY-008"
+      ]
+    },
+    {
+      "id": "REQ-017",
+      "kind": "NFR",
+      "cluster": "Performance",
+      "priority": "should",
+      "statement": "The system must operate with a response time that does not exceed 5 seconds for any user action.",
+      "fulfilled_by": [
+        "STORY-012"
+      ]
+    },
+    {
+      "id": "REQ-018",
+      "kind": "NFR",
+      "cluster": "User Experience",
+      "priority": "should",
+      "statement": "The system must provide clear error messages to users when issues occur.",
+      "fulfilled_by": [
+        "STORY-013"
+      ]
+    }
+  ],
+  "releases": [
+    {
+      "key": "r0",
+      "demo": "Show a basic report generated from integrated data sources with audit logging.",
+      "goal": "Establish data integration and basic reporting functionality.",
+      "name": "Initial Setup and Data Integration",
+      "week_end": 4,
+      "week_start": 1,
+      "story_ids": [
+        "STORY-001",
+        "STORY-002",
+        "STORY-003",
         "STORY-004"
       ],
-      "inputs": [
-        "Student Portal",
-        "Learning Management System",
-        "Attendance Tracking System"
-      ],
-      "skills": [
-        "data analysis",
-        "report generation"
-      ],
-      "outputs": [
-        "Weekly Report"
-      ],
-      "purpose": "Generates a weekly report of students potentially falling behind.",
-      "trigger": "Weekly schedule",
-      "trigger_type": "schedule",
-      "approval_gates": [],
-      "autonomy_level": "acts_autonomously",
-      "escalation_rules": []
+      "starts_on": "2026-08-15",
+      "ends_on": "2026-08-23",
+      "is_demo_target": false
     },
     {
-      "id": "AGENT-003",
-      "name": "Review Facilitator",
-      "owns": [
+      "key": "r1",
+      "demo": "Demonstrate identification of students based on combined data signals.",
+      "goal": "Implement advanced data analysis to identify struggling students.",
+      "name": "Advanced Data Analysis",
+      "week_end": 8,
+      "week_start": 5,
+      "story_ids": [
         "STORY-005",
+        "STORY-006",
+        "STORY-014"
+      ],
+      "starts_on": "2026-08-26",
+      "ends_on": "2026-09-02",
+      "is_demo_target": false
+    },
+    {
+      "key": "r2",
+      "demo": "Show instructors reviewing and approving recommendations before sending.",
+      "goal": "Enable instructor review and approval of recommendations.",
+      "name": "Instructor Review and Approval",
+      "week_end": 12,
+      "week_start": 9,
+      "story_ids": [
+        "STORY-007",
+        "STORY-008"
+      ],
+      "starts_on": "2026-09-07",
+      "ends_on": "2026-09-11",
+      "is_demo_target": false
+    },
+    {
+      "key": "r3",
+      "demo": "Present enhanced reports with suggested messages and improved UI.",
+      "goal": "Improve report content and user interface for instructors.",
+      "name": "Enhanced Reporting and User Experience",
+      "week_end": 16,
+      "week_start": 13,
+      "story_ids": [
+        "STORY-009",
+        "STORY-010"
+      ],
+      "starts_on": "2026-09-16",
+      "ends_on": "2026-09-21",
+      "is_demo_target": false
+    },
+    {
+      "key": "r4",
+      "demo": "Demonstrate system handling incomplete data and providing error messages.",
+      "goal": "Optimize system performance and handle data exceptions.",
+      "name": "System Optimization and Error Handling",
+      "week_end": 20,
+      "week_start": 17,
+      "story_ids": [
+        "STORY-011",
+        "STORY-012",
+        "STORY-013"
+      ],
+      "starts_on": "2026-09-24",
+      "ends_on": "2026-10-01",
+      "is_demo_target": false
+    }
+  ],
+  "stories": [
+    {
+      "id": "STORY-001",
+      "title": "User Login via Student Portal",
+      "release": "r0",
+      "fulfills": [
+        "REQ-009",
+        "REQ-013"
+      ],
+      "narrative": "As a student, I want to log in via the Student Portal, so that I can access my data securely.",
+      "acceptance": [
+        "Given a student with valid credentials, when they log in, then they should access their dashboard.",
+        "Given a student with invalid credentials, when they attempt to log in, then they should see an error message.",
+        "Trust: All login attempts must be logged for audit purposes."
+      ],
+      "blocked_by": [],
+      "owner_agent": "Data Analyzer",
+      "failure_paths": [
+        "Invalid credentials",
+        "Network failure",
+        "API downtime"
+      ],
+      "task_guidance": "Use the Student Portal API to authenticate users and log all login attempts in the audit log.",
+      "due_on": "2026-08-15",
+      "due_baseline_on": "2026-08-15"
+    },
+    {
+      "id": "STORY-002",
+      "title": "Display Student Progress from LMS",
+      "release": "r0",
+      "fulfills": [
+        "REQ-010",
+        "REQ-013"
+      ],
+      "narrative": "As an instructor, I want to view student progress from the LMS, so that I can monitor their learning journey.",
+      "acceptance": [
+        "Given a student enrolled in a course, when the instructor views the progress, then the correct data should be displayed.",
+        "Given a student not enrolled in any course, when the instructor views the progress, then a 'no data available' message should be shown.",
+        "Trust: All data retrieval actions must be logged for audit purposes."
+      ],
+      "blocked_by": [],
+      "owner_agent": "Data Analyzer",
+      "failure_paths": [
+        "Data mismatch",
+        "Network failure",
+        "API downtime"
+      ],
+      "task_guidance": "Integrate with the LMS API to fetch and display student progress data, ensuring data consistency.",
+      "due_on": "2026-08-18",
+      "due_baseline_on": "2026-08-18"
+    },
+    {
+      "id": "STORY-003",
+      "title": "Track Attendance via Attendance System",
+      "release": "r0",
+      "fulfills": [
+        "REQ-011",
+        "REQ-013"
+      ],
+      "narrative": "As an instructor, I want to track student attendance, so that I can ensure students are attending classes.",
+      "acceptance": [
+        "Given a student attends a class, when the instructor checks attendance, then the attendance should be marked as present.",
+        "Given a student misses a class, when the instructor checks attendance, then the attendance should be marked as absent.",
+        "Trust: All attendance records must be logged for audit purposes."
+      ],
+      "blocked_by": [],
+      "owner_agent": "Data Analyzer",
+      "failure_paths": [
+        "Incorrect attendance data",
+        "Network failure",
+        "API downtime"
+      ],
+      "task_guidance": "Integrate with the Attendance Tracking System to fetch and log attendance data.",
+      "due_on": "2026-08-20",
+      "due_baseline_on": "2026-08-20"
+    },
+    {
+      "id": "STORY-004",
+      "title": "Generate Basic Weekly Report",
+      "release": "r0",
+      "fulfills": [
+        "REQ-004"
+      ],
+      "narrative": "As an instructor, I want to receive a basic weekly report, so that I can see which students are inactive.",
+      "acceptance": [
+        "Given the system has collected data, when it is Monday morning, then a basic report is generated.",
+        "Given a student is identified as inactive, when the report is generated, then the student appears on the report.",
+        "Trust: All report generations are logged for audit purposes."
+      ],
+      "blocked_by": [],
+      "owner_agent": "Report Generator",
+      "failure_paths": [
+        "Data is incomplete",
+        "Report generation fails",
+        "Email delivery fails"
+      ],
+      "task_guidance": "Create a report generation module that compiles data from all sources into a weekly report.",
+      "due_on": "2026-08-23",
+      "due_baseline_on": "2026-08-23"
+    },
+    {
+      "id": "STORY-005",
+      "title": "Analyze Combined Data Signals",
+      "release": "r1",
+      "fulfills": [
+        "REQ-001",
+        "REQ-002",
+        "REQ-003"
+      ],
+      "narrative": "As an instructor, I want the system to analyze combined data signals, so that I can identify students who are truly struggling.",
+      "acceptance": [
+        "Given a student has not logged in and missed sessions, when the system analyzes data, then the student is flagged as struggling.",
+        "Given a student has logged in but not updated their build, when the system analyzes data, then the student is flagged as struggling.",
+        "Trust: All analysis results are logged for audit purposes."
+      ],
+      "blocked_by": [
+        "STORY-004"
+      ],
+      "owner_agent": "Data Analyzer",
+      "failure_paths": [
+        "Data analysis logic fails",
+        "Incorrect data interpretation",
+        "Analysis results are not logged"
+      ],
+      "task_guidance": "Implement data analysis logic that combines login, build, and attendance data to identify struggling students.",
+      "due_on": "2026-08-26",
+      "due_baseline_on": "2026-08-26"
+    },
+    {
+      "id": "STORY-006",
+      "title": "Flag Students for Instructor Review",
+      "release": "r1",
+      "fulfills": [
+        "REQ-008"
+      ],
+      "narrative": "As an instructor, I want the system to flag students for review, so that I can decide on recommendations.",
+      "acceptance": [
+        "Given a student has mixed signals, when the system analyzes data, then the student is flagged for review.",
+        "Given a student is flagged for review, when the instructor checks the report, then the student appears with a review flag.",
+        "Trust: All flagged students are logged for audit purposes."
+      ],
+      "blocked_by": [
+        "STORY-005"
+      ],
+      "owner_agent": "Student Flagging Assistant",
+      "failure_paths": [
+        "Flagging logic fails",
+        "Flagged students are not logged",
+        "Instructor cannot see flagged students"
+      ],
+      "task_guidance": "Implement a flagging mechanism for students with mixed data signals.",
+      "due_on": "2026-08-29",
+      "due_baseline_on": "2026-08-29"
+    },
+    {
+      "id": "STORY-007",
+      "title": "Instructor Review and Approval Interface",
+      "release": "r2",
+      "fulfills": [
+        "REQ-007"
+      ],
+      "narrative": "As an instructor, I want to review and approve recommendations, so that I can ensure accuracy before sending.",
+      "acceptance": [
+        "Given a report is generated, when an instructor reviews it, then they can approve or modify recommendations.",
+        "Given an instructor approves a recommendation, when the system sends it, then it is marked as approved.",
+        "Trust: All instructor actions are logged for audit purposes."
+      ],
+      "blocked_by": [
         "STORY-006"
       ],
-      "inputs": [
-        "Weekly Report"
+      "owner_agent": "Instructor Interface Manager",
+      "failure_paths": [
+        "Interface fails to load",
+        "Approval actions are not logged",
+        "Modifications are not saved"
       ],
-      "skills": [
-        "display report",
-        "capture instructor input"
-      ],
-      "outputs": [
-        "Approved Report"
-      ],
-      "purpose": "Facilitates instructor review and approval of the weekly report.",
-      "trigger": "Instructor accesses report for review",
-      "trigger_type": "manual",
-      "approval_gates": [],
-      "autonomy_level": "acts_with_approval",
-      "escalation_rules": [
-        "If instructor does not approve, report is not sent"
-      ]
+      "task_guidance": "Develop an interface for instructors to review and approve recommendations before sending.",
+      "due_on": "2026-09-07",
+      "due_baseline_on": "2026-09-07"
     },
     {
-      "id": "AGENT-004",
-      "name": "Email Notifier",
-      "owns": [
+      "id": "STORY-008",
+      "title": "Deliver Reports via Email Platform",
+      "release": "r2",
+      "fulfills": [
+        "REQ-012",
+        "REQ-016"
+      ],
+      "narrative": "As an instructor, I want to receive weekly reports via email, so that I can review student performance.",
+      "acceptance": [
+        "Given a weekly report is generated, when the report is sent, then the instructor should receive it via email.",
+        "Given an invalid email address, when the report is sent, then an error message should be logged.",
+        "Trust: All report deliveries must be logged for audit purposes."
+      ],
+      "blocked_by": [
         "STORY-007"
       ],
-      "inputs": [
-        "Approved Report"
+      "owner_agent": "Report Delivery System",
+      "failure_paths": [
+        "Invalid email address",
+        "Email server downtime",
+        "Network failure"
       ],
-      "skills": [
-        "send email",
-        "generate email content"
-      ],
-      "outputs": [
-        "Emails sent via Email Platform"
-      ],
-      "purpose": "Sends emails to instructors with suggested messages for students.",
-      "trigger": "Monday morning",
-      "trigger_type": "schedule",
-      "approval_gates": [],
-      "autonomy_level": "acts_with_approval",
-      "escalation_rules": [
-        "If report is not approved, emails are not sent"
-      ]
+      "task_guidance": "Use the Email Platform API to send reports and log delivery actions in the audit log.",
+      "due_on": "2026-09-11",
+      "due_baseline_on": "2026-09-11"
     },
     {
-      "id": "AGENT-005",
-      "name": "Integrity Checker",
-      "owns": [
-        "STORY-008",
-        "STORY-009",
+      "id": "STORY-009",
+      "title": "Enhance Report with Suggested Messages",
+      "release": "r3",
+      "fulfills": [
+        "REQ-006"
+      ],
+      "narrative": "As an instructor, I want the report to include suggested messages, so that I can communicate effectively with students.",
+      "acceptance": [
+        "Given a student is listed in the report, when the report is generated, then it includes a suggested message.",
+        "Given a suggested message is inappropriate, when an instructor reviews it, then they can modify it.",
+        "Trust: All suggested messages are logged for audit purposes."
+      ],
+      "blocked_by": [
+        "STORY-008"
+      ],
+      "owner_agent": "Report Generator",
+      "failure_paths": [
+        "Message generation fails",
+        "Inappropriate messages are not flagged",
+        "Messages are not logged"
+      ],
+      "task_guidance": "Enhance the report generation module to include suggested messages for each student.",
+      "due_on": "2026-09-16",
+      "due_baseline_on": "2026-09-16"
+    },
+    {
+      "id": "STORY-010",
+      "title": "Improve User Interface for Report Review",
+      "release": "r3",
+      "fulfills": [
+        "REQ-014"
+      ],
+      "narrative": "As an instructor, I want an improved interface for report review, so that I can easily navigate and approve recommendations.",
+      "acceptance": [
+        "Given the interface is loaded, when an instructor navigates it, then it is user-friendly and responsive.",
+        "Given an instructor reviews a report, when they approve it, then the interface confirms the action.",
+        "Trust: All interface interactions are logged for audit purposes."
+      ],
+      "blocked_by": [
+        "STORY-009"
+      ],
+      "owner_agent": "Instructor Interface Manager",
+      "failure_paths": [
+        "Interface is not user-friendly",
+        "Approval actions are not confirmed",
+        "Interface interactions are not logged"
+      ],
+      "task_guidance": "Redesign the report review interface to enhance usability and responsiveness.",
+      "due_on": "2026-09-21",
+      "due_baseline_on": "2026-09-21"
+    },
+    {
+      "id": "STORY-011",
+      "title": "Handle Incomplete Data Gracefully",
+      "release": "r4",
+      "fulfills": [
+        "REQ-015"
+      ],
+      "narrative": "As a developer, I want the system to handle incomplete data, so that it can still generate useful reports.",
+      "acceptance": [
+        "Given data is incomplete, when the system generates a report, then it handles the missing data gracefully.",
+        "Given data is incomplete, when an instructor reviews the report, then they are informed of the missing data.",
+        "Trust: All instances of incomplete data are logged for audit purposes."
+      ],
+      "blocked_by": [
+        "STORY-010"
+      ],
+      "owner_agent": "Data Analyzer",
+      "failure_paths": [
+        "Incomplete data causes report failure",
+        "Instructors are not informed of missing data",
+        "Incomplete data is not logged"
+      ],
+      "task_guidance": "Implement logic to handle incomplete data during report generation and notify instructors.",
+      "due_on": "2026-09-24",
+      "due_baseline_on": "2026-09-24"
+    },
+    {
+      "id": "STORY-012",
+      "title": "Optimize System Performance",
+      "release": "r4",
+      "fulfills": [
+        "REQ-017"
+      ],
+      "narrative": "As a developer, I want to optimize system performance, so that it responds quickly to user actions.",
+      "acceptance": [
+        "Given the system is under load, when a user performs an action, then the response time does not exceed 5 seconds.",
+        "Given the system is optimized, when an instructor uses it, then they experience improved performance.",
+        "Trust: All performance metrics are logged for audit purposes."
+      ],
+      "blocked_by": [
+        "STORY-011"
+      ],
+      "owner_agent": "System Optimizer",
+      "failure_paths": [
+        "System response time exceeds 5 seconds",
+        "Performance optimizations fail",
+        "Performance metrics are not logged"
+      ],
+      "task_guidance": "Optimize database queries and API calls to improve system performance.",
+      "due_on": "2026-09-28",
+      "due_baseline_on": "2026-09-28"
+    },
+    {
+      "id": "STORY-013",
+      "title": "Provide Clear Error Messages",
+      "release": "r4",
+      "fulfills": [
+        "REQ-018"
+      ],
+      "narrative": "As an instructor, I want clear error messages, so that I can understand and resolve issues quickly.",
+      "acceptance": [
+        "Given an error occurs, when the system displays a message, then it is clear and informative.",
+        "Given an error message is displayed, when an instructor follows the guidance, then they can resolve the issue.",
+        "Trust: All error messages are logged for audit purposes."
+      ],
+      "blocked_by": [
         "STORY-012"
       ],
-      "inputs": [
-        "Instructor Dashboard",
-        "Weekly Report"
+      "owner_agent": "System Optimizer",
+      "failure_paths": [
+        "Error messages are unclear",
+        "Instructors cannot resolve issues",
+        "Error messages are not logged"
       ],
-      "skills": [
-        "data validation",
-        "logging"
-      ],
-      "outputs": [
-        "Audit Log"
-      ],
-      "purpose": "Ensures data integrity and logs instructor actions for audit purposes.",
-      "trigger": "Any data processing or instructor action",
-      "trigger_type": "event",
-      "approval_gates": [
-        "REQ-011 — The system must ensure data integrity and accuracy in reports."
-      ],
-      "autonomy_level": "acts_with_approval",
-      "escalation_rules": []
+      "task_guidance": "Develop a comprehensive error messaging system that provides clear guidance to users.",
+      "due_on": "2026-10-01",
+      "due_baseline_on": "2026-10-01"
     },
     {
-      "id": "AGENT-006",
-      "name": "Analytics Provider",
+      "id": "STORY-014",
+      "title": "Generate Weekly Report with Student Attention List",
+      "release": "r1",
+      "fulfills": [
+        "REQ-005"
+      ],
+      "narrative": "As an instructor, I want to receive a weekly report highlighting students who need attention, so that I can provide timely support.",
+      "acceptance": [
+        "Given student performance data, when the weekly report is generated, then it should include a list of students needing attention.",
+        "Given no students need attention, when the weekly report is generated, then the list should be empty.",
+        "Trust: The generation of the report must be logged for audit purposes."
+      ],
+      "blocked_by": [
+        "STORY-004"
+      ],
+      "owner_agent": "Report Generator",
+      "failure_paths": [
+        "Data inconsistency",
+        "Report generation failure",
+        "Incorrect student list"
+      ],
+      "task_guidance": "Analyze student performance data to identify students needing attention and include them in the weekly report.",
+      "due_on": "2026-09-02",
+      "due_baseline_on": "2026-09-02"
+    }
+  ],
+  "agents": [
+    {
+      "id": "AGENT-001",
+      "name": "Data Analyzer",
       "owns": [
-        "STORY-010",
+        "STORY-001",
+        "STORY-002",
+        "STORY-003",
+        "STORY-005",
         "STORY-011"
       ],
       "inputs": [
@@ -144,477 +648,250 @@
         "Attendance Tracking System"
       ],
       "skills": [
-        "data analysis",
-        "customization interface"
+        "read data",
+        "analyze patterns",
+        "identify inactivity"
       ],
       "outputs": [
-        "Engagement Analytics",
-        "Customized Report Criteria"
+        "Analysis results"
       ],
-      "purpose": "Provides analytics on student engagement trends and allows report customization.",
-      "trigger": "Instructor requests analytics or customization",
-      "trigger_type": "manual",
+      "purpose": "Analyze student data to identify inactivity, lack of progress, and missed sessions.",
+      "trigger": "Weekly schedule every Monday morning",
+      "trigger_type": "schedule",
+      "approval_gates": [
+        "REQ-013 — The system must ensure data accuracy and consistency across all integrations.",
+        "REQ-015 — The system must handle exceptions where data is incomplete or unavailable."
+      ],
+      "autonomy_level": "acts_with_approval",
+      "escalation_rules": [
+        "If data is incomplete or unavailable, log the issue and notify the instructor"
+      ]
+    },
+    {
+      "id": "AGENT-002",
+      "name": "Report Generator",
+      "owns": [
+        "STORY-004",
+        "STORY-009",
+        "STORY-014"
+      ],
+      "inputs": [
+        "Analysis results"
+      ],
+      "skills": [
+        "generate reports",
+        "suggest messages"
+      ],
+      "outputs": [
+        "Weekly report with student attention list",
+        "Suggested opening lines"
+      ],
+      "purpose": "Generate and enhance weekly reports with student attention lists and suggested messages.",
+      "trigger": "Completion of data analysis",
+      "trigger_type": "event",
       "approval_gates": [],
       "autonomy_level": "acts_autonomously",
-      "escalation_rules": []
-    }
-  ],
-  "stories": [
-    {
-      "id": "STORY-001",
-      "title": "Enable instructors to log in via Student Portal and access their dashboard",
-      "release": "r0",
-      "fulfills": [
-        "REQ-001",
-        "REQ-010"
-      ],
-      "narrative": "As an instructor, I want to log in using the Student Portal credentials, so that I can access my dashboard securely.",
-      "acceptance": [
-        "Given an instructor with valid Student Portal credentials, when they log in, then they should access their dashboard.",
-        "Given an instructor with invalid credentials, when they attempt to log in, then they should receive an error message.",
-        "Trust: Every login attempt must be recorded in the audit log."
-      ],
-      "blocked_by": [],
-      "owner_agent": "Data Aggregator",
-      "failure_paths": [
-        "Invalid credentials",
-        "Network failure",
-        "API timeout"
-      ],
-      "task_guidance": "Integrate with the Student Portal API to authenticate instructors and redirect them to their dashboard upon successful login."
+      "escalation_rules": [
+        "If unable to generate report, log the issue and notify the instructor"
+      ]
     },
     {
-      "id": "STORY-002",
-      "title": "Display student progress data on instructor dashboard",
-      "release": "r0",
-      "fulfills": [
-        "REQ-002",
-        "REQ-010"
+      "id": "AGENT-003",
+      "name": "Instructor Interface Manager",
+      "owns": [
+        "STORY-007",
+        "STORY-010"
       ],
-      "narrative": "As an instructor, I want to view student progress data on my dashboard, so that I can monitor their performance.",
-      "acceptance": [
-        "Given an instructor logged into the dashboard, when they view a student's profile, then they should see the progress data.",
-        "Given an instructor views a student with no progress data, when they access the profile, then they should see a 'No data available' message.",
-        "Trust: Access to student progress data must be logged for audit purposes."
+      "inputs": [
+        "Weekly report with student attention list"
       ],
-      "blocked_by": [],
-      "owner_agent": "Data Aggregator",
-      "failure_paths": [
-        "Data retrieval failure",
-        "Data format mismatch",
-        "Unauthorized access"
+      "skills": [
+        "display data",
+        "capture approval"
       ],
-      "task_guidance": "Fetch progress data from the LMS and display it on the instructor's dashboard."
+      "outputs": [
+        "Approved report"
+      ],
+      "purpose": "Provide an interface for instructors to review and approve reports.",
+      "trigger": "Instructor login to review interface",
+      "trigger_type": "manual",
+      "approval_gates": [],
+      "autonomy_level": "acts_with_approval",
+      "escalation_rules": [
+        "If instructor does not approve, hold report for further review"
+      ]
     },
     {
-      "id": "STORY-003",
-      "title": "Show attendance data on instructor dashboard",
-      "release": "r0",
-      "fulfills": [
-        "REQ-003",
-        "REQ-010"
-      ],
-      "narrative": "As an instructor, I want to see student attendance data, so that I can track their participation.",
-      "acceptance": [
-        "Given an instructor logged into the dashboard, when they view a student's attendance, then they should see the attendance records.",
-        "Given an instructor views a student with no attendance records, when they access the profile, then they should see a 'No attendance data available' message.",
-        "Trust: Access to attendance data must be logged for audit purposes."
-      ],
-      "blocked_by": [],
-      "owner_agent": "Data Aggregator",
-      "failure_paths": [
-        "Data retrieval failure",
-        "Data format mismatch",
-        "Unauthorized access"
-      ],
-      "task_guidance": "Integrate with the Attendance Tracking System to fetch and display attendance data on the dashboard."
-    },
-    {
-      "id": "STORY-004",
-      "title": "Generate basic weekly report",
-      "release": "r1",
-      "fulfills": [
-        "REQ-005"
-      ],
-      "narrative": "As an instructor, I want to generate a basic weekly report, so that I can review student progress.",
-      "acceptance": [
-        "Given the instructor is logged in, when they navigate to the reports section, then they can generate a basic weekly report.",
-        "Given the instructor is not logged in, when they attempt to access the reports section, then they are prompted to log in.",
-        "Trust: All report generation actions are logged for audit purposes."
-      ],
-      "blocked_by": [
-        "STORY-005"
-      ],
-      "owner_agent": "Report Generator",
-      "failure_paths": [
-        "Report generation fails due to missing data.",
-        "Instructor attempts to generate a report without permissions.",
-        "System fails to log the report generation action."
-      ],
-      "task_guidance": "Implement report generation using the existing data sources and ensure logging of actions in the audit trail."
-    },
-    {
-      "id": "STORY-005",
-      "title": "Enable instructor review of reports",
-      "release": "r1",
-      "fulfills": [
-        "REQ-006"
-      ],
-      "narrative": "As an instructor, I want to review the list of students before emails are sent, so that I can ensure accuracy.",
-      "acceptance": [
-        "Given a report is generated, when an instructor reviews it, then they can approve or modify the list.",
-        "Given a student is incorrectly flagged, when the instructor reviews the report, then they can correct the error.",
-        "Trust: Ensure all changes by instructors are logged for audit."
-      ],
-      "blocked_by": [
-        "STORY-004"
-      ],
-      "owner_agent": "Review Facilitator",
-      "failure_paths": [
-        "Review interface not loading",
-        "Data mismatch during review",
-        "Approval process failure"
-      ],
-      "task_guidance": "Create a review interface for instructors to approve or modify the student list before sending."
-    },
-    {
-      "id": "STORY-006",
-      "title": "Flag uncertain recommendations for review",
-      "release": "r1",
-      "fulfills": [
-        "REQ-008"
-      ],
-      "narrative": "As a system, I want to flag uncertain student recommendations for instructor review, so that instructors can make the final decision.",
-      "acceptance": [
-        "Given a student recommendation is uncertain, when the report is generated, then the student is flagged for review.",
-        "Given a flagged student is reviewed, when the instructor approves, then the student is included in the final list.",
-        "Trust: Ensure all flagged recommendations are logged for audit."
-      ],
-      "blocked_by": [
-        "STORY-004"
-      ],
-      "owner_agent": "Review Facilitator",
-      "failure_paths": [
-        "Flagging mechanism failure",
-        "Incorrect flagging",
-        "Review process failure"
-      ],
-      "task_guidance": "Implement a flagging mechanism for uncertain recommendations in the report generation module."
-    },
-    {
-      "id": "STORY-007",
-      "title": "Send emails with suggested messages",
-      "release": "r2",
-      "fulfills": [
-        "REQ-007",
-        "REQ-009"
-      ],
-      "narrative": "As a system, I want to send emails with suggested opening lines, so that instructors can easily communicate with students.",
-      "acceptance": [
-        "Given the instructor approves the list, when emails are sent, then each email includes a suggested opening line.",
-        "Given an email fails to send, when the system retries, then the email is successfully sent.",
-        "Trust: Ensure all sent emails are logged for audit."
-      ],
-      "blocked_by": [
-        "STORY-005"
-      ],
-      "owner_agent": "Email Notifier",
-      "failure_paths": [
-        "Email platform integration failure",
-        "Incorrect email content",
-        "Email delivery failure"
-      ],
-      "task_guidance": "Integrate with the Email Platform to send emails. Use the 'email_content' table for storing suggested messages."
-    },
-    {
-      "id": "STORY-008",
-      "title": "Implement data integrity checks",
-      "release": "r3",
-      "fulfills": [
-        "REQ-011"
-      ],
-      "narrative": "As a system, I want to ensure data integrity, so that reports are accurate and reliable.",
-      "acceptance": [
-        "Given data is pulled from external systems, when it is stored, then integrity checks ensure accuracy.",
-        "Given a data integrity issue is detected, when the report is generated, then an alert is raised.",
-        "Trust: Ensure all integrity checks are logged for audit."
-      ],
-      "blocked_by": [
-        "STORY-007"
-      ],
-      "owner_agent": "Integrity Checker",
-      "failure_paths": [
-        "Integrity check failure",
-        "Data corruption",
-        "Alert system failure"
-      ],
-      "task_guidance": "Develop integrity check routines for data storage processes."
-    },
-    {
-      "id": "STORY-009",
-      "title": "Log instructor actions for audit",
-      "release": "r3",
-      "fulfills": [
-        "REQ-012"
-      ],
-      "narrative": "As a system, I want to log all instructor actions, so that there is an audit trail of changes and approvals.",
-      "acceptance": [
-        "Given an instructor approves a report, when the action is logged, then it is stored in the audit log.",
-        "Given an instructor modifies a report, when the action is logged, then it is stored in the audit log.",
-        "Trust: Ensure all logs are secure and tamper-proof."
-      ],
-      "blocked_by": [
+      "id": "AGENT-004",
+      "name": "Report Delivery System",
+      "owns": [
         "STORY-008"
       ],
-      "owner_agent": "Integrity Checker",
-      "failure_paths": [
-        "Logging failure",
-        "Log data corruption",
-        "Unauthorized log access"
+      "inputs": [
+        "Approved report"
       ],
-      "task_guidance": "Implement logging for all instructor actions in the 'audit_log' table."
+      "skills": [
+        "send email",
+        "log actions"
+      ],
+      "outputs": [
+        "Email sent to instructor",
+        "Audit log entry"
+      ],
+      "purpose": "Deliver approved reports to instructors via email and log actions for audit.",
+      "trigger": "Approval of report by instructor",
+      "trigger_type": "event",
+      "approval_gates": [],
+      "autonomy_level": "acts_autonomously",
+      "escalation_rules": [
+        "If email delivery fails, log the issue and retry"
+      ]
     },
     {
-      "id": "STORY-010",
-      "title": "Provide analytics on student engagement trends",
-      "release": "r4",
-      "fulfills": [
-        "REQ-015"
+      "id": "AGENT-005",
+      "name": "System Optimizer",
+      "owns": [
+        "STORY-012",
+        "STORY-013"
       ],
-      "narrative": "As an instructor, I want to see analytics on student engagement trends, so that I can better understand student behavior over time.",
-      "acceptance": [
-        "Given historical data is available, when analytics are generated, then trends are displayed accurately.",
-        "Given a trend is incorrect, when the data is reviewed, then the error is identified.",
-        "Trust: Ensure analytics data is accurate and up-to-date."
+      "inputs": [
+        "System performance metrics"
       ],
-      "blocked_by": [
-        "STORY-009"
+      "skills": [
+        "optimize performance",
+        "handle errors"
       ],
-      "owner_agent": "Analytics Provider",
-      "failure_paths": [
-        "Analytics calculation error",
-        "Dashboard loading failure",
-        "Data visualization error"
+      "outputs": [
+        "Optimized system performance",
+        "Clear error messages"
       ],
-      "task_guidance": "Develop an analytics dashboard using data from 'student_activity', 'student_progress', and 'student_attendance' tables."
+      "purpose": "Ensure system performance and provide clear error messages.",
+      "trigger": "System operation",
+      "trigger_type": "event",
+      "approval_gates": [],
+      "autonomy_level": "acts_autonomously",
+      "escalation_rules": [
+        "If performance issues persist, escalate to technical support"
+      ]
     },
     {
-      "id": "STORY-011",
-      "title": "Allow customization of report criteria",
-      "release": "r4",
-      "fulfills": [
-        "REQ-016"
+      "id": "AGENT-006",
+      "name": "Student Flagging Assistant",
+      "owns": [
+        "STORY-006"
       ],
-      "narrative": "As an instructor, I want to customize report criteria, so that I can tailor reports to my needs.",
-      "acceptance": [
-        "Given a customization option is available, when an instructor modifies it, then the report reflects the changes.",
-        "Given a customization error occurs, when the report is generated, then an alert is raised.",
-        "Trust: Ensure all customizations are logged for audit."
+      "inputs": [
+        "Analysis results"
       ],
-      "blocked_by": [
-        "STORY-009"
+      "skills": [
+        "flag uncertain cases"
       ],
-      "owner_agent": "Analytics Provider",
-      "failure_paths": [
-        "Customization option failure",
-        "Incorrect report customization",
-        "Alert system failure"
+      "outputs": [
+        "Flagged student list"
       ],
-      "task_guidance": "Implement customization options in the report generation module."
-    },
-    {
-      "id": "STORY-012",
-      "title": "Establish audit trail for all instructor actions",
-      "release": "r0",
-      "fulfills": [
-        "REQ-012"
-      ],
-      "narrative": "As a system administrator, I want to ensure all instructor actions are logged, so that we maintain a complete audit trail.",
-      "acceptance": [
-        "Given an instructor performs any action on the system, when the action is completed, then it should be logged in the audit trail.",
-        "Given an instructor attempts an unauthorized action, when the attempt is made, then it should be logged in the audit trail.",
-        "Trust: The audit trail must be immutable and accessible for review."
-      ],
-      "blocked_by": [],
-      "owner_agent": "Integrity Checker",
-      "failure_paths": [
-        "Log storage failure",
-        "Log retrieval failure",
-        "Unauthorized log access"
-      ],
-      "task_guidance": "Implement logging for all instructor actions and ensure logs are stored securely and are tamper-proof."
+      "purpose": "Flag students for instructor review if unsure about recommendations.",
+      "trigger": "Uncertain analysis result",
+      "trigger_type": "event",
+      "approval_gates": [],
+      "autonomy_level": "suggests",
+      "escalation_rules": [
+        "If unable to determine, escalate to instructor for manual review"
+      ]
     }
   ],
-  "releases": [
-    {
-      "key": "r0",
-      "demo": "Show data being pulled from all systems and a basic report generated.",
-      "goal": "Establish data connections and basic reporting.",
-      "name": "Initial Setup and Data Integration",
-      "week_end": 4,
-      "week_start": 1
-    },
-    {
-      "key": "r1",
-      "demo": "Demonstrate instructors reviewing and approving student lists before emails are sent.",
-      "goal": "Enable instructors to review and approve reports.",
-      "name": "Instructor Review and Approval",
-      "week_end": 8,
-      "week_start": 5
-    },
-    {
-      "key": "r2",
-      "demo": "Show emails being sent with suggested messages after instructor approval.",
-      "goal": "Automate email notifications with suggested messages.",
-      "name": "Notification and Communication",
-      "week_end": 12,
-      "week_start": 9
-    },
-    {
-      "key": "r3",
-      "demo": "Demonstrate data integrity checks and audit logs of instructor actions.",
-      "goal": "Implement data integrity checks and audit logging.",
-      "name": "Data Integrity and Audit",
-      "week_end": 16,
-      "week_start": 13
-    },
-    {
-      "key": "r4",
-      "demo": "Show analytics dashboard and customization options for report criteria.",
-      "goal": "Add analytics and customization features.",
-      "name": "Enhancements and Analytics",
-      "week_end": 20,
-      "week_start": 17
+  "project": {
+    "name": "Student Engagement Monitoring Tool",
+    "descriptor": "A tool to help instructors identify students who are falling behind by analyzing portal activity, build progress, and attendance, and providing a weekly report with recommendations.",
+    "repo_url": "https://github.com/ColaberryIntern/AcceleratorTesting",
+    "plan_version": 1,
+    "plan_sha256": "f487e85618a066e0b97354737013d902288f894bfd2f89830d0876c16d31f5d9"
+  },
+  "schedule": {
+    "build_start": "2026-08-13",
+    "build_end": "2026-10-01",
+    "demo_day": "2026-10-08",
+    "build_weeks": 7,
+    "demo_release_key": null,
+    "roadmap_release_keys": [],
+    "prep": [
+      {
+        "key": "PREP-1",
+        "title": "Write the demo narrative: the problem, the one moment, the guardrail",
+        "due_on": "2026-10-02"
+      },
+      {
+        "key": "PREP-2",
+        "title": "Record a first run-through and watch it back",
+        "due_on": "2026-10-03"
+      },
+      {
+        "key": "PREP-3",
+        "title": "Build the slides — what it does, who for, the number it moves",
+        "due_on": "2026-10-05"
+      },
+      {
+        "key": "PREP-4",
+        "title": "Rehearse with one other person and take their notes",
+        "due_on": "2026-10-06"
+      },
+      {
+        "key": "PREP-5",
+        "title": "Record the final demo video",
+        "due_on": "2026-10-07"
+      },
+      {
+        "key": "PREP-6",
+        "title": "Present at Demo Day",
+        "due_on": "2026-10-08"
+      }
+    ]
+  },
+  "derived": {
+    "measures": [
+      {
+        "id": "REQ-017",
+        "statement": "The system must operate with a response time that does not exceed 5 seconds for any user action."
+      }
+    ],
+    "guardrails": [
+      {
+        "id": "REQ-013",
+        "statement": "The system must ensure data accuracy and consistency across all integrations."
+      },
+      {
+        "id": "REQ-015",
+        "statement": "The system must handle exceptions where data is incomplete or unavailable."
+      }
+    ],
+    "systems": [
+      "Student Portal",
+      "Learning Management",
+      "Attendance Tracking",
+      "Email Platform"
+    ],
+    "roles": [
+      "student",
+      "instructor",
+      "developer"
+    ],
+    "counts": {
+      "requirements_total": 18,
+      "requirements_by_kind": {
+        "CONSTRAINT": 4,
+        "FUNC": 8,
+        "NFR": 3,
+        "OBS": 1,
+        "SAFE": 2
+      },
+      "stories_total": 14,
+      "releases_total": 5,
+      "agents_total": 6,
+      "failure_paths_total": 37,
+      "agents_by_autonomy": {
+        "acts_autonomously": 3,
+        "acts_with_approval": 2,
+        "suggests": 1
+      }
     }
-  ],
-  "descriptor": "A tool to identify and notify instructors about students who may be falling behind, using data from various educational systems.",
-  "project_name": "Student Engagement Monitoring Tool",
-  "requirements": [
-    {
-      "id": "REQ-001",
-      "kind": "CONSTRAINT",
-      "cluster": "Data Integration",
-      "priority": "must",
-      "statement": "The system must read student login data from the Student Portal."
-    },
-    {
-      "id": "REQ-002",
-      "kind": "CONSTRAINT",
-      "cluster": "Data Integration",
-      "priority": "must",
-      "statement": "The system must read student progress data from the Learning Management System."
-    },
-    {
-      "id": "REQ-003",
-      "kind": "CONSTRAINT",
-      "cluster": "Data Integration",
-      "priority": "must",
-      "statement": "The system must read attendance data from the Attendance Tracking System."
-    },
-    {
-      "id": "REQ-004",
-      "kind": "CONSTRAINT",
-      "cluster": "Notification",
-      "priority": "must",
-      "statement": "The system must send emails via the Email Platform."
-    },
-    {
-      "id": "REQ-005",
-      "kind": "FUNC",
-      "cluster": "Reporting",
-      "priority": "must",
-      "statement": "The system must generate a weekly report of students potentially falling behind based on login, progress, and attendance data."
-    },
-    {
-      "id": "REQ-006",
-      "kind": "FUNC",
-      "cluster": "Instructor Review",
-      "priority": "must",
-      "statement": "The system must allow instructors to review and approve the list of students before emails are sent."
-    },
-    {
-      "id": "REQ-007",
-      "kind": "FUNC",
-      "cluster": "Communication",
-      "priority": "must",
-      "statement": "The system must provide suggested opening lines for each student in the report."
-    },
-    {
-      "id": "REQ-008",
-      "kind": "FUNC",
-      "cluster": "Instructor Review",
-      "priority": "must",
-      "statement": "The system must flag students for instructor review if the recommendation is uncertain."
-    },
-    {
-      "id": "REQ-009",
-      "kind": "FUNC",
-      "cluster": "Notification",
-      "priority": "must",
-      "statement": "The system must send the final approved list to instructors every Monday morning."
-    },
-    {
-      "id": "REQ-010",
-      "kind": "FUNC",
-      "cluster": "Data Presentation",
-      "priority": "must",
-      "statement": "The system must allow instructors to view activity data for each student in the report."
-    },
-    {
-      "id": "REQ-011",
-      "kind": "SAFE",
-      "cluster": "Data Integrity",
-      "priority": "must",
-      "statement": "The system must ensure data integrity and accuracy in reports."
-    },
-    {
-      "id": "REQ-012",
-      "kind": "OBS",
-      "cluster": "Audit",
-      "priority": "must",
-      "statement": "The system must log all actions taken by instructors for audit purposes."
-    },
-    {
-      "id": "REQ-013",
-      "kind": "NFR",
-      "cluster": "User Interface",
-      "priority": "should",
-      "statement": "Every instructor-facing screen must allow completion of its primary action in three clicks or fewer."
-    },
-    {
-      "id": "REQ-014",
-      "kind": "NFR",
-      "cluster": "Communication",
-      "priority": "should",
-      "statement": "The system should optimize email content for engagement."
-    },
-    {
-      "id": "REQ-015",
-      "kind": "FUNC",
-      "cluster": "Analytics",
-      "priority": "should",
-      "statement": "The system should provide analytics on student engagement trends over time."
-    },
-    {
-      "id": "REQ-016",
-      "kind": "FUNC",
-      "cluster": "Customization",
-      "priority": "should",
-      "statement": "The system should allow customization of report criteria by instructors."
-    },
-    {
-      "id": "REQ-017",
-      "kind": "NFR",
-      "cluster": "Localization",
-      "priority": "should",
-      "statement": "The system should support multiple languages for email content."
-    },
-    {
-      "id": "REQ-018",
-      "kind": "NFR",
-      "cluster": "Accessibility",
-      "priority": "should",
-      "statement": "The system should provide mobile access to reports."
-    }
-  ]
+  }
 }

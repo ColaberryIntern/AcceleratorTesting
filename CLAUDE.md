@@ -720,7 +720,7 @@ Conventions for this build. Claude Code reads this automatically.
 
 ## What this is
 
-A tool to identify and notify instructors about students who may be falling behind, using data from various educational systems.
+A tool to help instructors identify students who are falling behind by analyzing portal activity, build progress, and attendance, and providing a weekly report with recommendations.
 
 ## Where the truth lives
 

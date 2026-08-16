@@ -1,24 +1,24 @@
-# STORY-004 — Generate basic weekly report
+# STORY-004 — Generate Basic Weekly Report
 
-As an instructor, I want to generate a basic weekly report, so that I can review student progress.
+As an instructor, I want to receive a basic weekly report, so that I can see which students are inactive.
 
-**Release:** r1 · Instructor Review and Approval (weeks 5–8)
+**Release:** r0 · Initial Setup and Data Integration (weeks 1–4)
 **Owner:** Report Generator
-**Blocked by:** STORY-005
+**Blocked by:** nothing — you can start this now
 
 ## The requirement this satisfies
 
-- **REQ-005** (Functional, must) — The system must generate a weekly report of students potentially falling behind based on login, progress, and attendance data.
+- **REQ-004** (Functional, must) — The system must generate a weekly report every Monday morning for each instructor.
 
 ## How to build it
 
-Implement report generation using the existing data sources and ensure logging of actions in the audit trail.
+Create a report generation module that compiles data from all sources into a weekly report.
 
 ## Failure paths you must handle
 
-- Report generation fails due to missing data.
-- Instructor attempts to generate a report without permissions.
-- System fails to log the report generation action.
+- Data is incomplete
+- Report generation fails
+- Email delivery fails
 
 ## Acceptance — your stop condition
 
@@ -27,8 +27,8 @@ the same criteria out of `.colaberry/progress.json`, which Claude Code keeps in
 step (see the managed block in CLAUDE.md). Ticking something you have not
 actually met only misleads you.
 
-- [ ] Given the instructor is logged in, when they navigate to the reports section, then they can generate a basic weekly report.
-- [ ] Given the instructor is not logged in, when they attempt to access the reports section, then they are prompted to log in.
-- [ ] Trust: All report generation actions are logged for audit purposes.
+- [ ] Given the system has collected data, when it is Monday morning, then a basic report is generated.
+- [ ] Given a student is identified as inactive, when the report is generated, then the student appears on the report.
+- [ ] Trust: All report generations are logged for audit purposes.
 
 When every box above is ticked, stop and show the demo.

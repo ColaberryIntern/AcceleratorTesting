@@ -1,11 +1,21 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "project": "Student Engagement Monitoring Tool",
+  "totals": {
+    "stories_total": 15,
+    "stories_verified": 0,
+    "stories_submitted": 0,
+    "stories_in_progress": 13,
+    "stories_not_started": 2,
+    "criteria_total": 47,
+    "criteria_passed": 0,
+    "points_awarded": 0
+  },
   "stories": [
     {
       "id": "STORY-000",
       "release": null,
-      "acceptance_total": 3,
+      "acceptance_total": 5,
       "criteria": [
         {
           "text": "Given the Command Center, when it is opened, then every tab is reachable and every card drills down one level.",
@@ -16,6 +26,14 @@
           "passed": false
         },
         {
+          "text": "Given the data files, when any tab renders, then its content comes from .colaberry/plan.json and .colaberry/progress.json read at runtime rather than from hard-coded values.",
+          "passed": false
+        },
+        {
+          "text": "Given .colaberry/manifest.json, when any tab is shown, then it displays how old the data is and warns when that age exceeds a week.",
+          "passed": false
+        },
+        {
           "text": "Trust — no tab shows a number, a connection or a result the project has not actually produced.",
           "passed": false
         }
@@ -23,7 +41,24 @@
       "files_touched": [],
       "tests_added": [],
       "notes": null,
-      "updated_at": null
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 5,
+        "verified_at": null,
+        "commit_sha": "33f5436212c7a445a00da9be86e4d87c8c513bb3",
+        "commit_url": "https://github.com/ColaberryIntern/AcceleratorTesting/commit/33f5436212c7a445a00da9be86e4d87c8c513bb3",
+        "commit_at": "2026-08-16T02:32:42Z",
+        "points_awarded": null,
+        "outstanding": [
+          "Given the Command Center, when it is opened, then every tab is reachable and every card drills down one level.",
+          "Given sample mode, when any tab is shown, then the sample data is visibly labelled as sample.",
+          "Given the data files, when any tab renders, then its content comes from .colaberry/plan.json and .colaberry/progress.json read at runtime rather than from hard-coded values.",
+          "Given .colaberry/manifest.json, when any tab is shown, then it displays how old the data is and warns when that age exceeds a week.",
+          "Trust — no tab shows a number, a connection or a result the project has not actually produced."
+        ]
+      }
     },
     {
       "id": "STORY-001",
@@ -31,22 +66,37 @@
       "acceptance_total": 3,
       "criteria": [
         {
-          "text": "Given an instructor with valid Student Portal credentials, when they log in, then they should access their dashboard.",
+          "text": "Given a student with valid credentials, when they log in, then they should access their dashboard.",
           "passed": false
         },
         {
-          "text": "Given an instructor with invalid credentials, when they attempt to log in, then they should receive an error message.",
+          "text": "Given a student with invalid credentials, when they attempt to log in, then they should see an error message.",
           "passed": false
         },
         {
-          "text": "Trust: Every login attempt must be recorded in the audit log.",
+          "text": "Trust: All login attempts must be logged for audit purposes.",
           "passed": false
         }
       ],
       "files_touched": [],
       "tests_added": [],
       "notes": null,
-      "updated_at": null
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Given a student with valid credentials, when they log in, then they should access their dashboard.",
+          "Given a student with invalid credentials, when they attempt to log in, then they should see an error message.",
+          "Trust: All login attempts must be logged for audit purposes."
+        ]
+      }
     },
     {
       "id": "STORY-002",
@@ -54,22 +104,37 @@
       "acceptance_total": 3,
       "criteria": [
         {
-          "text": "Given an instructor logged into the dashboard, when they view a student's profile, then they should see the progress data.",
+          "text": "Given a student enrolled in a course, when the instructor views the progress, then the correct data should be displayed.",
           "passed": false
         },
         {
-          "text": "Given an instructor views a student with no progress data, when they access the profile, then they should see a 'No data available' message.",
+          "text": "Given a student not enrolled in any course, when the instructor views the progress, then a 'no data available' message should be shown.",
           "passed": false
         },
         {
-          "text": "Trust: Access to student progress data must be logged for audit purposes.",
+          "text": "Trust: All data retrieval actions must be logged for audit purposes.",
           "passed": false
         }
       ],
       "files_touched": [],
       "tests_added": [],
       "notes": null,
-      "updated_at": null
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Given a student enrolled in a course, when the instructor views the progress, then the correct data should be displayed.",
+          "Given a student not enrolled in any course, when the instructor views the progress, then a 'no data available' message should be shown.",
+          "Trust: All data retrieval actions must be logged for audit purposes."
+        ]
+      }
     },
     {
       "id": "STORY-003",
@@ -77,45 +142,75 @@
       "acceptance_total": 3,
       "criteria": [
         {
-          "text": "Given an instructor logged into the dashboard, when they view a student's attendance, then they should see the attendance records.",
+          "text": "Given a student attends a class, when the instructor checks attendance, then the attendance should be marked as present.",
           "passed": false
         },
         {
-          "text": "Given an instructor views a student with no attendance records, when they access the profile, then they should see a 'No attendance data available' message.",
+          "text": "Given a student misses a class, when the instructor checks attendance, then the attendance should be marked as absent.",
           "passed": false
         },
         {
-          "text": "Trust: Access to attendance data must be logged for audit purposes.",
+          "text": "Trust: All attendance records must be logged for audit purposes.",
           "passed": false
         }
       ],
       "files_touched": [],
       "tests_added": [],
       "notes": null,
-      "updated_at": null
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Given a student attends a class, when the instructor checks attendance, then the attendance should be marked as present.",
+          "Given a student misses a class, when the instructor checks attendance, then the attendance should be marked as absent.",
+          "Trust: All attendance records must be logged for audit purposes."
+        ]
+      }
     },
     {
       "id": "STORY-004",
-      "release": "r1",
+      "release": "r0",
       "acceptance_total": 3,
       "criteria": [
         {
-          "text": "Given the instructor is logged in, when they navigate to the reports section, then they can generate a basic weekly report.",
+          "text": "Given the system has collected data, when it is Monday morning, then a basic report is generated.",
           "passed": false
         },
         {
-          "text": "Given the instructor is not logged in, when they attempt to access the reports section, then they are prompted to log in.",
+          "text": "Given a student is identified as inactive, when the report is generated, then the student appears on the report.",
           "passed": false
         },
         {
-          "text": "Trust: All report generation actions are logged for audit purposes.",
+          "text": "Trust: All report generations are logged for audit purposes.",
           "passed": false
         }
       ],
       "files_touched": [],
       "tests_added": [],
       "notes": null,
-      "updated_at": null
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Given the system has collected data, when it is Monday morning, then a basic report is generated.",
+          "Given a student is identified as inactive, when the report is generated, then the student appears on the report.",
+          "Trust: All report generations are logged for audit purposes."
+        ]
+      }
     },
     {
       "id": "STORY-005",
@@ -123,22 +218,37 @@
       "acceptance_total": 3,
       "criteria": [
         {
-          "text": "Given a report is generated, when an instructor reviews it, then they can approve or modify the list.",
+          "text": "Given a student has not logged in and missed sessions, when the system analyzes data, then the student is flagged as struggling.",
           "passed": false
         },
         {
-          "text": "Given a student is incorrectly flagged, when the instructor reviews the report, then they can correct the error.",
+          "text": "Given a student has logged in but not updated their build, when the system analyzes data, then the student is flagged as struggling.",
           "passed": false
         },
         {
-          "text": "Trust: Ensure all changes by instructors are logged for audit.",
+          "text": "Trust: All analysis results are logged for audit purposes.",
           "passed": false
         }
       ],
       "files_touched": [],
       "tests_added": [],
       "notes": null,
-      "updated_at": null
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Given a student has not logged in and missed sessions, when the system analyzes data, then the student is flagged as struggling.",
+          "Given a student has logged in but not updated their build, when the system analyzes data, then the student is flagged as struggling.",
+          "Trust: All analysis results are logged for audit purposes."
+        ]
+      }
     },
     {
       "id": "STORY-006",
@@ -146,22 +256,37 @@
       "acceptance_total": 3,
       "criteria": [
         {
-          "text": "Given a student recommendation is uncertain, when the report is generated, then the student is flagged for review.",
+          "text": "Given a student has mixed signals, when the system analyzes data, then the student is flagged for review.",
           "passed": false
         },
         {
-          "text": "Given a flagged student is reviewed, when the instructor approves, then the student is included in the final list.",
+          "text": "Given a student is flagged for review, when the instructor checks the report, then the student appears with a review flag.",
           "passed": false
         },
         {
-          "text": "Trust: Ensure all flagged recommendations are logged for audit.",
+          "text": "Trust: All flagged students are logged for audit purposes.",
           "passed": false
         }
       ],
       "files_touched": [],
       "tests_added": [],
       "notes": null,
-      "updated_at": null
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Given a student has mixed signals, when the system analyzes data, then the student is flagged for review.",
+          "Given a student is flagged for review, when the instructor checks the report, then the student appears with a review flag.",
+          "Trust: All flagged students are logged for audit purposes."
+        ]
+      }
     },
     {
       "id": "STORY-007",
@@ -169,45 +294,75 @@
       "acceptance_total": 3,
       "criteria": [
         {
-          "text": "Given the instructor approves the list, when emails are sent, then each email includes a suggested opening line.",
+          "text": "Given a report is generated, when an instructor reviews it, then they can approve or modify recommendations.",
           "passed": false
         },
         {
-          "text": "Given an email fails to send, when the system retries, then the email is successfully sent.",
+          "text": "Given an instructor approves a recommendation, when the system sends it, then it is marked as approved.",
           "passed": false
         },
         {
-          "text": "Trust: Ensure all sent emails are logged for audit.",
+          "text": "Trust: All instructor actions are logged for audit purposes.",
           "passed": false
         }
       ],
       "files_touched": [],
       "tests_added": [],
       "notes": null,
-      "updated_at": null
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Given a report is generated, when an instructor reviews it, then they can approve or modify recommendations.",
+          "Given an instructor approves a recommendation, when the system sends it, then it is marked as approved.",
+          "Trust: All instructor actions are logged for audit purposes."
+        ]
+      }
     },
     {
       "id": "STORY-008",
-      "release": "r3",
+      "release": "r2",
       "acceptance_total": 3,
       "criteria": [
         {
-          "text": "Given data is pulled from external systems, when it is stored, then integrity checks ensure accuracy.",
+          "text": "Given a weekly report is generated, when the report is sent, then the instructor should receive it via email.",
           "passed": false
         },
         {
-          "text": "Given a data integrity issue is detected, when the report is generated, then an alert is raised.",
+          "text": "Given an invalid email address, when the report is sent, then an error message should be logged.",
           "passed": false
         },
         {
-          "text": "Trust: Ensure all integrity checks are logged for audit.",
+          "text": "Trust: All report deliveries must be logged for audit purposes.",
           "passed": false
         }
       ],
       "files_touched": [],
       "tests_added": [],
       "notes": null,
-      "updated_at": null
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Given a weekly report is generated, when the report is sent, then the instructor should receive it via email.",
+          "Given an invalid email address, when the report is sent, then an error message should be logged.",
+          "Trust: All report deliveries must be logged for audit purposes."
+        ]
+      }
     },
     {
       "id": "STORY-009",
@@ -215,45 +370,75 @@
       "acceptance_total": 3,
       "criteria": [
         {
-          "text": "Given an instructor approves a report, when the action is logged, then it is stored in the audit log.",
+          "text": "Given a student is listed in the report, when the report is generated, then it includes a suggested message.",
           "passed": false
         },
         {
-          "text": "Given an instructor modifies a report, when the action is logged, then it is stored in the audit log.",
+          "text": "Given a suggested message is inappropriate, when an instructor reviews it, then they can modify it.",
           "passed": false
         },
         {
-          "text": "Trust: Ensure all logs are secure and tamper-proof.",
+          "text": "Trust: All suggested messages are logged for audit purposes.",
           "passed": false
         }
       ],
       "files_touched": [],
       "tests_added": [],
       "notes": null,
-      "updated_at": null
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Given a student is listed in the report, when the report is generated, then it includes a suggested message.",
+          "Given a suggested message is inappropriate, when an instructor reviews it, then they can modify it.",
+          "Trust: All suggested messages are logged for audit purposes."
+        ]
+      }
     },
     {
       "id": "STORY-010",
-      "release": "r4",
+      "release": "r3",
       "acceptance_total": 3,
       "criteria": [
         {
-          "text": "Given historical data is available, when analytics are generated, then trends are displayed accurately.",
+          "text": "Given the interface is loaded, when an instructor navigates it, then it is user-friendly and responsive.",
           "passed": false
         },
         {
-          "text": "Given a trend is incorrect, when the data is reviewed, then the error is identified.",
+          "text": "Given an instructor reviews a report, when they approve it, then the interface confirms the action.",
           "passed": false
         },
         {
-          "text": "Trust: Ensure analytics data is accurate and up-to-date.",
+          "text": "Trust: All interface interactions are logged for audit purposes.",
           "passed": false
         }
       ],
       "files_touched": [],
       "tests_added": [],
       "notes": null,
-      "updated_at": null
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Given the interface is loaded, when an instructor navigates it, then it is user-friendly and responsive.",
+          "Given an instructor reviews a report, when they approve it, then the interface confirms the action.",
+          "Trust: All interface interactions are logged for audit purposes."
+        ]
+      }
     },
     {
       "id": "STORY-011",
@@ -261,45 +446,151 @@
       "acceptance_total": 3,
       "criteria": [
         {
-          "text": "Given a customization option is available, when an instructor modifies it, then the report reflects the changes.",
+          "text": "Given data is incomplete, when the system generates a report, then it handles the missing data gracefully.",
           "passed": false
         },
         {
-          "text": "Given a customization error occurs, when the report is generated, then an alert is raised.",
+          "text": "Given data is incomplete, when an instructor reviews the report, then they are informed of the missing data.",
           "passed": false
         },
         {
-          "text": "Trust: Ensure all customizations are logged for audit.",
+          "text": "Trust: All instances of incomplete data are logged for audit purposes.",
           "passed": false
         }
       ],
       "files_touched": [],
       "tests_added": [],
       "notes": null,
-      "updated_at": null
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Given data is incomplete, when the system generates a report, then it handles the missing data gracefully.",
+          "Given data is incomplete, when an instructor reviews the report, then they are informed of the missing data.",
+          "Trust: All instances of incomplete data are logged for audit purposes."
+        ]
+      }
     },
     {
       "id": "STORY-012",
-      "release": "r0",
+      "release": "r4",
       "acceptance_total": 3,
       "criteria": [
         {
-          "text": "Given an instructor performs any action on the system, when the action is completed, then it should be logged in the audit trail.",
+          "text": "Given the system is under load, when a user performs an action, then the response time does not exceed 5 seconds.",
           "passed": false
         },
         {
-          "text": "Given an instructor attempts an unauthorized action, when the attempt is made, then it should be logged in the audit trail.",
+          "text": "Given the system is optimized, when an instructor uses it, then they experience improved performance.",
           "passed": false
         },
         {
-          "text": "Trust: The audit trail must be immutable and accessible for review.",
+          "text": "Trust: All performance metrics are logged for audit purposes.",
           "passed": false
         }
       ],
       "files_touched": [],
       "tests_added": [],
       "notes": null,
-      "updated_at": null
+      "updated_at": null,
+      "verification": {
+        "state": "in_progress",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Given the system is under load, when a user performs an action, then the response time does not exceed 5 seconds.",
+          "Given the system is optimized, when an instructor uses it, then they experience improved performance.",
+          "Trust: All performance metrics are logged for audit purposes."
+        ]
+      }
+    },
+    {
+      "id": "STORY-013",
+      "release": "r4",
+      "acceptance_total": 3,
+      "criteria": [
+        {
+          "text": "Given an error occurs, when the system displays a message, then it is clear and informative.",
+          "passed": false
+        },
+        {
+          "text": "Given an error message is displayed, when an instructor follows the guidance, then they can resolve the issue.",
+          "passed": false
+        },
+        {
+          "text": "Trust: All error messages are logged for audit purposes.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Given an error occurs, when the system displays a message, then it is clear and informative.",
+          "Given an error message is displayed, when an instructor follows the guidance, then they can resolve the issue.",
+          "Trust: All error messages are logged for audit purposes."
+        ]
+      }
+    },
+    {
+      "id": "STORY-014",
+      "release": "r1",
+      "acceptance_total": 3,
+      "criteria": [
+        {
+          "text": "Given student performance data, when the weekly report is generated, then it should include a list of students needing attention.",
+          "passed": false
+        },
+        {
+          "text": "Given no students need attention, when the weekly report is generated, then the list should be empty.",
+          "passed": false
+        },
+        {
+          "text": "Trust: The generation of the report must be logged for audit purposes.",
+          "passed": false
+        }
+      ],
+      "files_touched": [],
+      "tests_added": [],
+      "notes": null,
+      "updated_at": null,
+      "verification": {
+        "state": "not_started",
+        "criteria_passed": 0,
+        "criteria_total": 3,
+        "verified_at": null,
+        "commit_sha": null,
+        "commit_url": null,
+        "commit_at": null,
+        "points_awarded": null,
+        "outstanding": [
+          "Given student performance data, when the weekly report is generated, then it should include a list of students needing attention.",
+          "Given no students need attention, when the weekly report is generated, then the list should be empty.",
+          "Trust: The generation of the report must be logged for audit purposes."
+        ]
+      }
     }
   ]
 }

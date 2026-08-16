@@ -1,24 +1,24 @@
-# STORY-009 — Log instructor actions for audit
+# STORY-009 — Enhance Report with Suggested Messages
 
-As a system, I want to log all instructor actions, so that there is an audit trail of changes and approvals.
+As an instructor, I want the report to include suggested messages, so that I can communicate effectively with students.
 
-**Release:** r3 · Data Integrity and Audit (weeks 13–16)
-**Owner:** Integrity Checker
+**Release:** r3 · Enhanced Reporting and User Experience (weeks 13–16)
+**Owner:** Report Generator
 **Blocked by:** STORY-008
 
 ## The requirement this satisfies
 
-- **REQ-012** (Observability, must) — The system must log all actions taken by instructors for audit purposes.
+- **REQ-006** (Functional, must) — The system must suggest an opening line for each student listed in the report.
 
 ## How to build it
 
-Implement logging for all instructor actions in the 'audit_log' table.
+Enhance the report generation module to include suggested messages for each student.
 
 ## Failure paths you must handle
 
-- Logging failure
-- Log data corruption
-- Unauthorized log access
+- Message generation fails
+- Inappropriate messages are not flagged
+- Messages are not logged
 
 ## Acceptance — your stop condition
 
@@ -27,8 +27,8 @@ the same criteria out of `.colaberry/progress.json`, which Claude Code keeps in
 step (see the managed block in CLAUDE.md). Ticking something you have not
 actually met only misleads you.
 
-- [ ] Given an instructor approves a report, when the action is logged, then it is stored in the audit log.
-- [ ] Given an instructor modifies a report, when the action is logged, then it is stored in the audit log.
-- [ ] Trust: Ensure all logs are secure and tamper-proof.
+- [ ] Given a student is listed in the report, when the report is generated, then it includes a suggested message.
+- [ ] Given a suggested message is inappropriate, when an instructor reviews it, then they can modify it.
+- [ ] Trust: All suggested messages are logged for audit purposes.
 
 When every box above is ticked, stop and show the demo.

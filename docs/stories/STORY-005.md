@@ -1,24 +1,26 @@
-# STORY-005 — Enable instructor review of reports
+# STORY-005 — Analyze Combined Data Signals
 
-As an instructor, I want to review the list of students before emails are sent, so that I can ensure accuracy.
+As an instructor, I want the system to analyze combined data signals, so that I can identify students who are truly struggling.
 
-**Release:** r1 · Instructor Review and Approval (weeks 5–8)
-**Owner:** Review Facilitator
+**Release:** r1 · Advanced Data Analysis (weeks 5–8)
+**Owner:** Data Analyzer
 **Blocked by:** STORY-004
 
 ## The requirement this satisfies
 
-- **REQ-006** (Functional, must) — The system must allow instructors to review and approve the list of students before emails are sent.
+- **REQ-001** (Functional, must) — The system must analyze student portal login activity to identify inactivity.
+- **REQ-002** (Functional, must) — The system must analyze student build progress to identify lack of progress.
+- **REQ-003** (Functional, must) — The system must analyze attendance records to identify missed live sessions.
 
 ## How to build it
 
-Create a review interface for instructors to approve or modify the student list before sending.
+Implement data analysis logic that combines login, build, and attendance data to identify struggling students.
 
 ## Failure paths you must handle
 
-- Review interface not loading
-- Data mismatch during review
-- Approval process failure
+- Data analysis logic fails
+- Incorrect data interpretation
+- Analysis results are not logged
 
 ## Acceptance — your stop condition
 
@@ -27,8 +29,8 @@ the same criteria out of `.colaberry/progress.json`, which Claude Code keeps in
 step (see the managed block in CLAUDE.md). Ticking something you have not
 actually met only misleads you.
 
-- [ ] Given a report is generated, when an instructor reviews it, then they can approve or modify the list.
-- [ ] Given a student is incorrectly flagged, when the instructor reviews the report, then they can correct the error.
-- [ ] Trust: Ensure all changes by instructors are logged for audit.
+- [ ] Given a student has not logged in and missed sessions, when the system analyzes data, then the student is flagged as struggling.
+- [ ] Given a student has logged in but not updated their build, when the system analyzes data, then the student is flagged as struggling.
+- [ ] Trust: All analysis results are logged for audit purposes.
 
 When every box above is ticked, stop and show the demo.

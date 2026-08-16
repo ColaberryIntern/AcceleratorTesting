@@ -1,6 +1,6 @@
 # Student Engagement Monitoring Tool — Requirements
 
-A tool to identify and notify instructors about students who may be falling behind, using data from various educational systems.
+A tool to help instructors identify students who are falling behind by analyzing portal activity, build progress, and attendance, and providing a weekly report with recommendations.
 
 This is the source of truth for what you are building. Your Claude Code prompts
 point here. If you sharpen a requirement, edit it — your version is the real one.
@@ -12,136 +12,130 @@ point here. If you sharpen a requirement, edit it — your version is the real o
 | Reliability | how it behaves when something fails |
 | Constraint | a technology or vendor you must use — context, not a task |
 
-## Accessibility
-
-### REQ-018 — Non-functional · should
-
-The system should provide mobile access to reports.
-
-_Not yet fulfilled by any story._
-
-## Analytics
-
-### REQ-015 — Functional · should
-
-The system should provide analytics on student engagement trends over time.
-
-Fulfilled by: STORY-010
-
 ## Audit
 
-### REQ-012 — Observability · must
+### REQ-016 — Observability · must
 
-The system must log all actions taken by instructors for audit purposes.
-
-Fulfilled by: STORY-009, STORY-012
-
-## Communication
-
-### REQ-007 — Functional · must
-
-The system must provide suggested opening lines for each student in the report.
-
-Fulfilled by: STORY-007
-
-### REQ-014 — Non-functional · should
-
-The system should optimize email content for engagement.
-
-_Not yet fulfilled by any story._
-
-## Customization
-
-### REQ-016 — Functional · should
-
-The system should allow customization of report criteria by instructors.
-
-Fulfilled by: STORY-011
-
-## Data Integration
-
-### REQ-001 — Constraint
-
-The system must read student login data from the Student Portal.
-
-Fulfilled by: STORY-001
-
-### REQ-002 — Constraint
-
-The system must read student progress data from the Learning Management System.
-
-Fulfilled by: STORY-002
-
-### REQ-003 — Constraint
-
-The system must read attendance data from the Attendance Tracking System.
-
-Fulfilled by: STORY-003
-
-## Data Integrity
-
-### REQ-011 — Safety · must
-
-The system must ensure data integrity and accuracy in reports.
+The system must log all actions taken for audit purposes.
 
 Fulfilled by: STORY-008
 
-## Data Presentation
+## Data Analysis
 
-### REQ-010 — Functional · must
+### REQ-001 — Functional · must
 
-The system must allow instructors to view activity data for each student in the report.
-
-Fulfilled by: STORY-001, STORY-002, STORY-003
-
-## Instructor Review
-
-### REQ-006 — Functional · must
-
-The system must allow instructors to review and approve the list of students before emails are sent.
+The system must analyze student portal login activity to identify inactivity.
 
 Fulfilled by: STORY-005
 
-### REQ-008 — Functional · must
+### REQ-002 — Functional · must
 
-The system must flag students for instructor review if the recommendation is uncertain.
+The system must analyze student build progress to identify lack of progress.
 
-Fulfilled by: STORY-006
+Fulfilled by: STORY-005
 
-## Localization
+### REQ-003 — Functional · must
 
-### REQ-017 — Non-functional · should
+The system must analyze attendance records to identify missed live sessions.
 
-The system should support multiple languages for email content.
+Fulfilled by: STORY-005
 
-_Not yet fulfilled by any story._
+## Data Integrity
 
-## Notification
+### REQ-013 — Safety · must
 
-### REQ-004 — Constraint
+The system must ensure data accuracy and consistency across all integrations.
 
-The system must send emails via the Email Platform.
+Fulfilled by: STORY-001, STORY-002, STORY-003
 
-Context for the stories that use it — constraints do not get their own story.
+## Error Handling
 
-### REQ-009 — Functional · must
+### REQ-015 — Safety · must
 
-The system must send the final approved list to instructors every Monday morning.
+The system must handle exceptions where data is incomplete or unavailable.
+
+Fulfilled by: STORY-011
+
+## Instructor Interface
+
+### REQ-014 — Non-functional · should
+
+Every instructor interface must allow review of recommendations in three clicks or fewer.
+
+Fulfilled by: STORY-010
+
+## Instructor Review
+
+### REQ-007 — Functional · must
+
+The system must allow instructors to review and approve the list before sending recommendations.
 
 Fulfilled by: STORY-007
 
+### REQ-008 — Functional · must
+
+The system must flag students for instructor review if unsure about recommending them.
+
+Fulfilled by: STORY-006
+
+## Integration
+
+### REQ-009 — Constraint
+
+The system must integrate with the Student Portal to read login data.
+
+Fulfilled by: STORY-001
+
+### REQ-010 — Constraint
+
+The system must integrate with the Learning Management System to read build progress data.
+
+Fulfilled by: STORY-002
+
+### REQ-011 — Constraint
+
+The system must integrate with the Attendance Tracking System to read attendance data.
+
+Fulfilled by: STORY-003
+
+### REQ-012 — Constraint
+
+The system must integrate with the Email Platform to send reports.
+
+Fulfilled by: STORY-008
+
+## Performance
+
+### REQ-017 — Non-functional · should
+
+The system must operate with a response time that does not exceed 5 seconds for any user action.
+
+Fulfilled by: STORY-012
+
 ## Reporting
 
-### REQ-005 — Functional · must
+### REQ-004 — Functional · must
 
-The system must generate a weekly report of students potentially falling behind based on login, progress, and attendance data.
+The system must generate a weekly report every Monday morning for each instructor.
 
 Fulfilled by: STORY-004
 
-## User Interface
+### REQ-005 — Functional · must
 
-### REQ-013 — Non-functional · should
+The system must include a list of three or four students in the weekly report who may need attention.
 
-Every instructor-facing screen must allow completion of its primary action in three clicks or fewer.
+Fulfilled by: STORY-014
 
-_Not yet fulfilled by any story._
+### REQ-006 — Functional · must
+
+The system must suggest an opening line for each student listed in the report.
+
+Fulfilled by: STORY-009
+
+## User Experience
+
+### REQ-018 — Non-functional · should
+
+The system must provide clear error messages to users when issues occur.
+
+Fulfilled by: STORY-013
