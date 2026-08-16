@@ -86,9 +86,34 @@ const App = {
   drill(cardId) { return "detail.html?card=" + encodeURIComponent(cardId); },
 
   /* ---------- shell ---------- */
+
+  /* Initials from the project's own name, never typed in. */
+  initials() {
+    return (PLAN.project.name || "?").split(/\s+/)
+      .filter(w => /^[A-Za-z]/.test(w)).slice(0, 2)
+      .map(w => w[0].toUpperCase()).join("") || "?";
+  },
+
+  /* The "Data as of" stamp. Sits on every tab, above the content,
+     and turns into a warning once the data is over a week old. */
+  stamp() {
+    const a = CC.age(PLAN.manifest.generatedAt);
+    return '<div class="stamp ' + a.level + '" role="status">' +
+      '<span class="dot ' + (a.level === "warn" ? "warn" : "ok") + '"></span>' +
+      '<b>Data as of ' + App.esc(a.absolute) + '</b>' +
+      '<span class="stamp-rel">(' + App.esc(a.relative) + ')</span>' +
+      (a.level === "warn"
+        ? '<span class="stamp-warn">Sync from the portal to refresh.</span>'
+        : '') +
+      '<span class="stamp-note" title="These files are rewritten only when you sync">' +
+        'Read from .colaberry/ — nothing here is live' +
+      '</span>' +
+    '</div>';
+  },
+
   shell(activeTabId) {
     const p = PLAN.project;
-    const initials = "SE";
+    const initials = App.initials();
 
     const tabs = PLAN.tabs.map(t => {
       const active = t.id === activeTabId;
@@ -126,7 +151,8 @@ const App = {
       '<div id="sample-banner">' +
         'Sample data — believable made-up values so you can see the shape of this page. ' +
         'Nothing here is a record of anything this project has produced.' +
-      '</div>';
+      '</div>' +
+      App.stamp();
   },
 
   footer(extra) {
@@ -135,19 +161,56 @@ const App = {
     return '<footer class="foot">' +
       '<span>' + App.esc(PLAN.project.name) + ' · Command Center · ' +
         built + ' of ' + total + ' tabs built</span>' +
-      '<span>' + App.esc(g.label) + ' data · ' +
-        (g.asAt ? "as at " + App.fmt(g.asAt) : "no telemetry received") +
+      '<span>' + App.esc(g.label) + ' data · ' + App.esc(g.age.text) +
         (extra ? " · " + App.esc(extra) : "") + '</span>' +
     '</footer>';
   },
 
+  /* ---------- load failure ----------
+     A Command Center that renders an empty plan because a fetch failed
+     is worse than one that says so. This never degrades quietly. */
+  failScreen(err) {
+    const local = window.location.protocol === "file:";
+    return '<main class="wrap"><header class="hero">' +
+      '<div class="eyebrow">Command Center</div>' +
+      '<h1>Could not read the plan</h1>' +
+      '<p class="tagline">Every tab is rendered from the files in ' +
+        '<span class="mono">.colaberry/</span>. One of them could not be read, so ' +
+        'nothing is shown rather than something wrong.</p>' +
+      '</header>' +
+      '<div class="card"><h3>What failed</h3>' +
+        '<p class="mono" style="color:var(--risk)">' + App.esc(err && err.message ? err.message : String(err)) + '</p></div>' +
+      (local
+        ? '<div class="note"><b>You have opened this from the file system.</b> ' +
+          'Browsers block <span class="mono">fetch()</span> on <span class="mono">file://</span> ' +
+          'URLs, so the data files cannot be read. Serve the repo over HTTP instead — from ' +
+          'the repo root run <span class="mono">npx serve .</span> or ' +
+          '<span class="mono">python -m http.server</span>, then open ' +
+          '<span class="mono">/command-center/</span>.</div>'
+        : '<div class="note"><b>Checks worth making:</b> that ' +
+          '<span class="mono">.colaberry/plan.json</span> and ' +
+          '<span class="mono">.colaberry/progress.json</span> exist and are valid JSON, and ' +
+          '— if this is GitHub Pages — that a <span class="mono">.nojekyll</span> file sits ' +
+          'at the repo root, because Jekyll refuses to serve folders whose name starts with ' +
+          'a dot.</div>') +
+      '</main>';
+  },
+
   /* ---------- boot ---------- */
-  init(activeTabId, render) {
+  async init(activeTabId, render) {
     document.documentElement.setAttribute("data-mode", CCData.mode());
 
     let theme = "light";
     try { theme = window.localStorage.getItem("cc.theme") || "light"; } catch (e) {}
     document.documentElement.setAttribute("data-theme", theme);
+
+    try {
+      await CC.load();
+    } catch (err) {
+      if (window.console) console.error("Command Center: plan load failed", err);
+      document.body.innerHTML = App.failScreen(err);
+      return;
+    }
 
     const shell = document.getElementById("shell");
     if (shell) shell.innerHTML = App.shell(activeTabId);

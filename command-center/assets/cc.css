@@ -289,3 +289,27 @@ footer.foot{max-width:1200px; margin:0 auto; padding:26px 24px 60px;
   .tabs{top:auto; position:static}
 }
 @media print{ nav.top,.tabs,.icon-btn,.mode{display:none} .tile,.stat{break-inside:avoid} }
+
+/* ============================================================
+   "Data as of" stamp. Present on every tab, directly under the
+   tab rail. Turns amber once the data is over a week old.
+   ============================================================ */
+.stamp{
+  display:flex; align-items:center; gap:9px; flex-wrap:wrap;
+  padding:7px 22px; font-size:12.6px;
+  background:var(--sunken); border-bottom:1px solid var(--border);
+  color:var(--muted);
+}
+.stamp b{ color:var(--text); font-weight:600; }
+.stamp .stamp-rel{ color:var(--muted); }
+.stamp.warn{ background:var(--warn-tint); border-bottom-color:var(--warn); }
+.stamp.warn b, .stamp.warn .stamp-rel{ color:var(--warn); }
+.stamp .stamp-warn{ color:var(--warn); font-weight:600; }
+.stamp .stamp-note{
+  margin-left:auto; color:var(--faint); font-size:12px;
+  border-left:1px solid var(--border-strong); padding-left:9px;
+}
+@media (max-width:720px){
+  .stamp{ padding:7px 14px; }
+  .stamp .stamp-note{ margin-left:0; border-left:0; padding-left:0; flex-basis:100%; }
+}

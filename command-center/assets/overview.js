@@ -122,23 +122,39 @@ const Overview = {
         sample: sample,
         empty: g.guardrailsEnforced === 0,
         headline: g.guardrailsEnforced + ' <small>of ' + d.guardrailTotal + ' enforced in the build</small>',
-        lede: g.guardrailsEnforced === 0
-          ? "One promise is written down. Nothing in the build enforces it yet."
+        lede: d.guardrailTotal === 0
+          ? "The plan types no requirement SAFE, so this system promises nothing it must never do."
+          : g.guardrailsEnforced === 0
+          ? (d.guardrailTotal === 1 ? "One promise is" : d.guardrailTotal + " promises are") +
+            " written down. Nothing in the build enforces " +
+            (d.guardrailTotal === 1 ? "it" : "them") + " yet."
           : "Each promise names the code that enforces it and when it was last verified.",
-        foot: "REQ-011 · data integrity"
+        foot: g.guardrails.length
+          ? g.guardrails.map(x => x.req).join(" · ") +
+            (g.guardrails[0].coveredBy.length
+              ? " · covered by " + g.guardrails[0].coveredBy.join(", ")
+              : " · no story covers it")
+          : "No SAFE requirement in the plan"
       },
       {
         id: "outcomes",
         title: "Outcomes",
-        sample: sample && g.outcomes.length > 0,
-        empty: g.outcomes.length === 0,
-        headline: g.outcomes.length === 0
+        sample: sample && g.measuresRead > 0,
+        empty: g.measuresRead === 0,
+        headline: g.measures.length === 0
           ? '<small>No measure defined</small>'
-          : g.outcomes.length + ' <small>measures tracked</small>',
-        lede: g.outcomes.length === 0
-          ? "The plan carries no numeric target. Nothing here may claim one until it is agreed."
-          : "Sample measures only — no target has been agreed for this project.",
-        foot: g.outcomes.length === 0 ? "Needs a decision" : "Sample projection"
+          : g.measuresRead === 0
+          ? '<small>Not measured yet</small>'
+          : g.measuresRead + ' <small>of ' + g.measures.length + ' measured</small>',
+        lede: g.measures.length === 0
+          ? "The plan names no measure at all. Nothing here may claim one until it is agreed."
+          : g.measuresRead === 0
+          ? g.measures.length + " measures are committed to in the plan. None has ever been " +
+            "measured — these files record what was promised, never how far it has moved."
+          : "Sample readings only — nothing has really been measured for this project.",
+        foot: g.measures.length
+          ? g.measures.length + " NFR requirements"
+          : "Needs a decision"
       },
       {
         id: "requirements",
@@ -146,7 +162,9 @@ const Overview = {
         headline: d.reqTotal + ' <small>' + d.reqMust + ' must · ' + d.reqShould + ' should</small>',
         lede: "Constraints, functions, safety, observability and non-functional rules " +
               "the build has to satisfy.",
-        foot: "Mapping to stories not yet defined"
+        foot: d.reqMustUncovered.length
+          ? d.reqMustUncovered.length + " must-requirements no story covers"
+          : "Every must-requirement is covered by a story"
       },
       {
         id: "data-model",
@@ -158,7 +176,8 @@ const Overview = {
           : '<small>Proposed, not created</small>',
         lede: g.dataModel.status === "created"
           ? "Tables derived from the requirements, named for the domain rather than the vendor."
-          : "The model is to be derived from the 18 requirements and reviewed before any table is created.",
+          : "The model is to be derived from the " + d.reqTotal +
+            " requirements and reviewed before any table is created.",
         foot: "Show the model before creating tables"
       },
       {
@@ -187,8 +206,8 @@ const Overview = {
     };
 
     const rows = [
-      { id:"systems", name:"Source systems", sub:"Student Portal, Learning Management, " +
-          "Attendance Tracking, Email Platform",
+      { id:"systems", name:"Source systems",
+        sub: g.systems.map(s => s.name).join(", ") || "none named in the plan",
         status: worst(g.systems, "status"),
         state: g.systemsConnected + " of " + d.systemTotal + " connected",
         checked: g.systems.map(s => s.lastChecked).filter(Boolean).sort().pop() || null },
@@ -210,8 +229,10 @@ const Overview = {
 
       { id:"outcomes", name:"Outcome measures", sub:"Numbers this has to move",
         status: "unknown",
-        state: g.outcomes.length ? g.outcomes.length + " sample measures" : "none defined",
-        checked: null },
+        state: g.measures.length === 0 ? "none defined"
+             : g.measuresRead === 0 ? "0 of " + g.measures.length + " ever measured"
+             : g.measuresRead + " of " + g.measures.length + " measured",
+        checked: g.measures.map(m => m.measuredAt).filter(Boolean).sort().pop() || null },
 
       { id:"data-model", name:"Data model", sub:"Tables behind everything above",
         status: g.dataModel.status === "created" ? "ok" : "off",

@@ -1,0 +1,4 @@
+# Serve every file as-is.
+# Without this, GitHub Pages runs Jekyll, and Jekyll refuses to serve any
+# folder whose name starts with a dot - which would hide .colaberry/ and leave
+# the Command Center with no data to read.

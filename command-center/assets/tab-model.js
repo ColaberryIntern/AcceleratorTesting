@@ -10,6 +10,23 @@
    ============================================================ */
 const TabModel = {
 
+  /* The proposal, with every requirement citation resolved against the
+     plan as it stands right now. A table that cites a requirement which
+     has since left the plan says so instead of quietly still citing it —
+     the model is a reading of the requirements, so it has to move when
+     they do. */
+  proposal(P) {
+    const by = P.derive ? P.derive.reqById : {};
+    return TabModel.tables.map(t => {
+      const live = t.reqs.filter(r => by[r]);
+      return Object.assign({}, t, {
+        liveReqs: live,
+        staleReqs: t.reqs.filter(r => !by[r]),
+        orphan: live.length === 0
+      });
+    });
+  },
+
   bands: [
     { id:"people",  label:"Who and what",             note:"The people and the structure they sit in." },
     { id:"signals", label:"What the systems tell us",  note:"One row per observation, kept raw." },
@@ -202,8 +219,9 @@ const TabModel = {
           '<a class="mono" href="' + App.drill("table:" + t.t) + '">' + App.esc(t.t) + '</a>',
           App.esc((TabModel.bands.filter(b => b.id === t.band)[0] || {}).label || ""),
           App.esc(t.stores),
-          t.reqs.map(r => '<a class="mono" href="' + App.drill("req:" + r) + '">' +
-            App.esc(r) + '</a>').join(" "),
+          t.reqs.map(r => g.d.reqById[r]
+            ? '<a class="mono" href="' + App.drill("req:" + r) + '">' + App.esc(r) + '</a>'
+            : App.pill("warn", r + " gone")).join(" "),
           t.fields.length])) +
       '<div class="sec-head"><h2>Requirements that force no table</h2>' +
         '<span>' + orphan.length + ' of ' + d.reqTotal + '. Worth checking rather than assuming.</span></div>' +
@@ -254,10 +272,17 @@ Details.handlers["table"] = function (id, g) {
       Details.card("Requirements that force it to exist", Details.table(
         ["Requirement", "Kind", "Text"],
         t.reqs.map(r => {
-          const rq = g.d.reqById[r] || {};
-          return ['<a class="mono" href="' + App.drill("req:" + r) + '">' + App.esc(r) + '</a>',
-            App.pill(rq.kind === "SAFE" ? "risk" : "unknown", rq.kind || "—"),
-            App.esc(rq.text || "—")];
+          const rq = g.d.reqById[r];
+          return [rq
+              ? '<a class="mono" href="' + App.drill("req:" + r) + '">' + App.esc(r) + '</a>'
+              : '<span class="mono">' + App.esc(r) + '</span> ' +
+                App.pill("warn", "no longer in the plan"),
+            rq ? App.pill(rq.kind === "SAFE" ? "risk" : "unknown", rq.kind)
+               : App.pill("unknown", "—"),
+            rq ? App.esc(rq.text)
+               : '<span class="checked">This table was proposed from a requirement that ' +
+                 'has since left the plan. Worth deciding whether the table is still ' +
+                 'wanted.</span>'];
         }))) +
       Details.card("Relationships",
         (t.refs.length || usedBy.length)

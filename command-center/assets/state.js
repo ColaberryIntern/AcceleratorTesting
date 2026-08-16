@@ -1,170 +1,204 @@
 /* ============================================================
-   STATE — what the system has actually PRODUCED at runtime.
+   STATE — what the system has actually PRODUCED.
 
-   Two blocks, and the mode switch chooses between them:
+   The plan (data.js) says what is intended. This file says what
+   exists. Two blocks, and the mode switch chooses between them:
 
-     REAL   — only what this project has really produced. On day
-              one that is almost nothing, and that is the point.
-              Every unknown is null. Nothing here may be filled in
-              from the plan, from an expectation, or from a guess.
+     REAL   — read from .colaberry/progress.json, plus honest
+              nulls for everything no file in this repo can know.
+              A static page cannot check whether the Student
+              Portal is up, so it reports "not checked from here"
+              rather than a colour it has not earned.
 
-     SAMPLE — believable made-up data so the shape of the Command
-              Center is visible on day one. It is a PROJECTION,
-              not a record, and every screen it touches says so.
+     SAMPLE — a projection, generated FROM the loaded plan so it
+              cannot drift from it. Delete a story from plan.json
+              and it disappears from sample mode too. Every screen
+              it touches is labelled.
 
-   When the real system starts emitting telemetry, only the REAL
-   block below is replaced (by a generated file or an API read).
-   No tab, card or component changes.
+   Both are built after the plan loads, so neither can restate it.
    ============================================================ */
-
-const STATE = {
+const CCState = {
 
   /* ---------------------------------------------------------
-     REAL — as at 2026-08-15, day one. Nothing is connected,
-     nothing has run, nothing has shipped.
+     REAL — only what this project has really produced.
      --------------------------------------------------------- */
-  real: {
-    label: "Real",
-    asAt: null,                    /* no telemetry has ever been received */
-    provenance: "No telemetry has been received. Every value below is the " +
-                "absence of a reading, not a reading of zero.",
+  real(P) {
+    const stories = {};
+    P.stories.forEach(s => {
+      const p = P.progressById[s.id];
+      if (!p || p.criteriaTotal === 0) {
+        stories[s.id] = { status: "planned", shipped: null, evidence: null,
+                          passed: 0, total: 0 };
+        return;
+      }
+      /* A story is shipped only when every acceptance criterion in
+         progress.json passes. Anything less is in progress — the file
+         reports partial work honestly and so does this page. */
+      const status = p.criteriaPassed === p.criteriaTotal ? "shipped"
+                   : p.criteriaPassed > 0                 ? "building"
+                   : "planned";
+      stories[s.id] = {
+        status: status,
+        shipped: status === "shipped" ? p.updatedAt : null,
+        evidence: p.criteriaPassed > 0
+          ? p.criteriaPassed + " of " + p.criteriaTotal + " acceptance criteria passing" +
+            (p.filesTouched.length ? " · " + p.filesTouched.length + " files" : "")
+          : null,
+        passed: p.criteriaPassed, total: p.criteriaTotal
+      };
+    });
 
-    systems: {
-      "student-portal":      { status:"unknown", lastChecked:null, detail:"Never checked." },
-      "learning-management": { status:"unknown", lastChecked:null, detail:"Never checked." },
-      "attendance-tracking": { status:"unknown", lastChecked:null, detail:"Never checked." },
-      "email-platform":      { status:"unknown", lastChecked:null, detail:"Never checked." }
-    },
+    const systems = {};
+    P.systems.forEach(s => {
+      systems[s.id] = { status: "unknown", lastChecked: null,
+        detail: "Not checked from here. This page is static — it cannot reach " +
+                "the " + s.name + " to find out." };
+    });
 
-    agents: {
-      "data-aggregator":    { status:"off", runs:0, lastRun:null, skills:[] },
-      "report-generator":   { status:"off", runs:0, lastRun:null, skills:[] },
-      "review-facilitator": { status:"off", runs:0, lastRun:null, skills:[] },
-      "email-notifier":     { status:"off", runs:0, lastRun:null, skills:[] },
-      "integrity-checker":  { status:"off", runs:0, lastRun:null, skills:[] },
-      "analytics-provider": { status:"off", runs:0, lastRun:null, skills:[] }
-    },
+    const agents = {};
+    P.agents.forEach(a => {
+      agents[a.id] = { status: "off", runs: null, lastRun: null, skills: [] };
+    });
 
-    /* story id -> { status: planned|building|shipped, shipped, evidence } */
-    stories: {},
+    const guardrails = {};
+    P.guardrails.forEach(gr => { guardrails[gr.req] = { enforcedBy: [], lastVerified: null }; });
 
-    /* Waiting on a human. Empty because no agent has produced anything. */
-    approvals: [],
+    const measures = {};
+    P.measures.forEach(m => { measures[m.id] = { value: null, measuredAt: null }; });
 
-    /* Measures. Empty because the plan defines no numeric target. */
-    outcomes: [],
+    const verified = Object.keys(stories).filter(k => stories[k].status === "shipped").length;
 
-    /* Guardrail enforcement: which shipped code enforces which promise. */
-    guardrails: { "REQ-011": { enforcedBy: [], lastVerified: null } },
-
-    /* Data model: nothing created. The model is proposed, not built. */
-    dataModel: { status:"proposed", tables: [], createdAt: null },
-
-    /* Knowledge base: the plan's own records, plus notes added over time. */
-    knowledge: { notes: [], decisions: [] }
+    return {
+      label: "Real",
+      asAt: P.manifest.generatedAt,
+      provenance: "Story state is read from .colaberry/progress.json. Everything else " +
+                  "is the absence of a reading, not a reading of zero — no file in " +
+                  "this repo records a system check, an agent run or a measurement.",
+      systems, agents, stories, guardrails, measures,
+      approvals: [],
+      outcomes: [],
+      dataModel: { status: "proposed", tables: [], createdAt: null },
+      knowledge: { notes: [], decisions: [] },
+      storiesVerified: verified
+    };
   },
 
   /* ---------------------------------------------------------
-     SAMPLE — a projection of what this looks like once the
-     build is under way. Clearly fictional. Labelled everywhere.
+     SAMPLE — a projection of the same plan, mid-programme.
+     Generated from P so it can never contradict the plan.
      --------------------------------------------------------- */
-  sample: {
-    label: "Sample",
-    asAt: "2026-09-14T08:12:00",
-    provenance: "Believable made-up data showing the shape of the Command Center " +
-                "mid-programme. Not a record of anything that happened.",
+  sample(P) {
+    const n = P.stories.length;
+    const shippedTo  = Math.floor(n * 0.45);
+    const buildingTo = shippedTo + 1;
 
-    systems: {
-      "student-portal":      { status:"ok",      lastChecked:"2026-09-14T08:11:00",
-                               detail:"OAuth token valid. 1,284 students in scope." },
-      "learning-management": { status:"ok",      lastChecked:"2026-09-14T08:11:00",
-                               detail:"Progress feed responding in 340 ms." },
-      "attendance-tracking": { status:"error",   lastChecked:"2026-09-14T08:11:00",
-                               detail:"401 Unauthorized since 2026-09-13 22:40. Credential expired." },
-      "email-platform":      { status:"unknown", lastChecked:null,
-                               detail:"Never checked. Not wired up in this projection." }
-    },
+    const stories = {};
+    P.stories.forEach((s, i) => {
+      const rel = P.derive.releaseById[s.release] || {};
+      stories[s.id] = i < shippedTo
+        ? { status: "shipped", shipped: rel.end || null,
+            evidence: "3 of 3 acceptance criteria passing", passed: 3, total: 3 }
+        : i < buildingTo
+        ? { status: "building", shipped: null,
+            evidence: "1 of 3 acceptance criteria passing", passed: 1, total: 3 }
+        : { status: "planned", shipped: null, evidence: null, passed: 0, total: 3 };
+    });
 
-    agents: {
-      "data-aggregator":    { status:"ok",   runs:412, lastRun:"2026-09-14T08:05:00",
-                              skills:["read data from APIs","display data on dashboard"] },
-      "report-generator":   { status:"ok",   runs:4,   lastRun:"2026-09-14T06:00:00",
-                              skills:["data analysis","report generation"] },
-      "review-facilitator": { status:"warn", runs:4,   lastRun:"2026-09-14T06:02:00",
-                              skills:["display report","capture instructor input"] },
-      "email-notifier":     { status:"off",  runs:0,   lastRun:null, skills:[] },
-      "integrity-checker":  { status:"warn", runs:412, lastRun:"2026-09-14T08:05:00",
-                              skills:["data validation","logging"] },
-      "analytics-provider": { status:"off",  runs:0,   lastRun:null, skills:[] }
-    },
+    /* A believable spread: mostly up, one broken, one never wired. */
+    const SYS_CYCLE = [
+      { status: "ok",      detail: "Responding. Credentials valid." },
+      { status: "ok",      detail: "Responding in 340 ms." },
+      { status: "error",   detail: "401 Unauthorized. Credential expired." },
+      { status: "unknown", detail: "Never checked. Not wired up in this projection." }
+    ];
+    const checkedAt = CC.addDays(P.project.buildStart, 21) + "T08:11:00";
+    const systems = {};
+    P.systems.forEach((s, i) => {
+      const c = SYS_CYCLE[i % SYS_CYCLE.length];
+      systems[s.id] = { status: c.status,
+        lastChecked: c.status === "unknown" ? null : checkedAt, detail: c.detail };
+    });
 
-    stories: {
-      "STORY-001":{status:"shipped",  shipped:"2026-08-15", evidence:"Login flow tested end to end"},
-      "STORY-002":{status:"shipped",  shipped:"2026-08-18", evidence:"Dashboard renders progress"},
-      "STORY-003":{status:"shipped",  shipped:"2026-08-20", evidence:"Attendance column live"},
-      "STORY-012":{status:"shipped",  shipped:"2026-08-24", evidence:"Audit table created"},
-      "STORY-004":{status:"shipped",  shipped:"2026-08-27", evidence:"First weekly report generated"},
-      "STORY-005":{status:"shipped",  shipped:"2026-08-29", evidence:"Two instructors reviewed"},
-      "STORY-006":{status:"building", shipped:null,         evidence:null},
-      "STORY-007":{status:"planned",  shipped:null,         evidence:null},
-      "STORY-008":{status:"planned",  shipped:null,         evidence:null},
-      "STORY-009":{status:"planned",  shipped:null,         evidence:null},
-      "STORY-010":{status:"planned",  shipped:null,         evidence:null},
-      "STORY-011":{status:"planned",  shipped:null,         evidence:null}
-    },
+    const agents = {};
+    P.agents.forEach((a, i) => {
+      const live = i < Math.ceil(P.agents.length / 2);
+      agents[a.id] = live
+        ? { status: i === 2 ? "warn" : "ok", runs: 4 + i * 17,
+            lastRun: checkedAt, skills: a.skills.slice() }
+        : { status: "off", runs: 0, lastRun: null, skills: [] };
+    });
 
-    approvals: [
-      { id:"AP-0041", agent:"review-facilitator",
-        what:"Weekly report for CS-101 — 23 students flagged, 4 uncertain",
-        releasedBy:"instructor", waitingSince:"2026-09-14T06:02:00" },
-      { id:"AP-0042", agent:"review-facilitator",
-        what:"Weekly report for DS-220 — 11 students flagged, 1 uncertain",
-        releasedBy:"instructor", waitingSince:"2026-09-14T06:02:00" },
-      { id:"AP-0043", agent:"integrity-checker",
-        what:"3 attendance records failed the freshness check and are held back",
-        releasedBy:"system administrator", waitingSince:"2026-09-14T08:05:00" }
-    ],
+    /* Held work exists only for agents the plan says must wait. */
+    const approvals = [];
+    P.agents.filter(a => a.autonomy !== "auto").forEach((a, i) => {
+      if (agents[a.id].status === "off") return;
+      approvals.push({
+        id: "AP-00" + (41 + i), agent: a.id,
+        what: (a.produces[0] || "Output") + " prepared and held for release",
+        releasedBy: (P.roles[0] || { label: "a human" }).label,
+        waitingSince: checkedAt
+      });
+    });
 
-    outcomes: [
-      { id:"OUT-S1", name:"Flagged students contacted within 48h", value:78, unit:"%",
-        target:90, dir:"up", note:"Sample only — no target has been agreed for this project." },
-      { id:"OUT-S2", name:"Instructor review turnaround",          value:6.4, unit:"h",
-        target:4,  dir:"down", note:"Sample only — no target has been agreed for this project." },
-      { id:"OUT-S3", name:"Reports sent without a human check",    value:0,  unit:"",
-        target:0,  dir:"down", note:"Sample only — no target has been agreed for this project." }
-    ],
+    /* Only measures whose requirement actually states a number get a
+       sample reading. The rest stay unmeasured even here, because
+       inventing a unit for them would be inventing the measure. */
+    const measures = {};
+    P.measures.forEach((m, i) => {
+      measures[m.id] = m.stated
+        ? { value: m.target + (i % 2 ? 1 : 0), measuredAt: checkedAt }
+        : { value: null, measuredAt: null };
+    });
 
-    guardrails: {
-      "REQ-011": { enforcedBy:["integrityChecker.freshnessCheck","report.rowCountAssert"],
-                   lastVerified:"2026-09-14T08:05:00" }
-    },
+    const guardrails = {};
+    P.guardrails.forEach(gr => {
+      guardrails[gr.req] = {
+        enforcedBy: ["integrityCheck.assertFreshness", "report.rowCountAssert"],
+        lastVerified: checkedAt
+      };
+    });
 
-    dataModel: { status:"created", tables:["student","engagement_signal","weekly_report",
-                 "report_line","instructor_action","audit_event","system_connection"],
-                 createdAt:"2026-08-24" },
+    /* Table names come from the model tab's proposal, which is itself
+       derived from the requirements — nothing new is named here. */
+    const tables = (typeof TabModel !== "undefined" && TabModel.proposal)
+      ? TabModel.proposal(P).map(t => t.t) : [];
 
-    knowledge: {
-      notes: [
-        { id:"N-01", date:"2026-08-19", tab:"Systems",
-          text:"Attendance feed only refreshes overnight, so same-day absences are invisible." },
-        { id:"N-02", date:"2026-08-27", tab:"Agents",
-          text:"Report Generator over-flagged part-time students; weighting adjusted." }
-      ],
-      decisions: [
-        { id:"D-01", date:"2026-08-16", tab:"Guardrails",
-          text:"No email leaves the system without an instructor pressing approve." }
-      ]
-    }
+    return {
+      label: "Sample",
+      asAt: checkedAt,
+      provenance: "Believable made-up data showing the shape of this Command Center " +
+                  "mid-programme. Generated from your plan, so it matches your real " +
+                  "stories and agents — but it is not a record of anything that happened.",
+      systems, agents, stories, guardrails, measures, approvals,
+      outcomes: [],
+      dataModel: { status: "created", tables: tables,
+                   createdAt: CC.addDays(P.project.buildStart, 9) },
+      knowledge: {
+        notes: [
+          { id:"N-01", date: CC.addDays(P.project.buildStart, 4), tab:"Systems",
+            text:"Attendance feed only refreshes overnight, so same-day absences are invisible." },
+          { id:"N-02", date: CC.addDays(P.project.buildStart, 12), tab:"Agents",
+            text:"Report generation over-flagged part-time students; weighting adjusted." }
+        ],
+        decisions: [
+          { id:"D-01", date: CC.addDays(P.project.buildStart, 1), tab:"Guardrails",
+            text:"No email leaves the system without an instructor pressing approve." }
+        ]
+      },
+      storiesVerified: Object.keys(stories)
+        .filter(k => stories[k].status === "shipped").length
+    };
   }
 };
 
 /* ============================================================
    CCData — the one place any page gets its data.
-   Pages never touch STATE.real / STATE.sample directly.
+   Pages never touch the state blocks directly.
    ============================================================ */
 const CCData = {
   MODES: ["real", "sample"],
   KEY: "cc.mode",
+  _built: null,
 
   mode() {
     let m = null;
@@ -180,26 +214,37 @@ const CCData = {
 
   isSample() { return CCData.mode() === "sample"; },
 
+  /* Built once per load, after PLAN exists. */
+  states() {
+    if (!CCData._built) {
+      CCData._built = { real: CCState.real(PLAN), sample: CCState.sample(PLAN) };
+    }
+    return CCData._built;
+  },
+
   /* Resolved view: plan + the state block for the current mode. */
   get() {
     const mode = CCData.mode();
-    const s = STATE[mode];
-    const d = PLAN.derive;
+    const s = CCData.states()[mode];
+    const P = PLAN;
+    const d = P.derive;
 
     const storyState = (id) =>
-      s.stories[id] || { status:"planned", shipped:null, evidence:null };
+      s.stories[id] || { status:"planned", shipped:null, evidence:null, passed:0, total:0 };
 
-    const shipped   = PLAN.stories.filter(x => storyState(x.id).status === "shipped");
-    const building  = PLAN.stories.filter(x => storyState(x.id).status === "building");
-    const sysList   = PLAN.systems.map(x => Object.assign({}, x, s.systems[x.id]));
-    const agentList = PLAN.agents.map(x => Object.assign({}, x, s.agents[x.id]));
-    const guardList = PLAN.guardrails.map(g =>
-      Object.assign({}, g, s.guardrails[g.req] || { enforcedBy:[], lastVerified:null }));
+    const sysList   = P.systems.map(x => Object.assign({}, x, s.systems[x.id]));
+    const agentList = P.agents.map(x => Object.assign({}, x, s.agents[x.id]));
+    const guardList = P.guardrails.map(gr =>
+      Object.assign({}, gr, s.guardrails[gr.req] || { enforcedBy:[], lastVerified:null }));
+    const measureList = P.measures.map(m =>
+      Object.assign({}, m, s.measures[m.id] || { value:null, measuredAt:null }));
+    const storyList = P.stories.map(x => Object.assign({}, x, storyState(x.id)));
 
     return {
       mode, isSample: mode === "sample",
       label: s.label, asAt: s.asAt, provenance: s.provenance,
-      plan: PLAN, d,
+      plan: P, d,
+      age: CC.age(P.manifest.generatedAt),
 
       systems: sysList,
       systemsConnected: sysList.filter(x => x.status === "ok").length,
@@ -210,18 +255,21 @@ const CCData = {
       agentsRunning: agentList.filter(x => x.status === "ok" || x.status === "warn").length,
       agentsOff:     agentList.filter(x => x.status === "off").length,
 
-      stories: PLAN.stories.map(x => Object.assign({}, x, storyState(x.id))),
-      storiesShipped: shipped.length,
-      storiesBuilding: building.length,
+      stories: storyList,
+      storiesShipped:  storyList.filter(x => x.status === "shipped").length,
+      storiesBuilding: storyList.filter(x => x.status === "building").length,
+      criteriaPassed:  storyList.reduce((n, x) => n + (x.passed || 0), 0),
+      criteriaTotal:   storyList.reduce((n, x) => n + (x.total  || 0), 0),
 
       approvals: s.approvals,
       outcomes: s.outcomes,
+      measures: measureList,
+      measuresRead: measureList.filter(m => m.value != null).length,
       guardrails: guardList,
-      guardrailsEnforced: guardList.filter(g => g.enforcedBy.length > 0).length,
+      guardrailsEnforced: guardList.filter(gr => gr.enforcedBy.length > 0).length,
       dataModel: s.dataModel,
       knowledge: s.knowledge,
 
-      /* Knowledge base always holds the plan's own records. */
       knowledgeCount: d.reqTotal + d.storyTotal + d.agentTotal +
                       s.knowledge.notes.length + s.knowledge.decisions.length
     };

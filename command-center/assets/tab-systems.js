@@ -122,14 +122,18 @@ Details.handlers["system"] = function (id, g) {
           : '<p>No agent in the plan reads this system.</p>') +
       Details.card("Stories that depend on it",
         u.stories.length
-          ? Details.table(["Story", "Title", "Release", "Due", "Status"],
+          ? Details.table(["Story", "Title", "Release", "Window", "Status"],
               u.stories.map(sid => {
                 const st = g.stories.filter(x => x.id === sid)[0] || {};
+                const rel = g.d.releaseById[st.release] || {};
                 return ['<a class="mono" href="' + App.drill("story:" + sid) + '">' +
                     App.esc(sid) + '</a>',
-                  App.esc(st.title || "—"),
+                  App.esc(st.title || "not in plan"),
                   '<span class="mono">' + App.esc((st.release || "").toUpperCase()) + '</span>',
-                  '<span class="mono">' + App.fmtShort(st.due) + '</span>',
+                  rel.start
+                    ? '<span class="mono">' + App.fmtShort(rel.start) + " → " +
+                      App.fmtShort(rel.end) + '</span>'
+                    : '<span class="checked">—</span>',
                   App.pill(st.status === "shipped" ? "ok" :
                            st.status === "building" ? "warn" : "unknown",
                            st.status || "planned")];

@@ -64,13 +64,19 @@ const Details = {
         title: "What this system does",
         lede: p.purpose,
         body:
+          /* The pipeline, read off the agents themselves: what each one
+             is fired by, and what it hands on. Nothing is named here
+             that is not named in the plan. */
           Details.card("The shape of it", Details.table(
-            ["Stage", "Who or what", "What comes out"],
-            [["Read", g.d.systemTotal + " source systems", "Login, progress and attendance data"],
-             ["Judge", "Report Generator", "A weekly list of students possibly falling behind"],
-             ["Check", "Instructor", "An approved list — nothing sends without this"],
-             ["Send", "Email Notifier", "Emails with suggested opening lines"],
-             ["Record", "Integrity Checker", "An audit log of every instructor action"]])) +
+            ["Fires on", "Agent", "What comes out"],
+            g.plan.agents.map(a => [
+              App.esc(a.firesOn) + " " + App.pill("unknown", a.trigger),
+              '<a href="' + App.drill("agent:" + a.id) + '"><b>' +
+                App.esc(a.name) + '</b></a>' +
+                (a.autonomy === "auto" ? "" : " " + App.pill("warn", "waits for a human")),
+              a.produces.length ? a.produces.map(App.esc).join(", ")
+                                : '<span class="checked">the plan names no output</span>'
+            ]))) +
           Details.card("Who it is for", '<p>' +
             g.plan.roles.map(r => App.esc(r.label)).join(" · ") +
             ' — taken from the roles named in the stories. The Users tab expands this.</p>') +
@@ -79,7 +85,8 @@ const Details = {
             [["Build starts", App.fmt(p.buildStart)],
              ["Build ends", App.fmt(p.buildEnd)],
              ["Demo day", App.fmt(p.demoDay)],
-             ["Demo prep", App.esc(p.demoPrep)]]))
+             ["Demo prep", App.esc(p.demoPrep)]]) +
+            '<p style="margin-top:10px" class="checked">' + App.esc(p.anchorSource) + '</p>')
       };
     },
 
@@ -104,48 +111,56 @@ const Details = {
           : "Starts " + App.fmt(r.rel.start) + ".",
         body:
           Details.card("Stories in this release", Details.table(
-            ["Story", "Title", "Due", "Owned by", "Status"],
+            ["Story", "Title", "Fulfils", "Owned by", "Status"],
             r.stories.map(s => {
               const live = g.stories.find(x => x.id === s.id) || {};
-              return ['<span class="mono">' + App.esc(s.id) + '</span>', App.esc(s.title),
-                '<span class="mono">' + App.fmtShort(s.due) + '</span>',
+              return ['<a class="mono" href="' + App.drill("story:" + s.id) + '">' +
+                  App.esc(s.id) + '</a>', App.esc(s.title),
+                s.fulfills.length ? s.fulfills.map(App.esc).join(" ")
+                                  : '<span class="checked">—</span>',
                 App.esc((g.d.agentById[s.agent] || {}).name || "—"),
                 App.pill(live.status === "shipped" ? "ok" :
                          live.status === "building" ? "warn" : "unknown",
                          live.status || "planned") + (g.isSample ? " " + App.sampleChip() : "")];
             }))) +
-          Details.card("All five releases", Details.table(
+          Details.card("All " + g.d.releaseTotal + " releases", Details.table(
             ["Release", "Name", "Window", "Progress"], rows)) +
-          '<div class="note">The Project tab will carry the full Gantt view. ' +
-            'It is <b>not built yet</b> — it is tab 6 in the rail.</div>'
+          '<div class="note">The <a href="06-project.html">Project</a> tab carries the ' +
+            'full Gantt view of these releases, with every task under them.</div>'
       };
     },
 
     "delivery": function (g) {
       const rows = g.stories.map(s => [
-        '<span class="mono">' + App.esc(s.id) + '</span>',
+        '<a class="mono" href="' + App.drill("story:" + s.id) + '">' + App.esc(s.id) + '</a>',
         App.esc(s.title),
-        '<span class="mono">' + App.esc(s.release.toUpperCase()) + '</span>',
-        '<span class="mono">' + App.fmtShort(s.due) + '</span>',
+        '<span class="mono">' + App.esc((s.release || "").toUpperCase()) + '</span>',
+        s.total ? s.passed + " of " + s.total : '<span class="checked">not tracked</span>',
         App.pill(s.status === "shipped" ? "ok" : s.status === "building" ? "warn" : "unknown",
                  s.status) + (g.isSample ? " " + App.sampleChip() : ""),
         App.esc(s.evidence || "—")
       ]);
+      const first = g.stories[0];
       return {
         title: "Delivery progress",
         lede: g.storiesShipped + " of " + g.d.storyTotal + " stories shipped across " +
-              g.d.releaseTotal + " releases.",
+              g.d.releaseTotal + " releases. " + g.criteriaPassed + " of " +
+              g.criteriaTotal + " acceptance criteria passing.",
         body: (g.storiesShipped === 0
           ? Details.empty("Nothing has shipped yet",
-              ["The build starts " + App.fmt(g.plan.project.buildStart) +
-               ". A story is only marked shipped here when it carries verification evidence.",
-               "A story with no evidence stays <b>planned</b>, whatever the calendar says."],
-              ["STORY-001 lands and is verified",
-               "Its evidence is recorded against the story",
-               "This page shows 1 of 12 without anyone editing it"]) + "<br>"
+              ["A story counts as shipped here only when <b>every</b> acceptance " +
+               "criterion against it passes in " +
+               "<span class='mono'>.colaberry/progress.json</span>.",
+               "A story with criteria still failing stays <b>planned</b> or " +
+               "<b>building</b>, whatever the calendar says."],
+              [(first ? App.esc(first.id) : "The first story") +
+                 " lands and its criteria are ticked in progress.json",
+               "The commit naming it is pushed and the platform verifies it",
+               "This page moves to 1 of " + g.d.storyTotal +
+                 " without anyone editing it"]) + "<br>"
           : "") +
           Details.card("Every story", Details.table(
-            ["Story", "Title", "Release", "Due", "Status", "Evidence"], rows))
+            ["Story", "Title", "Release", "Criteria", "Status", "Evidence"], rows))
       };
     },
 
@@ -167,9 +182,10 @@ const Details = {
           Details.card("What each connection is blocked on",
             '<p>' + g.systems.map(s => "<b>" + App.esc(s.name) + "</b>: " +
               App.esc(s.detail)).join("<br>") + '</p>') +
-          '<div class="note">None of these are connected on day one. The indicator ' +
-            'reports that honestly rather than defaulting to green. The Systems tab ' +
-            '(tab 5) will add the check history — it is <b>not built yet</b>.</div>'
+          '<div class="note">None of these are connected. This page is static, so it ' +
+            'cannot reach any of them to find out — the indicator reports that honestly ' +
+            'rather than defaulting to green. The <a href="05-systems.html">Systems</a> ' +
+            'tab carries each one in full.</div>'
       };
     },
 
@@ -202,8 +218,9 @@ const Details = {
               (a.blockedByReq ? " Cannot act alone because of " + App.esc(a.blockedByReq) +
                 " — " + App.esc((g.d.reqById[a.blockedByReq] || {}).text || "") : "")
             ).join("<br><br>") + '</p>') +
-          '<div class="note">The Agents tab (tab 7) will give each agent its own card ' +
-            'with what it reads and produces. It is <b>not built yet</b>.</div>'
+          '<div class="note">The <a href="07-agents.html">AI agents</a> tab gives each ' +
+            'agent its own card, with what fires it, what it reads and produces, and ' +
+            'what it is holding for a human.</div>'
       };
     },
 
@@ -273,35 +290,43 @@ const Details = {
                  "The check registers itself against REQ-011",
                  "This page names the check and the time it last passed"])
             : "") +
-          '<div class="note">One SAFE requirement is defined. The Guardrails tab (tab 4) ' +
-            'is <b>not built yet</b>.</div>'
+          '<div class="note">' +
+            (g.d.guardrailTotal === 1 ? "One SAFE requirement is defined."
+                                      : g.d.guardrailTotal + " SAFE requirements are defined.") +
+            ' The <a href="04-guardrails.html">Guardrails</a> tab carries each one in ' +
+            'full, with whether anything enforces it.</div>'
       };
     },
 
     "outcomes": function (g) {
       return {
         title: "Outcomes — the numbers this has to move",
-        lede: g.outcomes.length === 0
-          ? "The plan carries no numeric target yet."
-          : "Sample measures only. No target has been agreed for this project.",
-        body: (g.outcomes.length === 0
+        lede: g.measures.length === 0
+          ? "The plan names no measure at all."
+          : g.measures.length + " measures committed to in the plan, " +
+            g.measuresRead + " ever measured.",
+        body: (g.measures.length === 0
           ? Details.empty("No measure is defined",
               ["Your plan states what the system does and what it must never do, " +
                "but it names no number it has to move.",
-               "Rather than invent one, this tab stays empty and says so. There is room " +
-               "for one card per measure the moment a target is agreed."],
-              ["Agree what success is measured in — for example, how quickly a flagged " +
-               "student is contacted, or what share of flagged students re-engage",
+               "Rather than invent one, this tab stays empty and says so."],
+              ["Agree what success is measured in",
                "Agree the target value and the direction of good",
                "Add it to the plan; this tab fills in with one card per measure"])
-          : Details.card("Sample measures", Details.table(
-              ["Measure", "Now", "Target", "Note"],
-              g.outcomes.map(o => [
-                App.esc(o.name) + " " + App.sampleChip(),
-                '<b>' + o.value + App.esc(o.unit) + '</b>',
-                o.target + App.esc(o.unit),
-                App.esc(o.note)
-              ]))))
+          : Details.card("Every measure", Details.table(
+              ["Measure", "Now", "Target in the plan", "Commitment"],
+              g.measures.map(m => [
+                '<a class="mono" href="' + App.drill("outcome:" + m.id) + '">' +
+                  App.esc(m.id) + '</a>' + (m.value != null ? " " + App.sampleChip() : ""),
+                m.value != null ? '<b>' + App.esc(String(m.value)) + '</b>'
+                                : '<span class="checked">not measured yet</span>',
+                m.target != null ? App.esc(String(m.target))
+                                 : '<span class="checked">no number stated</span>',
+                App.esc(m.name)
+              ])) +
+            '<div class="note">These are the plan\'s <b>NFR</b> requirements — what it ' +
+              'promised about how the system behaves. Your files never record how far ' +
+              'any of them has moved; that comes from the running system.</div>'))
       };
     },
 
@@ -315,19 +340,30 @@ const Details = {
         body:
           '<div class="card"><h3>By kind</h3><p>' + kinds + '</p></div>' +
           Details.card("Every requirement", Details.table(
-            ["ID", "Kind", "Level", "Requirement", "Mapped to"],
+            ["ID", "Kind", "Level", "Requirement", "Covered by"],
             g.plan.requirements.map(r => [
-              '<span class="mono">' + App.esc(r.id) + '</span>',
+              '<a class="mono" href="' + App.drill("req:" + r.id) + '">' +
+                App.esc(r.id) + '</a>',
               App.pill(r.kind === "SAFE" ? "risk" : "unknown", r.kind),
               App.esc(r.level),
               App.esc(r.text),
-              r.system
-                ? App.esc((g.d.systemById[r.system] || {}).name || "—")
-                : '<span class="checked">not mapped yet</span>'
+              r.fulfilledBy.length
+                ? r.fulfilledBy.map(sid => '<a class="mono" href="' +
+                    App.drill("story:" + sid) + '">' + App.esc(sid) + '</a>').join(" ")
+                : App.pill(r.level === "must" ? "risk" : "warn", "no story")
             ]))) +
-          '<div class="note">Requirement-to-story mapping is <b>not in the plan</b>, so no ' +
-            'link is claimed here. The four CONSTRAINT rows map to systems because the ' +
-            'requirement text names the system itself.</div>'
+          (g.d.reqMustUncovered.length
+            ? '<div class="note"><b>' + g.d.reqMustUncovered.length +
+              ' must-requirement' + (g.d.reqMustUncovered.length === 1 ? " has" : "s have") +
+              ' no story covering ' + (g.d.reqMustUncovered.length === 1 ? "it" : "them") +
+              ':</b> ' + g.d.reqMustUncovered.map(r =>
+                '<a class="mono" href="' + App.drill("req:" + r.id) + '">' +
+                App.esc(r.id) + '</a>').join(", ") +
+              '. That is a gap in the plan — nothing scheduled will satisfy ' +
+              (g.d.reqMustUncovered.length === 1 ? "it" : "them") + '.</div>'
+            : '<div class="note">Every <b>must</b> requirement is covered by at least one ' +
+              'story. The mapping is read from each story\'s own ' +
+              '<span class="mono">fulfills</span> list.</div>')
       };
     },
 

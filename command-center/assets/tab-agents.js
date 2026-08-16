@@ -149,15 +149,19 @@ Details.handlers["agent"] = function (id, g) {
             g.d.agentById[a.id].skills.map(App.esc).join(", ") +
             ' — but nothing has been registered against it in the build.</p>') +
       Details.card("Stories it owns", Details.table(
-        ["Story", "Title", "Release", "Due", "Status"],
+        ["Story", "Title", "Release", "Window", "Status"],
         a.owns.map(sid => {
           const s = g.stories.filter(x => x.id === sid)[0] || {};
+          const rel = g.d.releaseById[s.release] || {};
           return ['<a class="mono" href="' + App.drill("story:" + sid) + '">' +
               App.esc(sid) + '</a>',
-            App.esc(s.title || "—"),
+            App.esc(s.title || "not in plan"),
             '<a class="mono" href="' + App.drill("release:" + s.release) + '">' +
               App.esc((s.release || "").toUpperCase()) + '</a>',
-            '<span class="mono">' + App.fmtShort(s.due) + '</span>',
+            rel.start
+              ? '<span class="mono">' + App.fmtShort(rel.start) + " → " +
+                App.fmtShort(rel.end) + '</span>'
+              : '<span class="checked">—</span>',
             App.pill(s.status === "shipped" ? "ok" : s.status === "building" ? "warn" : "unknown",
                      s.status || "planned")];
         }))) +

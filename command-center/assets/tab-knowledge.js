@@ -67,14 +67,19 @@ const TabKnowledge = {
       "index.html");
 
     g.plan.requirements.forEach(r => {
-      const tab = r.kind === "SAFE" ? "Guardrails" : (r.system ? "Systems" : "Knowledge base");
-      add("requirement", tab, r.id, r.text + " " + r.kind + " " + r.level,
+      const namesSystem = g.systems.some(sy => sy.req === r.id);
+      const tab = r.kind === "SAFE" ? "Guardrails" : (namesSystem ? "Systems" : "Knowledge base");
+      add("requirement", tab, r.id, r.text + " " + r.kind + " " + r.level +
+        (r.fulfilledBy.length ? " covered by " + r.fulfilledBy.join(", ")
+                              : " no story covers it"),
         App.drill("req:" + r.id),
         r.kind === "SAFE" ? TabKnowledge.ALIAS.guardrail : "");
     });
 
     g.stories.forEach(s => add("story", "Project management", s.id,
-      s.title + " due " + s.due + " in release " + s.release + ", status " + s.status,
+      s.title + " in release " + s.release + ", status " + s.status +
+      (s.total ? ", " + s.passed + " of " + s.total + " acceptance criteria passing" : "") +
+      (s.fulfills.length ? ", fulfils " + s.fulfills.join(", ") : ""),
       App.drill("story:" + s.id), s.title));
 
     g.plan.releases.forEach(r => add("release", "Project management", r.id.toUpperCase(),
@@ -98,23 +103,26 @@ const TabKnowledge = {
 
     g.plan.roles.forEach(r => add("role", "Users and use case", r.label,
       "A role this system is for. " +
-      (TabUsers.jobs[r.id] || []).map(j => j.job).join(". "), App.drill("role:" + r.id)));
+      TabUsers.jobs(g, r.id).map(j => j.job).join(". "), App.drill("role:" + r.id)));
 
     g.guardrails.forEach(gr => add("guardrail", "Guardrails", gr.req + " guardrail",
       gr.promise + " Enforced by " +
       (gr.enforcedBy.length ? gr.enforcedBy.join(", ") : "nothing in the build yet") + ".",
       App.drill("guardrail:" + gr.req)));
 
-    TabModel.tables.forEach(t => add("table", "Data model", t.t,
+    TabModel.proposal(g.plan).forEach(t => add("table", "Data model", t.t,
       t.stores + " Fields: " + t.fields.join(", ") + ". Forced by " + t.reqs.join(", ") + ".",
       App.drill("table:" + t.t), t.t.split("_").join(" ")));
 
-    g.outcomes.forEach(o => add("outcome", "Outcomes", o.name,
-      o.name + " is " + o.value + o.unit + " against a target of " + o.target + o.unit +
-      ". " + o.note, App.drill("outcome:" + o.id)));
-    if (!g.outcomes.length)
+    g.measures.forEach(m => add("outcome", "Outcomes", m.id + " measure",
+      m.name + " " + (m.value != null
+        ? "Currently " + m.value + (m.target != null ? " against a target of " + m.target : "")
+        : "Not measured yet — the plan records what was promised, never how far it moved.") +
+      (m.target != null ? "" : " The requirement states no number."),
+      App.drill("outcome:" + m.id)));
+    if (!g.measures.length)
       add("outcome", "Outcomes", "No measure defined",
-        "The plan carries no numeric target. No outcome measure, baseline or target has " +
+        "The plan carries no NFR requirement and so no measure, baseline or target has " +
         "been agreed for this project.", "02-outcomes.html");
 
     g.knowledge.notes.concat(g.knowledge.decisions).forEach(n =>
@@ -207,7 +215,7 @@ const TabKnowledge = {
       { re:/guardrail|promise/,  n:g.d.guardrailTotal, w:"guardrails",   tab:"Guardrails" },
       { re:/table/,              n:TabModel.tables.length, w:"proposed tables", tab:"Data model" },
       { re:/role|user/,          n:g.plan.roles.length, w:"roles",       tab:"Users and use case" },
-      { re:/outcome|measure|kpi|target/, n:g.outcomes.length, w:"outcome measures",
+      { re:/outcome|measure|kpi|target/, n:g.measuresRead, w:"outcome measures",
         tab:"Outcomes" }
     ];
     for (let i = 0; i < total.length; i++)
