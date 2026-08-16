@@ -4,11 +4,11 @@
   "totals": {
     "stories_total": 15,
     "stories_verified": 0,
-    "stories_submitted": 0,
-    "stories_in_progress": 13,
-    "stories_not_started": 2,
+    "stories_submitted": 1,
+    "stories_in_progress": 14,
+    "stories_not_started": 0,
     "criteria_total": 47,
-    "criteria_passed": 0,
+    "criteria_passed": 3,
     "points_awarded": 0
   },
   "stories": [
@@ -50,8 +50,8 @@
       "notes": "Ticked by the Colaberry platform team during a pre-cohort end-to-end rehearsal on 2026-08-16, not by the student. Only the three criteria directly observed in a browser are marked passing. Criteria 3 (render from .colaberry/plan.json and progress.json at runtime) and 4 (manifest age and stale warning) are left FALSE because they are genuinely unmet: the Command Center makes no network request for any .colaberry file and contains no reference to manifest.json. This build was written against the earlier 3-criteria version of STORY-000 and is two criteria short of the current 5-criteria definition.",
       "updated_at": "2026-08-16T14:28:45.236Z",
       "verification": {
-        "state": "in_progress",
-        "criteria_passed": 0,
+        "state": "submitted",
+        "criteria_passed": 3,
         "criteria_total": 5,
         "verified_at": null,
         "commit_sha": "33f5436212c7a445a00da9be86e4d87c8c513bb3",
@@ -59,11 +59,8 @@
         "commit_at": "2026-08-16T02:32:42Z",
         "points_awarded": null,
         "outstanding": [
-          "Given the Command Center, when it is opened, then every tab is reachable and every card drills down one level.",
-          "Given sample mode, when any tab is shown, then the sample data is visibly labelled as sample.",
           "Given the data files, when any tab renders, then its content comes from .colaberry/plan.json and .colaberry/progress.json read at runtime rather than from hard-coded values.",
-          "Given .colaberry/manifest.json, when any tab is shown, then it displays how old the data is and warns when that age exceeds a week.",
-          "Trust — no tab shows a number, a connection or a result the project has not actually produced."
+          "Given .colaberry/manifest.json, when any tab is shown, then it displays how old the data is and warns when that age exceeds a week."
         ]
       }
     },
@@ -546,7 +543,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 3,
         "verified_at": null,
@@ -584,7 +581,7 @@
       "notes": null,
       "updated_at": null,
       "verification": {
-        "state": "not_started",
+        "state": "in_progress",
         "criteria_passed": 0,
         "criteria_total": 3,
         "verified_at": null,
