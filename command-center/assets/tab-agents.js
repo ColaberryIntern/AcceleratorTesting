@@ -20,10 +20,13 @@ const TabAgents = {
     }).join("<br>");
   },
 
+  /* Three settings, not two: the plan distinguishes an agent that acts
+     alone, one that prepares and stops, and one that only ever drafts
+     for a person. The label is the plan's own autonomy_level. */
   autonomyPill(a) {
-    return a.autonomy === "auto"
-      ? App.pill("ok", "completes on its own")
-      : App.pill("warn", "waits for a human to release it");
+    return a.autonomy === "auto"  ? App.pill("ok",   "completes on its own")
+         : a.autonomy === "draft" ? App.pill("warn", "drafts for a person")
+         :                          App.pill("warn", "waits for a human to release it");
   },
 
   card(g, a) {
@@ -48,7 +51,7 @@ const TabAgents = {
   },
 
   waitingBlock(g) {
-    const humans = g.agents.filter(a => a.autonomy === "human");
+    const humans = g.agents.filter(a => a.autonomy !== "auto");
     if (g.approvals.length === 0) {
       return Details.empty("Nothing is waiting on a human right now",
         [humans.length + " of " + g.d.agentTotal + " agents prepare work and then stop. " +
@@ -165,7 +168,7 @@ Details.handlers["agent"] = function (id, g) {
             App.pill(s.status === "shipped" ? "ok" : s.status === "building" ? "warn" : "unknown",
                      s.status || "planned")];
         }))) +
-      (a.autonomy === "human"
+      (a.autonomy !== "auto"
         ? Details.card("Work it is holding",
             held.length
               ? Details.table(["Item", "What is held", "Released by", "Waiting since"],

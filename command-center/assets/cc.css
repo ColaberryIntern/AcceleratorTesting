@@ -313,3 +313,8 @@ footer.foot{max-width:1200px; margin:0 auto; padding:26px 24px 60px;
   .stamp{ padding:7px 14px; }
   .stamp .stamp-note{ margin-left:0; border-left:0; padding-left:0; flex-basis:100%; }
 }
+
+/* Slippage on the Gantt: the hollow marker is the date a task was FIRST
+   given, the shaded span is how far it has moved since. */
+.gantt .g-slip{ stroke:var(--warn); stroke-width:3; opacity:.35; }
+.gantt .g-baseline{ fill:none; stroke:var(--warn); stroke-width:1.5; }

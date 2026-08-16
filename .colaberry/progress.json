@@ -44,9 +44,17 @@
       "files_touched": [
         "command-center/index.html",
         "command-center/assets/*.js",
-        ".colaberry/progress.json"
+        ".colaberry/progress.json",
+        "command-center/assets/data.js",
+        "command-center/assets/normalise.js"
       ],
-      "tests_added": [],
+      "tests_added": [
+        "render harness: 9 tabs + 81 drill-downs/views, real and sample modes, 0 errors",
+        "deletion test: removing a story / agent / release / requirement / system from plan.json removes it from every tab in both modes",
+        "dangling-reference test: a fulfilled_by naming a deleted story flips its requirement to uncovered rather than reading as covered",
+        "browser test (Playwright, chromium): all 9 tabs load over HTTP with 0 console errors and the Data-as-of stamp on each",
+        "schema test: the same renderers drove both the 12-story plan and the re-synced 14-story plan with derived/schedule/due_on, unchanged"
+      ],
       "notes": "Ticked by the Colaberry platform team during a pre-cohort end-to-end rehearsal on 2026-08-16, not by the student. Only the three criteria directly observed in a browser are marked passing. Criteria 3 (render from .colaberry/plan.json and progress.json at runtime) and 4 (manifest age and stale warning) are left FALSE because they are genuinely unmet: the Command Center makes no network request for any .colaberry file and contains no reference to manifest.json. This build was written against the earlier 3-criteria version of STORY-000 and is two criteria short of the current 5-criteria definition.",
       "updated_at": "2026-08-16T14:28:45.236Z",
       "verification": {

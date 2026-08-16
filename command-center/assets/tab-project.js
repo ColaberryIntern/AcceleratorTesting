@@ -4,10 +4,14 @@
    drawn across the window of the release it belongs to. Tasks
    are clickable and open their own detail.
 
-   Geometry is computed from the release week numbers in
-   plan.json, never drawn by hand, so the chart cannot drift
-   from the plan. The plan gives no per-task date, so none is
-   drawn — see the note in render().
+   Geometry is computed from the dates in plan.json, never drawn
+   by hand, so the chart cannot drift from the plan. A task is
+   drawn at its due_on when it has one and across its release
+   window when it does not — see the comment in gantt().
+
+   Where a task's due_on has moved off its due_baseline_on, both
+   are drawn and the gap is shaded. A chart that quietly moved
+   the target would hide exactly the thing worth seeing.
    ============================================================ */
 const TabProject = {
 
@@ -86,25 +90,45 @@ const TabProject = {
           '</a>');
         y += TabProject.REL_H;
       } else {
-        /* The plan gives a story a RELEASE, never a date. So a story is
-           drawn as the window it sits in, not as a due-date dot — a dot
-           would be a deadline this project has never actually set. */
+        /* A story is drawn at its due date when the plan gives it one.
+           When it does not, it is drawn across its release window
+           instead — a dot on a date would be a deadline nobody set.
+
+           Where the current due date has moved off its baseline, the
+           baseline is drawn as a hollow marker with the gap between
+           them shaded, so slippage is visible rather than absorbed. */
         const t = row.ref;
         const live = g.stories.filter(x => x.id === t.id)[0] || {};
-        const x1 = s.x(row.rel.start), x2 = s.x(row.rel.end) + s.dayW;
         const cls = live.status === "shipped" ? "done"
                   : live.status === "building" ? "wip" : "todo";
+        const x1 = s.x(row.rel.start);
+        const hasDue = !!t.due;
+        const xd = hasDue ? s.x(t.due) + s.dayW / 2 : s.x(row.rel.end) + s.dayW;
+        const xb = (t.dueBaseline && t.slipDays)
+          ? s.x(t.dueBaseline) + s.dayW / 2 : null;
+
         parts.push('<a href="' + App.drill("story:" + t.id) + '">' +
           '<rect class="g-hit" x="0" y="' + y + '" width="' + TabProject.W +
             '" height="' + TabProject.STORY_H + '"/>' +
           '<text class="g-label story" x="28" y="' + (y + 15) + '">' +
             App.esc(t.id) + ' · ' + App.esc(TabProject.clip(t.title, 30)) + '</text>' +
           '<line class="g-connect ' + cls + '" x1="' + x1.toFixed(1) + '" y1="' + (y + 11) +
-            '" x2="' + x2.toFixed(1) + '" y2="' + (y + 11) + '"/>' +
-          '<circle class="g-dot ' + cls + '" cx="' + x1.toFixed(1) + '" cy="' + (y + 11) +
-            '" r="4"/>' +
-          '<text class="g-due" x="' + (x2 + 8).toFixed(1) + '" y="' + (y + 15) + '">' +
-            App.esc(row.rel.id.toUpperCase()) + ' window</text>' +
+            '" x2="' + xd.toFixed(1) + '" y2="' + (y + 11) + '"/>' +
+          (xb !== null
+            ? '<line class="g-slip" x1="' + Math.min(xb, xd).toFixed(1) + '" y1="' + (y + 11) +
+                '" x2="' + Math.max(xb, xd).toFixed(1) + '" y2="' + (y + 11) + '"/>' +
+              '<circle class="g-baseline" cx="' + xb.toFixed(1) + '" cy="' + (y + 11) +
+                '" r="4"><title>Baseline ' + App.esc(t.dueBaseline) + '</title></circle>'
+            : '') +
+          (hasDue
+            ? '<circle class="g-dot ' + cls + '" cx="' + xd.toFixed(1) + '" cy="' + (y + 11) +
+              '" r="5"/>'
+            : '<circle class="g-dot ' + cls + '" cx="' + x1.toFixed(1) + '" cy="' + (y + 11) +
+              '" r="4"/>') +
+          '<text class="g-due" x="' + (xd + 11).toFixed(1) + '" y="' + (y + 15) + '">' +
+            App.esc(hasDue ? App.fmtShort(t.due)
+                           : row.rel.id.toUpperCase() + " window") +
+            (t.slipDays ? " (+" + t.slipDays + "d)" : "") + '</text>' +
           '</a>');
         y += TabProject.STORY_H;
       }
@@ -142,15 +166,20 @@ const TabProject = {
     const gaps = TabProject.gaps(g);
     const gapDays = gaps.reduce((n, x) => n + x.days, 0);
     const todayIso = App.today().toISOString().slice(0, 10);
-    /* Slippage is measured at RELEASE level, because that is the only
-       level the plan schedules. A release whose window has closed with
-       unshipped stories in it is behind. */
+    /* Overdue is measured per task when the plan dates tasks, and per
+       release when it does not — a release whose window has closed with
+       unshipped work in it is behind either way. */
+    const datedTasks = g.stories.filter(s => s.due);
+    const overdue = datedTasks.filter(s =>
+      s.status !== "shipped" && App.days(s.due, todayIso) > 0);
     const late = g.plan.releases.filter(r =>
       r.end && App.days(r.end, todayIso) > 0 &&
       g.d.storiesIn(r.id).some(st =>
         (g.stories.filter(x => x.id === st.id)[0] || {}).status !== "shipped"));
     const lateStories = late.reduce((n, r) => n + g.d.storiesIn(r.id).filter(st =>
       (g.stories.filter(x => x.id === st.id)[0] || {}).status !== "shipped").length, 0);
+    const slipped = g.stories.filter(s => s.slipDays);
+    const slipTotal = slipped.reduce((n, s) => n + s.slipDays, 0);
     const firstRel = g.plan.releases[0] || {}, lastRel =
       g.plan.releases[g.plan.releases.length - 1] || {};
 
@@ -168,33 +197,61 @@ const TabProject = {
             App.esc((lastRel.id || "").toUpperCase()) }) +
         App.stat({ k:"Tasks", v:d.storyTotal, s:g.storiesShipped + " shipped",
           sample:g.isSample }) +
-        App.stat({ k:"Releases behind", v:late.length,
-          s:late.length ? lateStories + " tasks past their release window"
-                        : "no release window has closed with work left in it",
-          sample:g.isSample, dotStatus:late.length ? "risk" : "off" }) +
-        App.stat({ k:"Unscheduled days", v:gapDays, s:"between releases",
-          dotStatus:gapDays ? "warn" : "off" }) +
+        (datedTasks.length
+          ? App.stat({ k:"Overdue", v:overdue.length,
+              s:overdue.length ? "past due and not shipped" : "nothing past its due date",
+              sample:g.isSample, dotStatus:overdue.length ? "risk" : "off" })
+          : App.stat({ k:"Releases behind", v:late.length,
+              s:late.length ? lateStories + " tasks past their release window"
+                            : "no release window has closed with work left in it",
+              sample:g.isSample, dotStatus:late.length ? "risk" : "off" })) +
+        App.stat({ k:"Slippage", v:slipTotal, unit:"days",
+          s:slipped.length ? slipped.length + " tasks moved off their baseline"
+                           : "every task still on its first date",
+          dotStatus:slipped.length ? "warn" : "off" }) +
         App.stat({ k:"Demo prep", v:App.days(p.buildEnd, p.demoDay), unit:"days",
           s:App.fmtShort(p.buildEnd) + " → " + App.fmtShort(p.demoDay) }) +
       '</div>' +
       '<div class="note"><b>Where these dates come from.</b> ' +
-        '<span class="mono">plan.json</span> gives each release a week number — ' +
-        App.esc((firstRel.id || "").toUpperCase()) + ' is weeks ' +
-        App.esc(firstRel.weekStart + "–" + firstRel.weekEnd) + ', ' +
-        App.esc((lastRel.id || "").toUpperCase()) + ' is weeks ' +
-        App.esc(lastRel.weekStart + "–" + lastRel.weekEnd) +
-        ' — and no calendar dates at all. Every date on this page is those week ' +
-        'numbers counted from <b>' + App.esc(App.fmt(p.buildStart)) + '</b>. ' +
-        App.esc(p.anchorSource) + ' Change that one anchor and this whole page moves ' +
-        'with it.</div>' +
+        (p.datesFrom === "file"
+          ? 'Read from <span class="mono">plan.json</span> — ' +
+            '<span class="mono">schedule.build_start</span>, each release\'s ' +
+            '<span class="mono">starts_on</span> / <span class="mono">ends_on</span>, and ' +
+            'each task\'s <span class="mono">due_on</span>. Nothing on this page is a ' +
+            'date this build chose. Where a task\'s <span class="mono">due_on</span> has ' +
+            'moved off its <span class="mono">due_baseline_on</span>, both are drawn and ' +
+            'the gap is shaded, so a moved target cannot hide as an on-time one.'
+          : '<span class="mono">plan.json</span> gives each release a week number — ' +
+            App.esc((firstRel.id || "").toUpperCase()) + ' is weeks ' +
+            App.esc(firstRel.weekStart + "–" + firstRel.weekEnd) + ', ' +
+            App.esc((lastRel.id || "").toUpperCase()) + ' is weeks ' +
+            App.esc(lastRel.weekStart + "–" + lastRel.weekEnd) +
+            ' — and no calendar dates at all. Every date on this page is those week ' +
+            'numbers counted from <b>' + App.esc(App.fmt(p.buildStart)) + '</b>. ' +
+            App.esc(p.anchorSource)) +
+      '</div>' +
+      (gapDays
+        ? '<div class="note" style="margin-top:8px"><b>' + gapDays + ' unscheduled days</b> ' +
+          'sit inside the build window between releases — listed in full below.</div>'
+        : "") +
       '<div class="sec-head"><h2>Schedule</h2>' +
         '<span>Every bar and every task opens its own detail.</span></div>' +
       TabProject.gantt(g) +
       '<div class="note" style="margin-top:12px">' +
-        '<b>Reading it:</b> the thick bar is a release window and the thin line under it ' +
-        'is a task, drawn across the same window. Tasks have no individual due date ' +
-        'because the plan does not give them one — a dot on a date would be a deadline ' +
-        'nobody has set. Vertical markers are today, build end and demo day.</div>' +
+        '<b>Reading it:</b> the thick bar is a release window, and the line under it is a ' +
+        'task. ' +
+        (datedTasks.length
+          ? 'The filled dot is the task\'s due date and the line joins it back to the ' +
+            'start of its release. ' +
+            (slipped.length
+              ? 'A hollow dot is the date the task was <i>first</i> given, with the shaded ' +
+                'span showing how far it has moved since.'
+              : 'No task has moved off the date it was first given, so no baseline ' +
+                'markers are drawn.')
+          : 'Tasks are drawn across their whole release window because the plan gives ' +
+            'them no individual due date — a dot on a date would be a deadline nobody ' +
+            'has set.') +
+        ' Vertical markers are today, build end and demo day.</div>' +
       (gaps.length
         ? '<div class="sec-head"><h2>Gaps between releases</h2>' +
             '<span>' + gapDays + ' days inside the build window carry no scheduled work.</span></div>' +
@@ -211,23 +268,42 @@ const TabProject = {
       '<div class="sec-head"><h2>Every task</h2>' +
         '<span>' + d.storyTotal + ' tasks in build order.</span></div>' +
       Details.table(
-        ["Task", "Title", "Release", "Window", "Owned by", "Status"],
+        ["Task", "Title", "Release", "Due", "First set", "Owned by", "Status"],
         g.stories.map(s => {
           const rel = d.releaseById[s.release] || {};
+          const isOverdue = s.due && s.status !== "shipped" &&
+                            App.days(s.due, todayIso) > 0;
           return [
             '<a class="mono" href="' + App.drill("story:" + s.id) + '">' + App.esc(s.id) + '</a>',
             '<a href="' + App.drill("story:" + s.id) + '">' + App.esc(s.title) + '</a>',
             '<a class="mono" href="' + App.drill("release:" + s.release) + '">' +
               App.esc((s.release || "").toUpperCase()) + '</a>',
-            rel.start
-              ? '<span class="mono">' + App.fmtShort(rel.start) + " → " +
-                App.fmtShort(rel.end) + '</span>'
-              : '<span class="checked">no window in plan</span>',
+            s.due
+              ? '<span class="mono">' + App.fmtShort(s.due) + '</span>' +
+                (isOverdue ? " " + App.pill("risk", "overdue") : "")
+              : (rel.start
+                  ? '<span class="checked">' + App.fmtShort(rel.start) + " → " +
+                    App.fmtShort(rel.end) + '</span>'
+                  : '<span class="checked">no date in plan</span>'),
+            s.dueBaseline
+              ? '<span class="mono">' + App.fmtShort(s.dueBaseline) + '</span>' +
+                (s.slipDays ? " " + App.pill("warn", "+" + s.slipDays + "d") : "")
+              : '<span class="checked">—</span>',
             '<a href="' + App.drill("agent:" + s.agent) + '">' +
               App.esc((d.agentById[s.agent] || {}).name || "—") + '</a>',
             App.pill(s.status === "shipped" ? "ok" : s.status === "building" ? "warn" : "unknown",
                      s.status) + (g.isSample ? " " + App.sampleChip() : "")];
         })) +
+      (p.prep.length
+        ? '<div class="sec-head"><h2>Demo prep</h2>' +
+            '<span>The ' + p.prep.length + ' steps the plan schedules between build end ' +
+            'and demo day.</span></div>' +
+          Details.table(["Step", "What", "Due"],
+            p.prep.map(x => ['<span class="mono">' + App.esc(x.key) + '</span>',
+              App.esc(x.title),
+              x.due ? '<span class="mono">' + App.fmtShort(x.due) + '</span>'
+                    : '<span class="checked">—</span>']))
+        : "") +
       App.footer();
   }
 };
@@ -335,8 +411,9 @@ Details.handlers["story"] = function (id, g) {
         [['<a href="' + App.drill("agent:" + s.agent) + '"><b>' +
             App.esc(agent.name || "—") + '</b></a>',
           App.esc(agent.does || "—"),
-          agent.autonomy === "auto" ? App.pill("ok", "completes alone")
-                                    : App.pill("warn", "waits for a human")]])) +
+          agent.autonomy === "auto"  ? App.pill("ok", "completes alone")
+          : agent.autonomy === "draft" ? App.pill("warn", "drafts for a person")
+          :                              App.pill("warn", "waits for a human")]])) +
       Details.card("Release", Details.table(
         ["Release", "Window", "Stories"],
         [['<a class="mono" href="' + App.drill("release:" + s.release) + '">' +

@@ -73,7 +73,7 @@ const Details = {
               App.esc(a.firesOn) + " " + App.pill("unknown", a.trigger),
               '<a href="' + App.drill("agent:" + a.id) + '"><b>' +
                 App.esc(a.name) + '</b></a>' +
-                (a.autonomy === "auto" ? "" : " " + App.pill("warn", "waits for a human")),
+                (a.autonomy === "auto" ? "" : " " + App.pill("warn", a.autonomy === "draft" ? "drafts for a person" : "waits for a human")),
               a.produces.length ? a.produces.map(App.esc).join(", ")
                                 : '<span class="checked">the plan names no output</span>'
             ]))) +

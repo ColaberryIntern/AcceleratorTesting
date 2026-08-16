@@ -267,6 +267,16 @@ Details.handlers["req"] = function (id, g) {
             (r.level === "must"
               ? ' It is a <b>must</b>, so this is a real gap in the plan.'
               : '') + '</p>') +
+      ((r.fulfilledByMissing || []).length
+        ? '<div class="note"><b>Dangling coverage claim.</b> The plan lists ' +
+          r.fulfilledByMissing.map(sid => '<span class="mono">' + App.esc(sid) + '</span>')
+            .join(", ") + ' as covering this requirement, but ' +
+          (r.fulfilledByMissing.length === 1 ? 'that story is' : 'those stories are') +
+          ' not in the plan. ' +
+          (r.fulfilledByMissing.length === 1 ? 'It does' : 'They do') +
+          ' not count as coverage here — a requirement whose only covering story was ' +
+          'deleted is uncovered, however the file still reads.</div>'
+        : "") +
       (measure
         ? Details.card("It is also a measure",
             '<p>This requirement appears on the <a href="02-outcomes.html">Outcomes</a> ' +
