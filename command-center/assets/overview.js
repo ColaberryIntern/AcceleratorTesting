@@ -28,12 +28,27 @@ const Overview = {
     };
   },
 
+  /* Where today sits in the build window. Derived, never a fixed claim —
+     a sentence like "the build starts today" is true for one day and a
+     lie on every other one. */
+  buildPhrase(g) {
+    const p = g.plan.project;
+    const n = App.days(p.buildStart, App.today().toISOString().slice(0, 10));
+    if (n === null) return "";
+    if (n < 0)   return "The build starts " + App.fmt(p.buildStart) + ".";
+    if (n === 0) return "The build starts today.";
+    return "Day " + (n + 1) + " of the build, which started " + App.fmt(p.buildStart) + ".";
+  },
+
   /* ---------- the cards. Also the registry details.js reads. ---------- */
   cards(g) {
     const r = Overview.release(g);
     const d = g.d;
     const sample = g.isSample;
     const nothing = '<small>nothing yet</small>';
+    /* Skills the agents have actually REGISTERED at runtime — not the
+       skills the plan says they need. Those live on g.d.agentById. */
+    const skillsRegistered = g.agents.reduce((n, a) => n + a.skills.length, 0);
 
     return [
       {
@@ -60,7 +75,7 @@ const Overview = {
         sample: sample,
         headline: g.storiesShipped + ' <small>of ' + d.storyTotal + ' stories shipped</small>',
         lede: g.storiesShipped === 0
-          ? "No story has shipped. The build starts today, so this is the honest number."
+          ? "No story has shipped. " + Overview.buildPhrase(g)
           : g.storiesBuilding + " in progress, " +
             (d.storyTotal - g.storiesShipped - g.storiesBuilding) + " not started.",
         foot: "Build ends " + App.fmtShort(g.plan.project.buildEnd)
@@ -83,7 +98,9 @@ const Overview = {
         headline: g.agentsRunning + ' <small>of ' + d.agentTotal + ' running</small>',
         lede: d.agentAuto + " complete on their own, " + d.agentHuman +
               " prepare and then wait for a human to release the work.",
-        foot: "No skills registered yet"
+        foot: skillsRegistered === 0
+          ? "No skills registered yet"
+          : skillsRegistered + " skills registered"
       },
       {
         id: "waiting",
