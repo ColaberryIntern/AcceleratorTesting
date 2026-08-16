@@ -19,11 +19,13 @@
       "criteria": [
         {
           "text": "Given the Command Center, when it is opened, then every tab is reachable and every card drills down one level.",
-          "passed": false
+          "passed": true,
+          "evidence": "Observed 2026-08-16: all 9 tabs served 200 with zero page errors; Overview carries 23 drill-down links; clicking one landed on detail.html?card=systems and rendered content."
         },
         {
           "text": "Given sample mode, when any tab is shown, then the sample data is visibly labelled as sample.",
-          "passed": false
+          "passed": true,
+          "evidence": "Observed 2026-08-16: pressing Sample renders the banner \"Sample data - believable made-up values ... Nothing here is a record of anything this project has produced.\" Occurrences of the word sample rise from 1 to 18."
         },
         {
           "text": "Given the data files, when any tab renders, then its content comes from .colaberry/plan.json and .colaberry/progress.json read at runtime rather than from hard-coded values.",
@@ -35,13 +37,18 @@
         },
         {
           "text": "Trust — no tab shows a number, a connection or a result the project has not actually produced.",
-          "passed": false
+          "passed": true,
+          "evidence": "Observed 2026-08-16: in Real mode every system reads \"never checked\" and every count reads 0, under the line \"Grey is unknown. Nothing here turns green until something real reports in.\" Caveat: the hard-coded plan still says 12 stories where the current plan has 14, which is a symptom of criterion 3 being unmet."
         }
       ],
-      "files_touched": [],
+      "files_touched": [
+        "command-center/index.html",
+        "command-center/assets/*.js",
+        ".colaberry/progress.json"
+      ],
       "tests_added": [],
-      "notes": null,
-      "updated_at": null,
+      "notes": "Ticked by the Colaberry platform team during a pre-cohort end-to-end rehearsal on 2026-08-16, not by the student. Only the three criteria directly observed in a browser are marked passing. Criteria 3 (render from .colaberry/plan.json and progress.json at runtime) and 4 (manifest age and stale warning) are left FALSE because they are genuinely unmet: the Command Center makes no network request for any .colaberry file and contains no reference to manifest.json. This build was written against the earlier 3-criteria version of STORY-000 and is two criteria short of the current 5-criteria definition.",
+      "updated_at": "2026-08-16T14:28:45.236Z",
       "verification": {
         "state": "in_progress",
         "criteria_passed": 0,
