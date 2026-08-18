@@ -1,25 +1,24 @@
-# STORY-008 — Deliver Reports via Email Platform
+# STORY-008 — Opportunity Feed displays top opportunities
 
-As an instructor, I want to receive weekly reports via email, so that I can review student performance.
+As an investor, I want to view the 'Top 20 Opportunities This Week', so that I can quickly identify potential investments.
 
-**Release:** r2 · Instructor Review and Approval (weeks 9–12)
-**Owner:** Report Delivery System
+**Release:** r3 · Opportunity Feed and Image Recognition (weeks 7–8)
+**Owner:** Opportunity Feed Manager
 **Blocked by:** STORY-007
 
 ## The requirement this satisfies
 
-- **REQ-012** (Constraint, must) — The system must integrate with the Email Platform to send reports.
-- **REQ-016** (Observability, must) — The system must log all actions taken for audit purposes.
+- **REQ-013** (Functional, must) — The system must allow users to view a 'Top 20 Opportunities This Week' list based on their input criteria.
 
 ## How to build it
 
-Use the Email Platform API to send reports and log delivery actions in the audit log.
+Implement opportunity feed UI and integrate with scoring logic.
 
 ## Failure paths you must handle
 
-- Invalid email address
-- Email server downtime
-- Network failure
+- Feed generation error
+- Criteria mismatch
+- UI rendering issue
 
 ## Acceptance — your stop condition
 
@@ -28,8 +27,8 @@ the same criteria out of `.colaberry/progress.json`, which Claude Code keeps in
 step (see the managed block in CLAUDE.md). Ticking something you have not
 actually met only misleads you.
 
-- [ ] Given a weekly report is generated, when the report is sent, then the instructor should receive it via email.
-- [ ] Given an invalid email address, when the report is sent, then an error message should be logged.
-- [ ] Trust: All report deliveries must be logged for audit purposes.
+- [ ] Given user criteria, when processed, then the system displays the top 20 opportunities.
+- [ ] Given no matching opportunities, when processed, then it displays a 'No opportunities' message.
+- [ ] Trust: The system logs the criteria and results for audit.
 
 When every box above is ticked, stop and show the demo.

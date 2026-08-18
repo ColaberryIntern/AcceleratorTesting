@@ -1,25 +1,25 @@
-# STORY-001 — User Login via Student Portal
+# STORY-001 — User selects location and receives Opportunity Score
 
-As a student, I want to log in via the Student Portal, so that I can access my data securely.
+As an investor, I want to select a location and receive an Opportunity Score, so that I can identify potential properties.
 
-**Release:** r0 · Initial Setup and Data Integration (weeks 1–4)
-**Owner:** Data Analyzer
+**Release:** r0 · Initial Property Analysis (weeks 1–2)
+**Owner:** Opportunity Scorer
 **Blocked by:** nothing — you can start this now
 
 ## The requirement this satisfies
 
-- **REQ-009** (Constraint, must) — The system must integrate with the Student Portal to read login data.
-- **REQ-013** (Safety, must) — The system must ensure data accuracy and consistency across all integrations.
+- **REQ-001** (Functional, must) — The system must allow users to select a city, ZIP code, neighborhood, or investment strategy for property analysis.
+- **REQ-002** (Functional, must) — The system must continuously analyze properties and assign an Opportunity Score from 0–100.
 
 ## How to build it
 
-Use the Student Portal API to authenticate users and log all login attempts in the audit log.
+Implement location selection UI and integrate with property analysis backend.
 
 ## Failure paths you must handle
 
-- Invalid credentials
-- Network failure
-- API downtime
+- Invalid location input
+- No properties found
+- Analysis service timeout
 
 ## Acceptance — your stop condition
 
@@ -28,8 +28,8 @@ the same criteria out of `.colaberry/progress.json`, which Claude Code keeps in
 step (see the managed block in CLAUDE.md). Ticking something you have not
 actually met only misleads you.
 
-- [ ] Given a student with valid credentials, when they log in, then they should access their dashboard.
-- [ ] Given a student with invalid credentials, when they attempt to log in, then they should see an error message.
-- [ ] Trust: All login attempts must be logged for audit purposes.
+- [ ] Given a user selects a city, when the system analyzes properties, then it displays an Opportunity Score.
+- [ ] Given a user selects a ZIP code, when no properties are found, then it displays a 'No opportunities' message.
+- [ ] Trust: The system logs the analysis process for audit.
 
 When every box above is ticked, stop and show the demo.

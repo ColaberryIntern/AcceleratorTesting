@@ -1,24 +1,24 @@
-# STORY-007 — Instructor Review and Approval Interface
+# STORY-007 — Negotiation Agent suggests offers
 
-As an instructor, I want to review and approve recommendations, so that I can ensure accuracy before sending.
+As an investor, I want the Negotiation Agent to suggest offers, so that I can negotiate effectively with property owners.
 
-**Release:** r2 · Instructor Review and Approval (weeks 9–12)
-**Owner:** Instructor Interface Manager
-**Blocked by:** STORY-006
+**Release:** r2 · Enhanced Agent Capabilities (weeks 5–6)
+**Owner:** Negotiation Agent
+**Blocked by:** STORY-005
 
 ## The requirement this satisfies
 
-- **REQ-007** (Functional, must) — The system must allow instructors to review and approve the list before sending recommendations.
+- **REQ-009** (Functional, must) — The system must include a Negotiation Agent to suggest offers and negotiation strategies.
 
 ## How to build it
 
-Develop an interface for instructors to review and approve recommendations before sending.
+Develop logic for offer suggestions based on property data.
 
 ## Failure paths you must handle
 
-- Interface fails to load
-- Approval actions are not logged
-- Modifications are not saved
+- Suggestion logic failure
+- Data inconsistency
+- Offer range mismatch
 
 ## Acceptance — your stop condition
 
@@ -27,8 +27,8 @@ the same criteria out of `.colaberry/progress.json`, which Claude Code keeps in
 step (see the managed block in CLAUDE.md). Ticking something you have not
 actually met only misleads you.
 
-- [ ] Given a report is generated, when an instructor reviews it, then they can approve or modify recommendations.
-- [ ] Given an instructor approves a recommendation, when the system sends it, then it is marked as approved.
-- [ ] Trust: All instructor actions are logged for audit purposes.
+- [ ] Given a property in a workspace, when analyzed, then the Negotiation Agent suggests an initial and maximum offer.
+- [ ] Given a suggestion error, when detected, then it logs the issue and retries.
+- [ ] Trust: The system logs all offer suggestion actions.
 
 When every box above is ticked, stop and show the demo.

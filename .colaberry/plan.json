@@ -1,250 +1,248 @@
 {
   "schema_version": 2,
-  "project_name": "Student Engagement Monitoring Tool",
-  "descriptor": "A tool to help instructors identify students who are falling behind by analyzing portal activity, build progress, and attendance, and providing a weekly report with recommendations.",
+  "project_name": "PropertyPulse AI",
+  "descriptor": "An AI-driven real estate opportunity engine that analyzes properties to provide investors with actionable insights and automation tools.",
   "requirements": [
     {
       "id": "REQ-001",
       "kind": "FUNC",
-      "cluster": "Data Analysis",
+      "cluster": "User Input",
       "priority": "must",
-      "statement": "The system must analyze student portal login activity to identify inactivity.",
+      "statement": "The system must allow users to select a city, ZIP code, neighborhood, or investment strategy for property analysis.",
       "fulfilled_by": [
-        "STORY-005"
+        "STORY-001"
       ]
     },
     {
       "id": "REQ-002",
       "kind": "FUNC",
-      "cluster": "Data Analysis",
+      "cluster": "Property Analysis",
       "priority": "must",
-      "statement": "The system must analyze student build progress to identify lack of progress.",
+      "statement": "The system must continuously analyze properties and assign an Opportunity Score from 0–100.",
       "fulfilled_by": [
-        "STORY-005"
+        "STORY-001"
       ]
     },
     {
       "id": "REQ-003",
       "kind": "FUNC",
-      "cluster": "Data Analysis",
+      "cluster": "Property Analysis",
       "priority": "must",
-      "statement": "The system must analyze attendance records to identify missed live sessions.",
+      "statement": "The system must provide an AI Assessment for each property, detailing potential acquisition strategies.",
       "fulfilled_by": [
-        "STORY-005"
+        "STORY-002"
       ]
     },
     {
       "id": "REQ-004",
       "kind": "FUNC",
-      "cluster": "Reporting",
+      "cluster": "Action Recommendation",
       "priority": "must",
-      "statement": "The system must generate a weekly report every Monday morning for each instructor.",
+      "statement": "The system must generate a recommended action for each property based on its Opportunity Score.",
       "fulfilled_by": [
-        "STORY-004"
+        "STORY-002"
       ]
     },
     {
       "id": "REQ-005",
       "kind": "FUNC",
-      "cluster": "Reporting",
+      "cluster": "AI Workspace",
       "priority": "must",
-      "statement": "The system must include a list of three or four students in the weekly report who may need attention.",
+      "statement": "The system must create an AI workspace for properties when a user selects 'Work This Deal'.",
       "fulfilled_by": [
-        "STORY-014"
+        "STORY-003"
       ]
     },
     {
       "id": "REQ-006",
       "kind": "FUNC",
-      "cluster": "Reporting",
+      "cluster": "AI Agents",
       "priority": "must",
-      "statement": "The system must suggest an opening line for each student listed in the report.",
+      "statement": "The system must include a Research Agent to gather property history, comparable properties, and neighborhood trends.",
       "fulfilled_by": [
-        "STORY-009"
+        "STORY-004"
       ]
     },
     {
       "id": "REQ-007",
       "kind": "FUNC",
-      "cluster": "Instructor Review",
+      "cluster": "AI Agents",
       "priority": "must",
-      "statement": "The system must allow instructors to review and approve the list before sending recommendations.",
+      "statement": "The system must include a Deal Analyst to calculate ARV, rehab assumptions, and potential returns.",
       "fulfilled_by": [
-        "STORY-007"
+        "STORY-005"
       ]
     },
     {
       "id": "REQ-008",
       "kind": "FUNC",
-      "cluster": "Instructor Review",
+      "cluster": "AI Agents",
       "priority": "must",
-      "statement": "The system must flag students for instructor review if unsure about recommending them.",
+      "statement": "The system must include an Outreach Agent to generate communication materials for contacting property owners.",
       "fulfilled_by": [
         "STORY-006"
       ]
     },
     {
       "id": "REQ-009",
-      "kind": "CONSTRAINT",
-      "cluster": "Integration",
+      "kind": "FUNC",
+      "cluster": "AI Agents",
       "priority": "must",
-      "statement": "The system must integrate with the Student Portal to read login data.",
+      "statement": "The system must include a Negotiation Agent to suggest offers and negotiation strategies.",
       "fulfilled_by": [
-        "STORY-001"
+        "STORY-007"
       ]
     },
     {
       "id": "REQ-010",
-      "kind": "CONSTRAINT",
-      "cluster": "Integration",
+      "kind": "FUNC",
+      "cluster": "AI Agents",
       "priority": "must",
-      "statement": "The system must integrate with the Learning Management System to read build progress data.",
-      "fulfilled_by": [
-        "STORY-002"
-      ]
-    },
-    {
-      "id": "REQ-011",
-      "kind": "CONSTRAINT",
-      "cluster": "Integration",
-      "priority": "must",
-      "statement": "The system must integrate with the Attendance Tracking System to read attendance data.",
-      "fulfilled_by": [
-        "STORY-003"
-      ]
-    },
-    {
-      "id": "REQ-012",
-      "kind": "CONSTRAINT",
-      "cluster": "Integration",
-      "priority": "must",
-      "statement": "The system must integrate with the Email Platform to send reports.",
-      "fulfilled_by": [
-        "STORY-008"
-      ]
-    },
-    {
-      "id": "REQ-013",
-      "kind": "SAFE",
-      "cluster": "Data Integrity",
-      "priority": "must",
-      "statement": "The system must ensure data accuracy and consistency across all integrations.",
-      "fulfilled_by": [
-        "STORY-001",
-        "STORY-002",
-        "STORY-003"
-      ]
-    },
-    {
-      "id": "REQ-014",
-      "kind": "NFR",
-      "cluster": "Instructor Interface",
-      "priority": "should",
-      "statement": "Every instructor interface must allow review of recommendations in three clicks or fewer.",
-      "fulfilled_by": [
-        "STORY-010"
-      ]
-    },
-    {
-      "id": "REQ-015",
-      "kind": "SAFE",
-      "cluster": "Error Handling",
-      "priority": "must",
-      "statement": "The system must handle exceptions where data is incomplete or unavailable.",
-      "fulfilled_by": [
-        "STORY-011"
-      ]
-    },
-    {
-      "id": "REQ-016",
-      "kind": "OBS",
-      "cluster": "Audit",
-      "priority": "must",
-      "statement": "The system must log all actions taken for audit purposes.",
-      "fulfilled_by": [
-        "STORY-008"
-      ]
-    },
-    {
-      "id": "REQ-017",
-      "kind": "NFR",
-      "cluster": "Performance",
-      "priority": "should",
-      "statement": "The system must operate with a response time that does not exceed 5 seconds for any user action.",
+      "statement": "The system must include a Due Diligence Agent to create inspection checklists and identify potential issues.",
       "fulfilled_by": [
         "STORY-012"
       ]
     },
     {
-      "id": "REQ-018",
-      "kind": "NFR",
-      "cluster": "User Experience",
-      "priority": "should",
-      "statement": "The system must provide clear error messages to users when issues occur.",
+      "id": "REQ-011",
+      "kind": "FUNC",
+      "cluster": "AI Agents",
+      "priority": "must",
+      "statement": "The system must include a Disposition Agent to suggest strategies for wholesaling, renting, or flipping properties.",
       "fulfilled_by": [
         "STORY-013"
+      ]
+    },
+    {
+      "id": "REQ-012",
+      "kind": "FUNC",
+      "cluster": "Opportunity Explanation",
+      "priority": "must",
+      "statement": "The system must provide a 'Why Now?' explanation for each property to justify its current opportunity status.",
+      "fulfilled_by": [
+        "STORY-014"
+      ]
+    },
+    {
+      "id": "REQ-013",
+      "kind": "FUNC",
+      "cluster": "Opportunity Feed",
+      "priority": "must",
+      "statement": "The system must allow users to view a 'Top 20 Opportunities This Week' list based on their input criteria.",
+      "fulfilled_by": [
+        "STORY-008"
+      ]
+    },
+    {
+      "id": "REQ-014",
+      "kind": "FUNC",
+      "cluster": "Image Recognition",
+      "priority": "must",
+      "statement": "The system must support image recognition to identify properties from user-uploaded photos.",
+      "fulfilled_by": [
+        "STORY-009"
+      ]
+    },
+    {
+      "id": "REQ-015",
+      "kind": "SAFE",
+      "cluster": "Trust and Safety",
+      "priority": "must",
+      "statement": "The system must flag uncertain opportunities for human review.",
+      "fulfilled_by": [
+        "STORY-010"
+      ]
+    },
+    {
+      "id": "REQ-016",
+      "kind": "SAFE",
+      "cluster": "Trust and Safety",
+      "priority": "must",
+      "statement": "The system must provide a clear rationale for decisions made in property recommendations.",
+      "fulfilled_by": [
+        "STORY-015"
+      ]
+    },
+    {
+      "id": "REQ-017",
+      "kind": "NFR",
+      "cluster": "Business Model",
+      "priority": "should",
+      "statement": "The system must monetize through investor subscriptions and transaction-based fees.",
+      "fulfilled_by": []
+    },
+    {
+      "id": "REQ-018",
+      "kind": "FUNC",
+      "cluster": "Monetization",
+      "priority": "should",
+      "statement": "The system must allow users to purchase detailed Opportunity Reports for individual properties.",
+      "fulfilled_by": [
+        "STORY-011"
       ]
     }
   ],
   "releases": [
     {
       "key": "r0",
-      "demo": "Show a basic report generated from integrated data sources with audit logging.",
-      "goal": "Establish data integration and basic reporting functionality.",
-      "name": "Initial Setup and Data Integration",
-      "week_end": 4,
+      "demo": "Show a user selecting a location and receiving an Opportunity Score with AI Assessment and recommended action.",
+      "goal": "Enable basic property analysis and opportunity scoring.",
+      "name": "Initial Property Analysis",
+      "week_end": 2,
       "week_start": 1,
       "story_ids": [
         "STORY-001",
-        "STORY-002",
-        "STORY-003",
-        "STORY-004"
+        "STORY-002"
       ],
-      "starts_on": "2026-08-15",
+      "starts_on": "2026-08-18",
       "ends_on": "2026-08-23",
       "is_demo_target": false
     },
     {
       "key": "r1",
-      "demo": "Demonstrate identification of students based on combined data signals.",
-      "goal": "Implement advanced data analysis to identify struggling students.",
-      "name": "Advanced Data Analysis",
-      "week_end": 8,
-      "week_start": 5,
+      "demo": "Demonstrate the creation of an AI workspace with active Research and Deal Analyst agents.",
+      "goal": "Introduce AI workspace and core agents for property analysis.",
+      "name": "AI Workspace and Agents",
+      "week_end": 4,
+      "week_start": 3,
       "story_ids": [
+        "STORY-003",
+        "STORY-004",
         "STORY-005",
-        "STORY-006",
-        "STORY-014"
+        "STORY-012",
+        "STORY-013"
       ],
-      "starts_on": "2026-08-26",
+      "starts_on": "2026-08-25",
       "ends_on": "2026-09-02",
-      "is_demo_target": false
+      "is_demo_target": true
     },
     {
       "key": "r2",
-      "demo": "Show instructors reviewing and approving recommendations before sending.",
-      "goal": "Enable instructor review and approval of recommendations.",
-      "name": "Instructor Review and Approval",
-      "week_end": 12,
-      "week_start": 9,
+      "demo": "Show Outreach Agent generating communication materials and Negotiation Agent suggesting offers.",
+      "goal": "Expand agent functionalities and introduce Outreach and Negotiation agents.",
+      "name": "Enhanced Agent Capabilities",
+      "week_end": 6,
+      "week_start": 5,
       "story_ids": [
+        "STORY-006",
         "STORY-007",
-        "STORY-008"
+        "STORY-014",
+        "STORY-015"
       ],
-      "starts_on": "2026-09-07",
+      "starts_on": "2026-09-04",
       "ends_on": "2026-09-11",
       "is_demo_target": false
     },
     {
       "key": "r3",
-      "demo": "Present enhanced reports with suggested messages and improved UI.",
-      "goal": "Improve report content and user interface for instructors.",
-      "name": "Enhanced Reporting and User Experience",
-      "week_end": 16,
-      "week_start": 13,
+      "demo": "Display the 'Top 20 Opportunities' feed and identify a property from a user-uploaded photo.",
+      "goal": "Implement the Opportunity Feed and image recognition features.",
+      "name": "Opportunity Feed and Image Recognition",
+      "week_end": 8,
+      "week_start": 7,
       "story_ids": [
-        "STORY-009",
-        "STORY-010"
+        "STORY-008",
+        "STORY-009"
       ],
       "starts_on": "2026-09-16",
       "ends_on": "2026-09-21",
@@ -252,17 +250,16 @@
     },
     {
       "key": "r4",
-      "demo": "Demonstrate system handling incomplete data and providing error messages.",
-      "goal": "Optimize system performance and handle data exceptions.",
-      "name": "System Optimization and Error Handling",
-      "week_end": 20,
-      "week_start": 17,
+      "demo": "Show a flagged opportunity for review and a user purchasing an Opportunity Report.",
+      "goal": "Introduce trust mechanisms and monetization features.",
+      "name": "Trust and Monetization",
+      "week_end": 10,
+      "week_start": 9,
       "story_ids": [
-        "STORY-011",
-        "STORY-012",
-        "STORY-013"
+        "STORY-010",
+        "STORY-011"
       ],
-      "starts_on": "2026-09-24",
+      "starts_on": "2026-09-26",
       "ends_on": "2026-10-01",
       "is_demo_target": false
     }
@@ -270,549 +267,744 @@
   "stories": [
     {
       "id": "STORY-001",
-      "title": "User Login via Student Portal",
+      "title": "User selects location and receives Opportunity Score",
       "release": "r0",
       "fulfills": [
-        "REQ-009",
-        "REQ-013"
+        "REQ-001",
+        "REQ-002"
       ],
-      "narrative": "As a student, I want to log in via the Student Portal, so that I can access my data securely.",
+      "narrative": "As an investor, I want to select a location and receive an Opportunity Score, so that I can identify potential properties.",
       "acceptance": [
-        "Given a student with valid credentials, when they log in, then they should access their dashboard.",
-        "Given a student with invalid credentials, when they attempt to log in, then they should see an error message.",
-        "Trust: All login attempts must be logged for audit purposes."
+        "Given a user selects a city, when the system analyzes properties, then it displays an Opportunity Score.",
+        "Given a user selects a ZIP code, when no properties are found, then it displays a 'No opportunities' message.",
+        "Trust: The system logs the analysis process for audit."
       ],
       "blocked_by": [],
-      "owner_agent": "Data Analyzer",
+      "owner_agent": "Opportunity Scorer",
       "failure_paths": [
-        "Invalid credentials",
-        "Network failure",
-        "API downtime"
+        "Invalid location input",
+        "No properties found",
+        "Analysis service timeout"
       ],
-      "task_guidance": "Use the Student Portal API to authenticate users and log all login attempts in the audit log.",
-      "due_on": "2026-08-15",
+      "task_guidance": "Implement location selection UI and integrate with property analysis backend.",
+      "due_on": "2026-08-18",
       "due_baseline_on": "2026-08-15"
     },
     {
       "id": "STORY-002",
-      "title": "Display Student Progress from LMS",
+      "title": "AI Assessment and recommended action for properties",
       "release": "r0",
       "fulfills": [
-        "REQ-010",
-        "REQ-013"
+        "REQ-003",
+        "REQ-004"
       ],
-      "narrative": "As an instructor, I want to view student progress from the LMS, so that I can monitor their learning journey.",
+      "narrative": "As an investor, I want an AI Assessment and recommended action for properties, so that I can decide on next steps.",
       "acceptance": [
-        "Given a student enrolled in a course, when the instructor views the progress, then the correct data should be displayed.",
-        "Given a student not enrolled in any course, when the instructor views the progress, then a 'no data available' message should be shown.",
-        "Trust: All data retrieval actions must be logged for audit purposes."
+        "Given a property with a high Opportunity Score, when viewed, then it shows an AI Assessment and recommended action.",
+        "Given a property with a low Opportunity Score, when viewed, then it shows a minimal assessment.",
+        "Trust: The system logs the rationale for the recommended action."
       ],
       "blocked_by": [],
-      "owner_agent": "Data Analyzer",
+      "owner_agent": "AI Assessment Generator",
       "failure_paths": [
-        "Data mismatch",
-        "Network failure",
-        "API downtime"
+        "Assessment logic failure",
+        "Missing property data",
+        "Recommendation mismatch"
       ],
-      "task_guidance": "Integrate with the LMS API to fetch and display student progress data, ensuring data consistency.",
-      "due_on": "2026-08-18",
+      "task_guidance": "Develop AI Assessment logic and integrate with property details view.",
+      "due_on": "2026-08-23",
       "due_baseline_on": "2026-08-18"
     },
     {
       "id": "STORY-003",
-      "title": "Track Attendance via Attendance System",
-      "release": "r0",
+      "title": "Create AI workspace for selected property",
+      "release": "r1",
       "fulfills": [
-        "REQ-011",
-        "REQ-013"
+        "REQ-005"
       ],
-      "narrative": "As an instructor, I want to track student attendance, so that I can ensure students are attending classes.",
+      "narrative": "As an investor, I want to create an AI workspace for a property, so that I can manage its analysis and actions.",
       "acceptance": [
-        "Given a student attends a class, when the instructor checks attendance, then the attendance should be marked as present.",
-        "Given a student misses a class, when the instructor checks attendance, then the attendance should be marked as absent.",
-        "Trust: All attendance records must be logged for audit purposes."
+        "Given a user selects 'Work This Deal', when confirmed, then an AI workspace is created.",
+        "Given a workspace creation failure, when retried, then it succeeds or provides an error message.",
+        "Trust: The system logs workspace creation events."
       ],
-      "blocked_by": [],
-      "owner_agent": "Data Analyzer",
+      "blocked_by": [
+        "STORY-002"
+      ],
+      "owner_agent": "AI Workspace Creator",
       "failure_paths": [
-        "Incorrect attendance data",
-        "Network failure",
-        "API downtime"
+        "Workspace creation failure",
+        "Duplicate workspace",
+        "Data sync issues"
       ],
-      "task_guidance": "Integrate with the Attendance Tracking System to fetch and log attendance data.",
-      "due_on": "2026-08-20",
+      "task_guidance": "Design AI workspace structure and integrate with property selection.",
+      "due_on": "2026-08-25",
       "due_baseline_on": "2026-08-20"
     },
     {
       "id": "STORY-004",
-      "title": "Generate Basic Weekly Report",
-      "release": "r0",
+      "title": "Research Agent gathers property data",
+      "release": "r1",
       "fulfills": [
-        "REQ-004"
+        "REQ-006"
       ],
-      "narrative": "As an instructor, I want to receive a basic weekly report, so that I can see which students are inactive.",
+      "narrative": "As an investor, I want the Research Agent to gather property data, so that I have comprehensive information for decision-making.",
       "acceptance": [
-        "Given the system has collected data, when it is Monday morning, then a basic report is generated.",
-        "Given a student is identified as inactive, when the report is generated, then the student appears on the report.",
-        "Trust: All report generations are logged for audit purposes."
+        "Given a property in a workspace, when analyzed, then the Research Agent provides property history and trends.",
+        "Given missing data sources, when attempted, then it logs an error and continues.",
+        "Trust: The system logs all data retrieval actions."
       ],
-      "blocked_by": [],
-      "owner_agent": "Report Generator",
+      "blocked_by": [
+        "STORY-003"
+      ],
+      "owner_agent": "Research Agent",
       "failure_paths": [
-        "Data is incomplete",
-        "Report generation fails",
-        "Email delivery fails"
+        "Data source unavailable",
+        "Incomplete data",
+        "Incorrect data mapping"
       ],
-      "task_guidance": "Create a report generation module that compiles data from all sources into a weekly report.",
-      "due_on": "2026-08-23",
+      "task_guidance": "Implement data retrieval for property history and trends.",
+      "due_on": "2026-08-27",
       "due_baseline_on": "2026-08-23"
     },
     {
       "id": "STORY-005",
-      "title": "Analyze Combined Data Signals",
+      "title": "Deal Analyst calculates property returns",
       "release": "r1",
       "fulfills": [
-        "REQ-001",
-        "REQ-002",
-        "REQ-003"
+        "REQ-007"
       ],
-      "narrative": "As an instructor, I want the system to analyze combined data signals, so that I can identify students who are truly struggling.",
+      "narrative": "As an investor, I want the Deal Analyst to calculate property returns, so that I can evaluate investment potential.",
       "acceptance": [
-        "Given a student has not logged in and missed sessions, when the system analyzes data, then the student is flagged as struggling.",
-        "Given a student has logged in but not updated their build, when the system analyzes data, then the student is flagged as struggling.",
-        "Trust: All analysis results are logged for audit purposes."
+        "Given a property in a workspace, when analyzed, then the Deal Analyst provides ARV and potential returns.",
+        "Given calculation errors, when detected, then it logs the issue and retries.",
+        "Trust: The system logs all calculation processes."
       ],
       "blocked_by": [
-        "STORY-004"
+        "STORY-003"
       ],
-      "owner_agent": "Data Analyzer",
+      "owner_agent": "Deal Analyst",
       "failure_paths": [
-        "Data analysis logic fails",
-        "Incorrect data interpretation",
-        "Analysis results are not logged"
+        "Calculation error",
+        "Data inconsistency",
+        "ARV estimation failure"
       ],
-      "task_guidance": "Implement data analysis logic that combines login, build, and attendance data to identify struggling students.",
-      "due_on": "2026-08-26",
+      "task_guidance": "Develop calculation logic for ARV and investment returns.",
+      "due_on": "2026-08-29",
       "due_baseline_on": "2026-08-26"
     },
     {
       "id": "STORY-006",
-      "title": "Flag Students for Instructor Review",
-      "release": "r1",
+      "title": "Outreach Agent generates communication materials",
+      "release": "r2",
       "fulfills": [
         "REQ-008"
       ],
-      "narrative": "As an instructor, I want the system to flag students for review, so that I can decide on recommendations.",
+      "narrative": "As an investor, I want the Outreach Agent to generate communication materials, so that I can contact property owners effectively.",
       "acceptance": [
-        "Given a student has mixed signals, when the system analyzes data, then the student is flagged for review.",
-        "Given a student is flagged for review, when the instructor checks the report, then the student appears with a review flag.",
-        "Trust: All flagged students are logged for audit purposes."
+        "Given a property in a workspace, when prompted, then the Outreach Agent generates a homeowner letter and email.",
+        "Given a communication failure, when detected, then it logs the issue and retries.",
+        "Trust: The system logs all communication generation actions."
       ],
       "blocked_by": [
         "STORY-005"
       ],
-      "owner_agent": "Student Flagging Assistant",
+      "owner_agent": "Outreach Agent",
       "failure_paths": [
-        "Flagging logic fails",
-        "Flagged students are not logged",
-        "Instructor cannot see flagged students"
+        "Template generation error",
+        "Email service failure",
+        "Incorrect contact details"
       ],
-      "task_guidance": "Implement a flagging mechanism for students with mixed data signals.",
-      "due_on": "2026-08-29",
+      "task_guidance": "Implement templates for letters and emails, integrate with property data.",
+      "due_on": "2026-09-04",
       "due_baseline_on": "2026-08-29"
     },
     {
       "id": "STORY-007",
-      "title": "Instructor Review and Approval Interface",
+      "title": "Negotiation Agent suggests offers",
       "release": "r2",
       "fulfills": [
-        "REQ-007"
+        "REQ-009"
       ],
-      "narrative": "As an instructor, I want to review and approve recommendations, so that I can ensure accuracy before sending.",
+      "narrative": "As an investor, I want the Negotiation Agent to suggest offers, so that I can negotiate effectively with property owners.",
       "acceptance": [
-        "Given a report is generated, when an instructor reviews it, then they can approve or modify recommendations.",
-        "Given an instructor approves a recommendation, when the system sends it, then it is marked as approved.",
-        "Trust: All instructor actions are logged for audit purposes."
+        "Given a property in a workspace, when analyzed, then the Negotiation Agent suggests an initial and maximum offer.",
+        "Given a suggestion error, when detected, then it logs the issue and retries.",
+        "Trust: The system logs all offer suggestion actions."
       ],
       "blocked_by": [
-        "STORY-006"
+        "STORY-005"
       ],
-      "owner_agent": "Instructor Interface Manager",
+      "owner_agent": "Negotiation Agent",
       "failure_paths": [
-        "Interface fails to load",
-        "Approval actions are not logged",
-        "Modifications are not saved"
+        "Suggestion logic failure",
+        "Data inconsistency",
+        "Offer range mismatch"
       ],
-      "task_guidance": "Develop an interface for instructors to review and approve recommendations before sending.",
+      "task_guidance": "Develop logic for offer suggestions based on property data.",
       "due_on": "2026-09-07",
       "due_baseline_on": "2026-09-07"
     },
     {
       "id": "STORY-008",
-      "title": "Deliver Reports via Email Platform",
-      "release": "r2",
+      "title": "Opportunity Feed displays top opportunities",
+      "release": "r3",
       "fulfills": [
-        "REQ-012",
-        "REQ-016"
+        "REQ-013"
       ],
-      "narrative": "As an instructor, I want to receive weekly reports via email, so that I can review student performance.",
+      "narrative": "As an investor, I want to view the 'Top 20 Opportunities This Week', so that I can quickly identify potential investments.",
       "acceptance": [
-        "Given a weekly report is generated, when the report is sent, then the instructor should receive it via email.",
-        "Given an invalid email address, when the report is sent, then an error message should be logged.",
-        "Trust: All report deliveries must be logged for audit purposes."
+        "Given user criteria, when processed, then the system displays the top 20 opportunities.",
+        "Given no matching opportunities, when processed, then it displays a 'No opportunities' message.",
+        "Trust: The system logs the criteria and results for audit."
       ],
       "blocked_by": [
         "STORY-007"
       ],
-      "owner_agent": "Report Delivery System",
+      "owner_agent": "Opportunity Feed Manager",
       "failure_paths": [
-        "Invalid email address",
-        "Email server downtime",
-        "Network failure"
+        "Feed generation error",
+        "Criteria mismatch",
+        "UI rendering issue"
       ],
-      "task_guidance": "Use the Email Platform API to send reports and log delivery actions in the audit log.",
-      "due_on": "2026-09-11",
+      "task_guidance": "Implement opportunity feed UI and integrate with scoring logic.",
+      "due_on": "2026-09-16",
       "due_baseline_on": "2026-09-11"
     },
     {
       "id": "STORY-009",
-      "title": "Enhance Report with Suggested Messages",
-      "release": "r3",
-      "fulfills": [
-        "REQ-006"
-      ],
-      "narrative": "As an instructor, I want the report to include suggested messages, so that I can communicate effectively with students.",
-      "acceptance": [
-        "Given a student is listed in the report, when the report is generated, then it includes a suggested message.",
-        "Given a suggested message is inappropriate, when an instructor reviews it, then they can modify it.",
-        "Trust: All suggested messages are logged for audit purposes."
-      ],
-      "blocked_by": [
-        "STORY-008"
-      ],
-      "owner_agent": "Report Generator",
-      "failure_paths": [
-        "Message generation fails",
-        "Inappropriate messages are not flagged",
-        "Messages are not logged"
-      ],
-      "task_guidance": "Enhance the report generation module to include suggested messages for each student.",
-      "due_on": "2026-09-16",
-      "due_baseline_on": "2026-09-16"
-    },
-    {
-      "id": "STORY-010",
-      "title": "Improve User Interface for Report Review",
+      "title": "Image recognition identifies properties from photos",
       "release": "r3",
       "fulfills": [
         "REQ-014"
       ],
-      "narrative": "As an instructor, I want an improved interface for report review, so that I can easily navigate and approve recommendations.",
+      "narrative": "As an investor, I want to identify properties from photos, so that I can assess opportunities on-the-go.",
       "acceptance": [
-        "Given the interface is loaded, when an instructor navigates it, then it is user-friendly and responsive.",
-        "Given an instructor reviews a report, when they approve it, then the interface confirms the action.",
-        "Trust: All interface interactions are logged for audit purposes."
+        "Given a user-uploaded photo, when processed, then the system identifies the property and displays details.",
+        "Given an unrecognized photo, when processed, then it displays an error message.",
+        "Trust: The system logs all image recognition attempts."
       ],
       "blocked_by": [
-        "STORY-009"
+        "STORY-008"
       ],
-      "owner_agent": "Instructor Interface Manager",
+      "owner_agent": "Image Recognition Processor",
       "failure_paths": [
-        "Interface is not user-friendly",
-        "Approval actions are not confirmed",
-        "Interface interactions are not logged"
+        "Image recognition failure",
+        "Incorrect property match",
+        "Photo upload error"
       ],
-      "task_guidance": "Redesign the report review interface to enhance usability and responsiveness.",
+      "task_guidance": "Integrate image recognition API and connect to property database.",
       "due_on": "2026-09-21",
-      "due_baseline_on": "2026-09-21"
+      "due_baseline_on": "2026-09-16"
     },
     {
-      "id": "STORY-011",
-      "title": "Handle Incomplete Data Gracefully",
+      "id": "STORY-010",
+      "title": "Flag uncertain opportunities for review",
       "release": "r4",
       "fulfills": [
         "REQ-015"
       ],
-      "narrative": "As a developer, I want the system to handle incomplete data, so that it can still generate useful reports.",
+      "narrative": "As an investor, I want uncertain opportunities flagged for review, so that I can ensure decision accuracy.",
       "acceptance": [
-        "Given data is incomplete, when the system generates a report, then it handles the missing data gracefully.",
-        "Given data is incomplete, when an instructor reviews the report, then they are informed of the missing data.",
-        "Trust: All instances of incomplete data are logged for audit purposes."
+        "Given an uncertain opportunity, when detected, then the system flags it for review.",
+        "Given a flagging error, when detected, then it logs the issue and retries.",
+        "Trust: The system logs all flagging actions for audit."
       ],
       "blocked_by": [
-        "STORY-010"
+        "STORY-009"
       ],
-      "owner_agent": "Data Analyzer",
+      "owner_agent": "Opportunity Review Flag",
       "failure_paths": [
-        "Incomplete data causes report failure",
-        "Instructors are not informed of missing data",
-        "Incomplete data is not logged"
+        "Flagging logic failure",
+        "Review process error",
+        "Notification failure"
       ],
-      "task_guidance": "Implement logic to handle incomplete data during report generation and notify instructors.",
-      "due_on": "2026-09-24",
-      "due_baseline_on": "2026-09-24"
+      "task_guidance": "Implement uncertainty detection logic and flagging mechanism.",
+      "due_on": "2026-09-26",
+      "due_baseline_on": "2026-09-21"
     },
     {
-      "id": "STORY-012",
-      "title": "Optimize System Performance",
-      "release": "r4",
-      "fulfills": [
-        "REQ-017"
-      ],
-      "narrative": "As a developer, I want to optimize system performance, so that it responds quickly to user actions.",
-      "acceptance": [
-        "Given the system is under load, when a user performs an action, then the response time does not exceed 5 seconds.",
-        "Given the system is optimized, when an instructor uses it, then they experience improved performance.",
-        "Trust: All performance metrics are logged for audit purposes."
-      ],
-      "blocked_by": [
-        "STORY-011"
-      ],
-      "owner_agent": "System Optimizer",
-      "failure_paths": [
-        "System response time exceeds 5 seconds",
-        "Performance optimizations fail",
-        "Performance metrics are not logged"
-      ],
-      "task_guidance": "Optimize database queries and API calls to improve system performance.",
-      "due_on": "2026-09-28",
-      "due_baseline_on": "2026-09-28"
-    },
-    {
-      "id": "STORY-013",
-      "title": "Provide Clear Error Messages",
+      "id": "STORY-011",
+      "title": "User purchases detailed Opportunity Report",
       "release": "r4",
       "fulfills": [
         "REQ-018"
       ],
-      "narrative": "As an instructor, I want clear error messages, so that I can understand and resolve issues quickly.",
+      "narrative": "As an investor, I want to purchase detailed Opportunity Reports, so that I can access in-depth property analysis.",
       "acceptance": [
-        "Given an error occurs, when the system displays a message, then it is clear and informative.",
-        "Given an error message is displayed, when an instructor follows the guidance, then they can resolve the issue.",
-        "Trust: All error messages are logged for audit purposes."
+        "Given a user selects a property, when purchasing a report, then the system provides the detailed report.",
+        "Given a purchase failure, when detected, then it logs the issue and retries.",
+        "Trust: The system logs all purchase transactions for audit."
       ],
       "blocked_by": [
-        "STORY-012"
+        "STORY-010"
       ],
-      "owner_agent": "System Optimizer",
+      "owner_agent": "Opportunity Report Seller",
       "failure_paths": [
-        "Error messages are unclear",
-        "Instructors cannot resolve issues",
-        "Error messages are not logged"
+        "Payment processing error",
+        "Report generation failure",
+        "User authentication error"
       ],
-      "task_guidance": "Develop a comprehensive error messaging system that provides clear guidance to users.",
+      "task_guidance": "Develop purchase flow and integrate with payment gateway.",
       "due_on": "2026-10-01",
+      "due_baseline_on": "2026-09-24"
+    },
+    {
+      "id": "STORY-012",
+      "title": "Due Diligence Agent creates inspection checklists",
+      "release": "r1",
+      "fulfills": [
+        "REQ-010"
+      ],
+      "narrative": "As a property analyst, I want a Due Diligence Agent to create inspection checklists, so that I can identify potential issues with properties.",
+      "acceptance": [
+        "Given a property is selected, When the Due Diligence Agent is activated, Then it creates an inspection checklist for the property.",
+        "Given a property with known issues, When the Due Diligence Agent reviews it, Then it identifies potential issues.",
+        "Trust: The system logs the checklist creation and identified issues for audit."
+      ],
+      "blocked_by": [
+        "STORY-003"
+      ],
+      "owner_agent": "Due Diligence Agent",
+      "failure_paths": [
+        "Agent fails to generate checklist",
+        "Checklist misses critical issues",
+        "Agent logs incorrect data"
+      ],
+      "task_guidance": "Implement the Due Diligence Agent to generate checklists based on property data. Ensure it logs all actions in the audit trail.",
+      "due_on": "2026-08-31",
+      "due_baseline_on": "2026-09-28"
+    },
+    {
+      "id": "STORY-013",
+      "title": "Disposition Agent suggests property strategies",
+      "release": "r1",
+      "fulfills": [
+        "REQ-011"
+      ],
+      "narrative": "As a property investor, I want a Disposition Agent to suggest strategies for properties, so that I can decide whether to wholesale, rent, or flip them.",
+      "acceptance": [
+        "Given a property is selected, When the Disposition Agent is activated, Then it suggests strategies for wholesaling, renting, or flipping.",
+        "Given a property with specific market conditions, When the Disposition Agent analyzes it, Then it suggests the most viable strategy.",
+        "Trust: The system logs the strategy suggestions and rationale for audit."
+      ],
+      "blocked_by": [
+        "STORY-003"
+      ],
+      "owner_agent": "Disposition Agent",
+      "failure_paths": [
+        "Agent suggests non-viable strategy",
+        "Agent fails to log rationale",
+        "Agent provides incomplete analysis"
+      ],
+      "task_guidance": "Develop the Disposition Agent to analyze property data and suggest strategies. Ensure all suggestions and rationales are logged.",
+      "due_on": "2026-09-02",
       "due_baseline_on": "2026-10-01"
     },
     {
       "id": "STORY-014",
-      "title": "Generate Weekly Report with Student Attention List",
-      "release": "r1",
+      "title": "Provide 'Why Now?' explanation for properties",
+      "release": "r2",
       "fulfills": [
-        "REQ-005"
+        "REQ-012"
       ],
-      "narrative": "As an instructor, I want to receive a weekly report highlighting students who need attention, so that I can provide timely support.",
+      "narrative": "As a property analyst, I want the system to provide a 'Why Now?' explanation for each property, so that I can understand its current opportunity status.",
       "acceptance": [
-        "Given student performance data, when the weekly report is generated, then it should include a list of students needing attention.",
-        "Given no students need attention, when the weekly report is generated, then the list should be empty.",
-        "Trust: The generation of the report must be logged for audit purposes."
+        "Given a property is selected, When the analysis is complete, Then the system provides a 'Why Now?' explanation.",
+        "Given a property with fluctuating market conditions, When the analysis is conducted, Then the explanation reflects current conditions.",
+        "Trust: The system logs the 'Why Now?' explanation and supporting data for audit."
       ],
       "blocked_by": [
-        "STORY-004"
+        "STORY-007"
       ],
-      "owner_agent": "Report Generator",
+      "owner_agent": "Explanation Provider",
       "failure_paths": [
-        "Data inconsistency",
-        "Report generation failure",
-        "Incorrect student list"
+        "Explanation is outdated",
+        "Explanation lacks supporting data",
+        "System fails to log explanation"
       ],
-      "task_guidance": "Analyze student performance data to identify students needing attention and include them in the weekly report.",
-      "due_on": "2026-09-02",
+      "task_guidance": "Enhance the Opportunity Analysis Module to generate 'Why Now?' explanations based on current market data. Ensure explanations are logged.",
+      "due_on": "2026-09-09",
       "due_baseline_on": "2026-09-02"
+    },
+    {
+      "id": "STORY-015",
+      "title": "Provide rationale for property recommendations",
+      "release": "r2",
+      "fulfills": [
+        "REQ-016"
+      ],
+      "narrative": "As a property investor, I want the system to provide a clear rationale for property recommendations, so that I can trust the decision-making process.",
+      "acceptance": [
+        "Given a property recommendation is made, When the user requests details, Then the system provides a clear rationale.",
+        "Given a recommendation with multiple factors, When the user reviews it, Then the rationale includes all relevant factors.",
+        "Trust: The system logs the rationale and decision-making process for audit."
+      ],
+      "blocked_by": [
+        "STORY-007"
+      ],
+      "owner_agent": "Explanation Provider",
+      "failure_paths": [
+        "Rationale is unclear",
+        "Rationale omits key factors",
+        "System fails to log rationale"
+      ],
+      "task_guidance": "Update the Recommendation Engine to include detailed rationales for each recommendation. Ensure all rationales are logged for audit.",
+      "due_on": "2026-09-11",
+      "due_baseline_on": "2026-09-11"
     }
   ],
   "agents": [
     {
       "id": "AGENT-001",
-      "name": "Data Analyzer",
+      "name": "Opportunity Scorer",
       "owns": [
-        "STORY-001",
-        "STORY-002",
-        "STORY-003",
-        "STORY-005",
-        "STORY-011"
+        "STORY-001"
       ],
       "inputs": [
-        "Student Portal",
-        "Learning Management System",
-        "Attendance Tracking System"
+        "User-selected location or strategy"
       ],
       "skills": [
-        "read data",
-        "analyze patterns",
-        "identify inactivity"
+        "analyze property data",
+        "calculate score"
       ],
       "outputs": [
-        "Analysis results"
+        "Opportunity Score"
       ],
-      "purpose": "Analyze student data to identify inactivity, lack of progress, and missed sessions.",
-      "trigger": "Weekly schedule every Monday morning",
-      "trigger_type": "schedule",
-      "approval_gates": [
-        "REQ-013 — The system must ensure data accuracy and consistency across all integrations.",
-        "REQ-015 — The system must handle exceptions where data is incomplete or unavailable."
-      ],
-      "autonomy_level": "acts_with_approval",
-      "escalation_rules": [
-        "If data is incomplete or unavailable, log the issue and notify the instructor"
-      ]
+      "purpose": "To analyze properties and assign an Opportunity Score based on user-selected criteria.",
+      "trigger": "User selects location or investment strategy",
+      "trigger_type": "event",
+      "approval_gates": [],
+      "autonomy_level": "acts_autonomously",
+      "escalation_rules": []
     },
     {
       "id": "AGENT-002",
-      "name": "Report Generator",
+      "name": "AI Assessment Generator",
       "owns": [
-        "STORY-004",
-        "STORY-009",
-        "STORY-014"
+        "STORY-002"
       ],
       "inputs": [
-        "Analysis results"
+        "Opportunity Score"
       ],
       "skills": [
-        "generate reports",
-        "suggest messages"
+        "generate assessment",
+        "recommend actions"
       ],
       "outputs": [
-        "Weekly report with student attention list",
-        "Suggested opening lines"
+        "AI Assessment",
+        "Recommended Action"
       ],
-      "purpose": "Generate and enhance weekly reports with student attention lists and suggested messages.",
-      "trigger": "Completion of data analysis",
+      "purpose": "To provide an AI Assessment and recommended action for each property based on its Opportunity Score.",
+      "trigger": "Opportunity Score is assigned",
       "trigger_type": "event",
       "approval_gates": [],
       "autonomy_level": "acts_autonomously",
-      "escalation_rules": [
-        "If unable to generate report, log the issue and notify the instructor"
-      ]
+      "escalation_rules": []
     },
     {
       "id": "AGENT-003",
-      "name": "Instructor Interface Manager",
+      "name": "AI Workspace Creator",
       "owns": [
-        "STORY-007",
-        "STORY-010"
+        "STORY-003"
       ],
       "inputs": [
-        "Weekly report with student attention list"
+        "User selection"
       ],
       "skills": [
-        "display data",
-        "capture approval"
+        "create workspace"
       ],
       "outputs": [
-        "Approved report"
+        "AI Workspace"
       ],
-      "purpose": "Provide an interface for instructors to review and approve reports.",
-      "trigger": "Instructor login to review interface",
-      "trigger_type": "manual",
+      "purpose": "To create an AI workspace for properties when a user selects 'Work This Deal'.",
+      "trigger": "User selects 'Work This Deal'",
+      "trigger_type": "event",
       "approval_gates": [],
-      "autonomy_level": "acts_with_approval",
-      "escalation_rules": [
-        "If instructor does not approve, hold report for further review"
-      ]
+      "autonomy_level": "acts_autonomously",
+      "escalation_rules": []
     },
     {
       "id": "AGENT-004",
-      "name": "Report Delivery System",
+      "name": "Research Agent",
       "owns": [
-        "STORY-008"
+        "STORY-004"
       ],
       "inputs": [
-        "Approved report"
+        "Property data"
       ],
       "skills": [
-        "send email",
-        "log actions"
+        "gather data",
+        "analyze trends"
       ],
       "outputs": [
-        "Email sent to instructor",
-        "Audit log entry"
+        "Property history",
+        "Comparable properties",
+        "Neighborhood trends"
       ],
-      "purpose": "Deliver approved reports to instructors via email and log actions for audit.",
-      "trigger": "Approval of report by instructor",
+      "purpose": "To gather property history, comparable properties, and neighborhood trends.",
+      "trigger": "AI Workspace is created",
       "trigger_type": "event",
       "approval_gates": [],
       "autonomy_level": "acts_autonomously",
-      "escalation_rules": [
-        "If email delivery fails, log the issue and retry"
-      ]
+      "escalation_rules": []
     },
     {
       "id": "AGENT-005",
-      "name": "System Optimizer",
+      "name": "Deal Analyst",
       "owns": [
-        "STORY-012",
-        "STORY-013"
+        "STORY-005"
       ],
       "inputs": [
-        "System performance metrics"
+        "Property data"
       ],
       "skills": [
-        "optimize performance",
-        "handle errors"
+        "calculate ARV",
+        "analyze returns"
       ],
       "outputs": [
-        "Optimized system performance",
-        "Clear error messages"
+        "ARV",
+        "Rehab assumptions",
+        "Potential returns"
       ],
-      "purpose": "Ensure system performance and provide clear error messages.",
-      "trigger": "System operation",
+      "purpose": "To calculate ARV, rehab assumptions, and potential returns for properties.",
+      "trigger": "AI Workspace is created",
       "trigger_type": "event",
       "approval_gates": [],
       "autonomy_level": "acts_autonomously",
-      "escalation_rules": [
-        "If performance issues persist, escalate to technical support"
-      ]
+      "escalation_rules": []
     },
     {
       "id": "AGENT-006",
-      "name": "Student Flagging Assistant",
+      "name": "Outreach Agent",
       "owns": [
         "STORY-006"
       ],
       "inputs": [
-        "Analysis results"
+        "Property data"
       ],
       "skills": [
-        "flag uncertain cases"
+        "generate materials"
       ],
       "outputs": [
-        "Flagged student list"
+        "Communication materials"
       ],
-      "purpose": "Flag students for instructor review if unsure about recommendations.",
-      "trigger": "Uncertain analysis result",
+      "purpose": "To generate communication materials for contacting property owners.",
+      "trigger": "AI Workspace is created",
       "trigger_type": "event",
       "approval_gates": [],
-      "autonomy_level": "suggests",
+      "autonomy_level": "acts_autonomously",
+      "escalation_rules": []
+    },
+    {
+      "id": "AGENT-007",
+      "name": "Negotiation Agent",
+      "owns": [
+        "STORY-007"
+      ],
+      "inputs": [
+        "Property data"
+      ],
+      "skills": [
+        "suggest offers",
+        "develop strategies"
+      ],
+      "outputs": [
+        "Suggested offers",
+        "Negotiation strategies"
+      ],
+      "purpose": "To suggest offers and negotiation strategies for properties.",
+      "trigger": "AI Workspace is created",
+      "trigger_type": "event",
+      "approval_gates": [],
+      "autonomy_level": "acts_autonomously",
+      "escalation_rules": []
+    },
+    {
+      "id": "AGENT-008",
+      "name": "Opportunity Feed Manager",
+      "owns": [
+        "STORY-008"
+      ],
+      "inputs": [
+        "Opportunity Scores"
+      ],
+      "skills": [
+        "rank opportunities"
+      ],
+      "outputs": [
+        "Top 20 Opportunities List"
+      ],
+      "purpose": "To display the top 20 opportunities based on user input criteria.",
+      "trigger": "Weekly update",
+      "trigger_type": "schedule",
+      "approval_gates": [],
+      "autonomy_level": "acts_autonomously",
+      "escalation_rules": []
+    },
+    {
+      "id": "AGENT-009",
+      "name": "Image Recognition Processor",
+      "owns": [
+        "STORY-009"
+      ],
+      "inputs": [
+        "User-uploaded photos"
+      ],
+      "skills": [
+        "image recognition"
+      ],
+      "outputs": [
+        "Identified properties"
+      ],
+      "purpose": "To identify properties from user-uploaded photos using image recognition.",
+      "trigger": "User uploads photo",
+      "trigger_type": "event",
+      "approval_gates": [],
+      "autonomy_level": "acts_autonomously",
+      "escalation_rules": []
+    },
+    {
+      "id": "AGENT-010",
+      "name": "Opportunity Review Flag",
+      "owns": [
+        "STORY-010"
+      ],
+      "inputs": [
+        "Opportunity Score"
+      ],
+      "skills": [
+        "evaluate uncertainty"
+      ],
+      "outputs": [
+        "Flagged opportunities"
+      ],
+      "purpose": "To flag uncertain opportunities for human review.",
+      "trigger": "Opportunity Score is assigned",
+      "trigger_type": "event",
+      "approval_gates": [
+        "REQ-015 — The system must flag uncertain opportunities for human review."
+      ],
+      "autonomy_level": "acts_with_approval",
       "escalation_rules": [
-        "If unable to determine, escalate to instructor for manual review"
+        "Uncertainty above threshold"
       ]
+    },
+    {
+      "id": "AGENT-011",
+      "name": "Opportunity Report Seller",
+      "owns": [
+        "STORY-011"
+      ],
+      "inputs": [
+        "User request"
+      ],
+      "skills": [
+        "process transactions"
+      ],
+      "outputs": [
+        "Opportunity Report"
+      ],
+      "purpose": "To facilitate the purchase of detailed Opportunity Reports for individual properties.",
+      "trigger": "User requests report purchase",
+      "trigger_type": "manual",
+      "approval_gates": [],
+      "autonomy_level": "acts_with_approval",
+      "escalation_rules": []
+    },
+    {
+      "id": "AGENT-012",
+      "name": "Due Diligence Agent",
+      "owns": [
+        "STORY-012"
+      ],
+      "inputs": [
+        "Property data"
+      ],
+      "skills": [
+        "create checklists",
+        "identify issues"
+      ],
+      "outputs": [
+        "Inspection checklists",
+        "Potential issues"
+      ],
+      "purpose": "To create inspection checklists and identify potential issues for properties.",
+      "trigger": "AI Workspace is created",
+      "trigger_type": "event",
+      "approval_gates": [],
+      "autonomy_level": "acts_autonomously",
+      "escalation_rules": []
+    },
+    {
+      "id": "AGENT-013",
+      "name": "Disposition Agent",
+      "owns": [
+        "STORY-013"
+      ],
+      "inputs": [
+        "Property data"
+      ],
+      "skills": [
+        "suggest strategies"
+      ],
+      "outputs": [
+        "Disposition strategies"
+      ],
+      "purpose": "To suggest strategies for wholesaling, renting, or flipping properties.",
+      "trigger": "AI Workspace is created",
+      "trigger_type": "event",
+      "approval_gates": [],
+      "autonomy_level": "acts_autonomously",
+      "escalation_rules": []
+    },
+    {
+      "id": "AGENT-014",
+      "name": "Explanation Provider",
+      "owns": [
+        "STORY-014",
+        "STORY-015"
+      ],
+      "inputs": [
+        "Opportunity Score",
+        "Property data"
+      ],
+      "skills": [
+        "generate explanations",
+        "provide rationale"
+      ],
+      "outputs": [
+        "Why Now explanation",
+        "Rationale"
+      ],
+      "purpose": "To provide a 'Why Now?' explanation and rationale for property recommendations.",
+      "trigger": "Opportunity Score is assigned",
+      "trigger_type": "event",
+      "approval_gates": [
+        "REQ-016 — The system must provide a clear rationale for decisions made in property recommendations."
+      ],
+      "autonomy_level": "acts_with_approval",
+      "escalation_rules": []
     }
   ],
   "project": {
-    "name": "Student Engagement Monitoring Tool",
-    "descriptor": "A tool to help instructors identify students who are falling behind by analyzing portal activity, build progress, and attendance, and providing a weekly report with recommendations.",
+    "name": "PropertyPulse AI",
+    "descriptor": "An AI-driven real estate opportunity engine that analyzes properties to provide investors with actionable insights and automation tools.",
     "repo_url": "https://github.com/ColaberryIntern/AcceleratorTesting",
-    "plan_version": 1,
-    "plan_sha256": "f487e85618a066e0b97354737013d902288f894bfd2f89830d0876c16d31f5d9"
+    "plan_version": 2,
+    "plan_sha256": "986da625e067cda3ab4199ab92edd0ef6a1c91a04b5329039e13b3fc4a859eea"
   },
   "schedule": {
     "build_start": "2026-08-13",
     "build_end": "2026-10-01",
     "demo_day": "2026-10-08",
     "build_weeks": 7,
-    "demo_release_key": null,
-    "roadmap_release_keys": [],
+    "demo_release_key": "r1",
+    "roadmap_release_keys": [
+      "r2",
+      "r3",
+      "r4"
+    ],
     "prep": [
       {
         "key": "PREP-1",
@@ -847,50 +1039,37 @@
     ]
   },
   "derived": {
-    "measures": [
-      {
-        "id": "REQ-017",
-        "statement": "The system must operate with a response time that does not exceed 5 seconds for any user action."
-      }
-    ],
+    "measures": [],
     "guardrails": [
       {
-        "id": "REQ-013",
-        "statement": "The system must ensure data accuracy and consistency across all integrations."
+        "id": "REQ-015",
+        "statement": "The system must flag uncertain opportunities for human review."
       },
       {
-        "id": "REQ-015",
-        "statement": "The system must handle exceptions where data is incomplete or unavailable."
+        "id": "REQ-016",
+        "statement": "The system must provide a clear rationale for decisions made in property recommendations."
       }
     ],
-    "systems": [
-      "Student Portal",
-      "Learning Management",
-      "Attendance Tracking",
-      "Email Platform"
-    ],
+    "systems": [],
     "roles": [
-      "student",
-      "instructor",
-      "developer"
+      "investor",
+      "property analyst",
+      "property investor"
     ],
     "counts": {
       "requirements_total": 18,
       "requirements_by_kind": {
-        "CONSTRAINT": 4,
-        "FUNC": 8,
-        "NFR": 3,
-        "OBS": 1,
+        "FUNC": 15,
+        "NFR": 1,
         "SAFE": 2
       },
-      "stories_total": 14,
+      "stories_total": 15,
       "releases_total": 5,
-      "agents_total": 6,
-      "failure_paths_total": 37,
+      "agents_total": 14,
+      "failure_paths_total": 44,
       "agents_by_autonomy": {
-        "acts_autonomously": 3,
-        "acts_with_approval": 2,
-        "suggests": 1
+        "acts_autonomously": 11,
+        "acts_with_approval": 3
       }
     }
   }

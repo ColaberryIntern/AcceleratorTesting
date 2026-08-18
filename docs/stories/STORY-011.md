@@ -1,24 +1,24 @@
-# STORY-011 — Handle Incomplete Data Gracefully
+# STORY-011 — User purchases detailed Opportunity Report
 
-As a developer, I want the system to handle incomplete data, so that it can still generate useful reports.
+As an investor, I want to purchase detailed Opportunity Reports, so that I can access in-depth property analysis.
 
-**Release:** r4 · System Optimization and Error Handling (weeks 17–20)
-**Owner:** Data Analyzer
+**Release:** r4 · Trust and Monetization (weeks 9–10)
+**Owner:** Opportunity Report Seller
 **Blocked by:** STORY-010
 
 ## The requirement this satisfies
 
-- **REQ-015** (Safety, must) — The system must handle exceptions where data is incomplete or unavailable.
+- **REQ-018** (Functional, should) — The system must allow users to purchase detailed Opportunity Reports for individual properties.
 
 ## How to build it
 
-Implement logic to handle incomplete data during report generation and notify instructors.
+Develop purchase flow and integrate with payment gateway.
 
 ## Failure paths you must handle
 
-- Incomplete data causes report failure
-- Instructors are not informed of missing data
-- Incomplete data is not logged
+- Payment processing error
+- Report generation failure
+- User authentication error
 
 ## Acceptance — your stop condition
 
@@ -27,8 +27,8 @@ the same criteria out of `.colaberry/progress.json`, which Claude Code keeps in
 step (see the managed block in CLAUDE.md). Ticking something you have not
 actually met only misleads you.
 
-- [ ] Given data is incomplete, when the system generates a report, then it handles the missing data gracefully.
-- [ ] Given data is incomplete, when an instructor reviews the report, then they are informed of the missing data.
-- [ ] Trust: All instances of incomplete data are logged for audit purposes.
+- [ ] Given a user selects a property, when purchasing a report, then the system provides the detailed report.
+- [ ] Given a purchase failure, when detected, then it logs the issue and retries.
+- [ ] Trust: The system logs all purchase transactions for audit.
 
 When every box above is ticked, stop and show the demo.

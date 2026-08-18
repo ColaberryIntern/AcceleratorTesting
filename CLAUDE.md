@@ -714,13 +714,13 @@ The article's canonical example: spin up a read-only `Explore` subagent to map a
 The bar is: would research take more than 5 file reads OR more than 1 round of web search? If yes, spin up a subagent. If no, stay in-session.
 
 <!-- COLABERRY:BEGIN — managed by the build pipeline. Edits inside this block are overwritten. -->
-# CLAUDE.md — Student Engagement Monitoring Tool
+# CLAUDE.md — PropertyPulse AI
 
 Conventions for this build. Claude Code reads this automatically.
 
 ## What this is
 
-A tool to help instructors identify students who are falling behind by analyzing portal activity, build progress, and attendance, and providing a weekly report with recommendations.
+An AI-driven real estate opportunity engine that analyzes properties to provide investors with actionable insights and automation tools.
 
 ## Where the truth lives
 

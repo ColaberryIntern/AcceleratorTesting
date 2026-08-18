@@ -1,24 +1,24 @@
-# STORY-013 — Provide Clear Error Messages
+# STORY-013 — Disposition Agent suggests property strategies
 
-As an instructor, I want clear error messages, so that I can understand and resolve issues quickly.
+As a property investor, I want a Disposition Agent to suggest strategies for properties, so that I can decide whether to wholesale, rent, or flip them.
 
-**Release:** r4 · System Optimization and Error Handling (weeks 17–20)
-**Owner:** System Optimizer
-**Blocked by:** STORY-012
+**Release:** r1 · AI Workspace and Agents (weeks 3–4)
+**Owner:** Disposition Agent
+**Blocked by:** STORY-003
 
 ## The requirement this satisfies
 
-- **REQ-018** (Non-functional, should) — The system must provide clear error messages to users when issues occur.
+- **REQ-011** (Functional, must) — The system must include a Disposition Agent to suggest strategies for wholesaling, renting, or flipping properties.
 
 ## How to build it
 
-Develop a comprehensive error messaging system that provides clear guidance to users.
+Develop the Disposition Agent to analyze property data and suggest strategies. Ensure all suggestions and rationales are logged.
 
 ## Failure paths you must handle
 
-- Error messages are unclear
-- Instructors cannot resolve issues
-- Error messages are not logged
+- Agent suggests non-viable strategy
+- Agent fails to log rationale
+- Agent provides incomplete analysis
 
 ## Acceptance — your stop condition
 
@@ -27,8 +27,8 @@ the same criteria out of `.colaberry/progress.json`, which Claude Code keeps in
 step (see the managed block in CLAUDE.md). Ticking something you have not
 actually met only misleads you.
 
-- [ ] Given an error occurs, when the system displays a message, then it is clear and informative.
-- [ ] Given an error message is displayed, when an instructor follows the guidance, then they can resolve the issue.
-- [ ] Trust: All error messages are logged for audit purposes.
+- [ ] Given a property is selected, When the Disposition Agent is activated, Then it suggests strategies for wholesaling, renting, or flipping.
+- [ ] Given a property with specific market conditions, When the Disposition Agent analyzes it, Then it suggests the most viable strategy.
+- [ ] Trust: The system logs the strategy suggestions and rationale for audit.
 
 When every box above is ticked, stop and show the demo.

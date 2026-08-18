@@ -25,11 +25,20 @@ text drifts — a rewritten dash or a changed full stop makes a claim the platfo
 cannot match, and the story stays unverified with your work already done. Step 3
 below has the exact procedure.
 
+**If this repo already has some of the Command Center in it, do not start over.**
+Step 2a below takes stock before anything is written and Step 2b repairs in place;
+work that is already right is kept, not replaced. And if the seeded story carries
+fewer lines than the acceptance list at the foot of this file, this build predates a
+criterion that has since been added — there are 5 now.
+Copy the missing line in with `"passed": false` and earn it; do not tick it to make
+the two lists the same length.
+
 ---
 
 ## Read this first
 This is the first thing you build, before any part of the system itself. It is a Command Center: one page that shows what you are building, what it is meant to move, and how far along you are. You will keep it open for the rest of the programme, and it is what you demo from.
 Everything below is YOUR project, taken from the plan you just produced. Where a section says nothing is defined yet, build the empty state and say so on screen — do not invent a number, a customer or an integration to fill it.
+If some of it is already built, this same brief repairs it rather than replacing it — Step 2 starts by finding out how much is already there, and you only build the part that is missing.
 
 ## Step 1 — let the platform see your pushes (2 minutes, do it now)
 Right now the portal only learns what you have finished when you press "Sync from GitHub". Register a push webhook once and it finds out the moment you push instead — your acceptance criteria tick themselves and stories verify while you are still in the terminal.
@@ -41,11 +50,27 @@ Right now the portal only learns what you have finished when you press "Sync fro
 - Safe to run twice. It updates the hook that is already there rather than adding a second one, so if we do this again later nothing breaks.
 - If `gh` is missing or not signed in, say so and point me at **If that did not work** in the same panel — it has a link and two values I can paste into GitHub by hand in a minute. Do not try to install anything for me.
 - If I say skip it, skip it and start building. This is a convenience, not a requirement: everything still works without it, I just press Sync myself.
-## Step 2 — build the Command Center
-Everything from here to Step 3 is the build itself. Work through it in order; the sections below say what goes in each tab and what the data rules are.
+## Step 2 — take stock, then build
+Everything from here to Step 3 is the build itself. This story is the same whether you have built none of it, some of it, or all of it — what differs is how much is already done, so establish that first and then do only what is left.
+
+### Step 2a — take stock before you change a single line
+This step READS. It does not create, edit, move, rename or delete anything. Work through it even if you are fairly sure the repo is empty; it takes a minute when it is.
+- Find the Command Center if it is already here — its entry point (`index.html` at the repo root is where it belongs; a build started before today often has it under `command-center/` instead), and which of the nine tabs described below already exist and are actually reachable from it. Report three buckets, not two: the tabs that are there and work, the ones that are missing entirely, and the ones that exist but are empty or broken. Those last need repair, not creation.
+- Check which of these files exist: `.colaberry/plan.json`, `.colaberry/progress.json`, `.colaberry/manifest.json` and `docs/stories/STORY-000.md`. Say which are present and which are not. A missing data file is why a tab that looks finished can still be rendering nothing.
+- If `.colaberry/progress.json` is there, open the `STORY-000` entry and compare its criteria line by line against the 5 lines under **Done means** below. **A build started before today can carry fewer lines than the list has now** — criteria get added over time and are never renamed in place. Every Done-means line missing from that file is work still outstanding, not a mistake in the file and not something to delete.
+- Judge each of the 5 criteria against the repo as it is today — read the code and decide for yourself. A criterion already ticked in the file is a claim, not proof; if the code no longer backs it, say so rather than trusting the tick.
+- Then STOP and tell me what you found, in plain language, before you change anything: which tabs exist and are reachable, which files are present, which criteria already hold and which do not and why, and what you propose to do about it. A short list, not a report.
+
+### Step 2b — build what is missing, repair what is already here
+Work from what you just found rather than from a blank page. Everything after this section describes the FINISHED state, not a build order for an empty repo: read each part as "this is what has to be true when you are done", and act only where it is not true yet.
+- **Keep what is already right.** A tab that exists and works stays exactly as it is. Do not delete it, do not rewrite it into a tidier shape, do not rename things for consistency, and do not regenerate the app from scratch because a clean build would be easier than a repair. The work already in this repo is mine and it stays.
+- Repair in place, with the smallest change that makes a criterion true. A tab that renders but hard-codes its data needs its data source fixed, not a rewrite. A tab that is missing gets built the way the sections below describe.
+- If you genuinely believe something has to be removed or restructured, **stop and ask me first** and tell me what would be lost. Never remove my work and report it afterwards.
+- My own files stay mine. If this repo has a `CLAUDE.md`, the build pipeline owns only the block between `COLABERRY:BEGIN` and `COLABERRY:END`. Edit inside that block if it is there, or append below my content if it is not. **Never replace the file.** The same goes for a README, a config or anything else I wrote.
+- **Running this a second time on a finished build must change nothing.** If every tab is already there and every criterion already holds, say exactly that and stop — no reformatting, no "while I was in there", no empty commit.
 
 ## What you are building it for
-**Student Engagement Monitoring Tool** — A tool to help instructors identify students who are falling behind by analyzing portal activity, build progress, and attendance, and providing a weekly report with recommendations.
+**PropertyPulse AI** — An AI-driven real estate opportunity engine that analyzes properties to provide investors with actionable insights and automation tools.
 
 ## Where the data comes from
 Read it from your own repo. There is no API to call and no key to hold: this page is static, and a static page cannot keep a secret, so the data ships beside it as files the platform commits. Fetch them at runtime, do not paste their contents into your components — they are rewritten every time you sync, and a copy you typed out will silently go stale.
@@ -59,6 +84,11 @@ Both data files carry `schema_version`. Read fields you know and ignore fields y
 
 Join the two files on story id: `.colaberry/plan.json` → `stories[].id` matches `.colaberry/progress.json` → `stories[].id`. The plan carries the title, release, acceptance criteria, `due_on` and `due_baseline_on`; progress carries `verification` with the state, the commit and the points. Neither file repeats the other.
 
+## Where it lives in your repo
+The entry point is `index.html` at the ROOT of the repo. Everything else — your CSS, your scripts, your images, your per-tab pages — can be organised however you like underneath it. It is the entry point that has to be at the top.
+That is not a house style, it is the only thing that works. GitHub Pages on a free public repo can publish from exactly two places: the repo root, or `docs/`. And `docs/` is not yours — it holds your requirements, your stories and your traceability table, and the platform rewrites it every time you sync, so anything you built in there would be overwritten. The root is what is left, it is what Step 4 turns on, and it is the address the portal goes to when it looks for your Command Center so it can put a link to it in your header.
+**If you have already built it somewhere else** — under `command-center/` is the common one — do not move it and do not rebuild it. Add `index.html` at the root that opens what is already there. A one-line redirect is a perfectly good answer.
+
 ## Tabs, and what goes in each
 Build it as a website, not a dashboard widget. Every tab is a real page, and every card on it drills down one level to its own detail view. A card with nothing behind it yet still drills down — to a page that says what will be there and what has to happen first.
 
@@ -68,100 +98,150 @@ Source: `plan.project` for the name and descriptor, `plan.schedule` for where yo
 
 ### 2. Outcomes — the numbers this has to move
 Source: `plan.derived.measures` — each entry has `id` and `statement`.
-These are the measures you committed to. Each one is a card, each drills into how it is calculated:
-- **REQ-017** — The system must operate with a response time that does not exceed 5 seconds for any user action.
-
-On sample data, show a plausible trend toward the target. On real data, show the real figure — and where there is no measurement yet, show "not measured yet" rather than a zero, because a zero reads as a real result.
-Note what is NOT in your files: the actual value of any of these. Your files know what you promised to move, never how far it has moved — that number comes from the system you are building, once it is running and measuring. Until then every one of these cards reads "not measured yet", and that is correct rather than unfinished.
+Your plan carries no numeric target yet. Build the tab with an empty state that says so, and leave room for one card per measure.
 
 ### 3. Users and use case
-Who this is for and what they are trying to get done. Take the roles from your own stories — they are written "As a <role>, I want …". Roles in your plan: student, instructor, developer.
+Who this is for and what they are trying to get done. Take the roles from your own stories — they are written "As a <role>, I want …". Roles in your plan: investor, property analyst, property investor.
 Source: `plan.derived.roles`, already extracted. `plan.stories[].narrative` has the full sentence each role came from, for the drill-down.
 
 ### 4. Guardrails — what must never happen
 Source: `plan.derived.guardrails` — `id` and `statement` each. To show whether anything enforces one, follow `plan.requirements[].fulfilled_by` to the story ids, then read those stories' `verification.state` in the progress file. A guardrail whose stories are not verified is a promise you have made and not yet kept, and the page should say so in those words.
 These are the promises your system makes. Show each one, and whether anything in the build currently enforces it:
-- **REQ-013** — The system must ensure data accuracy and consistency across all integrations.
-- **REQ-015** — The system must handle exceptions where data is incomplete or unavailable.
+- **REQ-015** — The system must flag uncertain opportunities for human review.
+- **REQ-016** — The system must provide a clear rationale for decisions made in property recommendations.
 
 ### 5. Systems — what this connects to
 Source: `plan.derived.systems` — a list of names. That is ALL your files know about them. Whether any one of them is actually connected right now is a fact about your running system, and nothing in this repo can tell you it. Render every indicator grey and labelled "not checked from here" until your own system reports otherwise. An indicator that goes green because a name appeared in a JSON file is a lie with a colour on it.
-One row per system, each with a live indicator (connected / not connected / error) and the time it was last checked:
-- Student Portal
-- Learning Management
-- Attendance Tracking
-- Email Platform
-
-None of these are connected on day one. The indicator must show that honestly rather than defaulting to green.
+Your plan names no external system yet. Build the empty state.
 
 ### 6. Project management
 Source: `plan.releases[]` for the bars — each carries `starts_on`, `ends_on`, `story_ids` and `is_demo_target`. `plan.schedule` has `build_start`, `build_end`, `demo_day` and `demo_release_key`. Per story, `plan.stories[].due_on` is the current date and `due_baseline_on` is the date it was FIRST given: show both, because the gap between them is slippage and a chart that quietly moves the target hides it. Status per story comes from the progress file, `stories[].verification.state`, which is one of `not_started`, `in_progress`, `submitted`, `verified`.
 A Gantt view of your releases, and under it every task with its due date. Tasks are clickable and open their own detail. Your releases:
-- **r0** Initial Setup and Data Integration — 4 stories
-- **r1** Advanced Data Analysis — 3 stories
-- **r2** Instructor Review and Approval — 2 stories
-- **r3** Enhanced Reporting and User Experience — 2 stories
-- **r4** System Optimization and Error Handling — 3 stories
+- **r0** Initial Property Analysis — 2 stories
+- **r1** AI Workspace and Agents — 5 stories
+- **r2** Enhanced Agent Capabilities — 4 stories
+- **r3** Opportunity Feed and Image Recognition — 2 stories
+- **r4** Trust and Monetization — 2 stories
 
 ### 7. AI agents
 Source: `plan.agents[]` — one card each, with `name`, `purpose`, `trigger_type`, `trigger`, `inputs`, `outputs`, `autonomy_level`, `approval_gates`, `escalation_rules`, `skills` and `owns` (the story ids it owns, which you join back to the plan and the progress file). `plan.derived.counts.agents_by_autonomy` gives you the roster breakdown without counting them yourself.
 What is NOT there: whether any agent has ever run. There is no run history, no last-run time and no success rate in these files, because none of that exists until you build the agent and it starts running. Show the design, and show "no runs recorded" — never a zero success rate, which reads as an agent that ran and failed.
 One card per agent. Each shows what fires it, what it reads and produces, how much it decides on its own, and when it must stop and ask:
 
-**Data Analyzer** — Analyze student data to identify inactivity, lack of progress, and missed sessions.
-- Fires on: Weekly schedule every Monday morning (schedule)
-- Reads: Student Portal, Learning Management System, Attendance Tracking System
-- Produces: Analysis results
-- Autonomy: **prepares, then waits for a human to release it**
-- Cannot act alone because of: REQ-013 — The system must ensure data accuracy and consistency across all integrations.; REQ-015 — The system must handle exceptions where data is incomplete or unavailable.
-- Stops and asks when: If data is incomplete or unavailable, log the issue and notify the instructor
-- Skills it needs: read data, analyze patterns, identify inactivity
-- Owns: STORY-001, STORY-002, STORY-003, STORY-005, STORY-011
-
-**Report Generator** — Generate and enhance weekly reports with student attention lists and suggested messages.
-- Fires on: Completion of data analysis (event)
-- Reads: Analysis results
-- Produces: Weekly report with student attention list, Suggested opening lines
+**Opportunity Scorer** — To analyze properties and assign an Opportunity Score based on user-selected criteria.
+- Fires on: User selects location or investment strategy (event)
+- Reads: User-selected location or strategy
+- Produces: Opportunity Score
 - Autonomy: **completes on its own**
-- Stops and asks when: If unable to generate report, log the issue and notify the instructor
-- Skills it needs: generate reports, suggest messages
-- Owns: STORY-004, STORY-009, STORY-014
+- Skills it needs: analyze property data, calculate score
+- Owns: STORY-001
 
-**Instructor Interface Manager** — Provide an interface for instructors to review and approve reports.
-- Fires on: Instructor login to review interface (manual)
-- Reads: Weekly report with student attention list
-- Produces: Approved report
-- Autonomy: **prepares, then waits for a human to release it**
-- Stops and asks when: If instructor does not approve, hold report for further review
-- Skills it needs: display data, capture approval
-- Owns: STORY-007, STORY-010
-
-**Report Delivery System** — Deliver approved reports to instructors via email and log actions for audit.
-- Fires on: Approval of report by instructor (event)
-- Reads: Approved report
-- Produces: Email sent to instructor, Audit log entry
+**AI Assessment Generator** — To provide an AI Assessment and recommended action for each property based on its Opportunity Score.
+- Fires on: Opportunity Score is assigned (event)
+- Reads: Opportunity Score
+- Produces: AI Assessment, Recommended Action
 - Autonomy: **completes on its own**
-- Stops and asks when: If email delivery fails, log the issue and retry
-- Skills it needs: send email, log actions
+- Skills it needs: generate assessment, recommend actions
+- Owns: STORY-002
+
+**AI Workspace Creator** — To create an AI workspace for properties when a user selects 'Work This Deal'.
+- Fires on: User selects 'Work This Deal' (event)
+- Reads: User selection
+- Produces: AI Workspace
+- Autonomy: **completes on its own**
+- Skills it needs: create workspace
+- Owns: STORY-003
+
+**Research Agent** — To gather property history, comparable properties, and neighborhood trends.
+- Fires on: AI Workspace is created (event)
+- Reads: Property data
+- Produces: Property history, Comparable properties, Neighborhood trends
+- Autonomy: **completes on its own**
+- Skills it needs: gather data, analyze trends
+- Owns: STORY-004
+
+**Deal Analyst** — To calculate ARV, rehab assumptions, and potential returns for properties.
+- Fires on: AI Workspace is created (event)
+- Reads: Property data
+- Produces: ARV, Rehab assumptions, Potential returns
+- Autonomy: **completes on its own**
+- Skills it needs: calculate ARV, analyze returns
+- Owns: STORY-005
+
+**Outreach Agent** — To generate communication materials for contacting property owners.
+- Fires on: AI Workspace is created (event)
+- Reads: Property data
+- Produces: Communication materials
+- Autonomy: **completes on its own**
+- Skills it needs: generate materials
+- Owns: STORY-006
+
+**Negotiation Agent** — To suggest offers and negotiation strategies for properties.
+- Fires on: AI Workspace is created (event)
+- Reads: Property data
+- Produces: Suggested offers, Negotiation strategies
+- Autonomy: **completes on its own**
+- Skills it needs: suggest offers, develop strategies
+- Owns: STORY-007
+
+**Opportunity Feed Manager** — To display the top 20 opportunities based on user input criteria.
+- Fires on: Weekly update (schedule)
+- Reads: Opportunity Scores
+- Produces: Top 20 Opportunities List
+- Autonomy: **completes on its own**
+- Skills it needs: rank opportunities
 - Owns: STORY-008
 
-**System Optimizer** — Ensure system performance and provide clear error messages.
-- Fires on: System operation (event)
-- Reads: System performance metrics
-- Produces: Optimized system performance, Clear error messages
+**Image Recognition Processor** — To identify properties from user-uploaded photos using image recognition.
+- Fires on: User uploads photo (event)
+- Reads: User-uploaded photos
+- Produces: Identified properties
 - Autonomy: **completes on its own**
-- Stops and asks when: If performance issues persist, escalate to technical support
-- Skills it needs: optimize performance, handle errors
-- Owns: STORY-012, STORY-013
+- Skills it needs: image recognition
+- Owns: STORY-009
 
-**Student Flagging Assistant** — Flag students for instructor review if unsure about recommendations.
-- Fires on: Uncertain analysis result (event)
-- Reads: Analysis results
-- Produces: Flagged student list
-- Autonomy: **drafts for a person**
-- Stops and asks when: If unable to determine, escalate to instructor for manual review
-- Skills it needs: flag uncertain cases
-- Owns: STORY-006
+**Opportunity Review Flag** — To flag uncertain opportunities for human review.
+- Fires on: Opportunity Score is assigned (event)
+- Reads: Opportunity Score
+- Produces: Flagged opportunities
+- Autonomy: **prepares, then waits for a human to release it**
+- Cannot act alone because of: REQ-015 — The system must flag uncertain opportunities for human review.
+- Stops and asks when: Uncertainty above threshold
+- Skills it needs: evaluate uncertainty
+- Owns: STORY-010
+
+**Opportunity Report Seller** — To facilitate the purchase of detailed Opportunity Reports for individual properties.
+- Fires on: User requests report purchase (manual)
+- Reads: User request
+- Produces: Opportunity Report
+- Autonomy: **prepares, then waits for a human to release it**
+- Skills it needs: process transactions
+- Owns: STORY-011
+
+**Due Diligence Agent** — To create inspection checklists and identify potential issues for properties.
+- Fires on: AI Workspace is created (event)
+- Reads: Property data
+- Produces: Inspection checklists, Potential issues
+- Autonomy: **completes on its own**
+- Skills it needs: create checklists, identify issues
+- Owns: STORY-012
+
+**Disposition Agent** — To suggest strategies for wholesaling, renting, or flipping properties.
+- Fires on: AI Workspace is created (event)
+- Reads: Property data
+- Produces: Disposition strategies
+- Autonomy: **completes on its own**
+- Skills it needs: suggest strategies
+- Owns: STORY-013
+
+**Explanation Provider** — To provide a 'Why Now?' explanation and rationale for property recommendations.
+- Fires on: Opportunity Score is assigned (event)
+- Reads: Opportunity Score, Property data
+- Produces: Why Now explanation, Rationale
+- Autonomy: **prepares, then waits for a human to release it**
+- Cannot act alone because of: REQ-016 — The system must provide a clear rationale for decisions made in property recommendations.
+- Skills it needs: generate explanations, provide rationale
+- Owns: STORY-014, STORY-015
 
 Autonomy is not decoration. An agent marked "waits for approval" must have somewhere on this page showing what is waiting and who has to release it — otherwise the guardrail exists only in the plan.
 
@@ -195,45 +275,46 @@ Use the brand colours you chose for this project. If you have not chosen any yet
 
 ## The requirements this has to reflect
 Your full set, so the Command Center can show all of it:
-- **REQ-001** (FUNC, must) — The system must analyze student portal login activity to identify inactivity.
-- **REQ-002** (FUNC, must) — The system must analyze student build progress to identify lack of progress.
-- **REQ-003** (FUNC, must) — The system must analyze attendance records to identify missed live sessions.
-- **REQ-004** (FUNC, must) — The system must generate a weekly report every Monday morning for each instructor.
-- **REQ-005** (FUNC, must) — The system must include a list of three or four students in the weekly report who may need attention.
-- **REQ-006** (FUNC, must) — The system must suggest an opening line for each student listed in the report.
-- **REQ-007** (FUNC, must) — The system must allow instructors to review and approve the list before sending recommendations.
-- **REQ-008** (FUNC, must) — The system must flag students for instructor review if unsure about recommending them.
-- **REQ-009** (CONSTRAINT, must) — The system must integrate with the Student Portal to read login data.
-- **REQ-010** (CONSTRAINT, must) — The system must integrate with the Learning Management System to read build progress data.
-- **REQ-011** (CONSTRAINT, must) — The system must integrate with the Attendance Tracking System to read attendance data.
-- **REQ-012** (CONSTRAINT, must) — The system must integrate with the Email Platform to send reports.
-- **REQ-013** (SAFE, must) — The system must ensure data accuracy and consistency across all integrations.
-- **REQ-014** (NFR, should) — Every instructor interface must allow review of recommendations in three clicks or fewer.
-- **REQ-015** (SAFE, must) — The system must handle exceptions where data is incomplete or unavailable.
-- **REQ-016** (OBS, must) — The system must log all actions taken for audit purposes.
-- **REQ-017** (NFR, should) — The system must operate with a response time that does not exceed 5 seconds for any user action.
-- **REQ-018** (NFR, should) — The system must provide clear error messages to users when issues occur.
+- **REQ-001** (FUNC, must) — The system must allow users to select a city, ZIP code, neighborhood, or investment strategy for property analysis.
+- **REQ-002** (FUNC, must) — The system must continuously analyze properties and assign an Opportunity Score from 0–100.
+- **REQ-003** (FUNC, must) — The system must provide an AI Assessment for each property, detailing potential acquisition strategies.
+- **REQ-004** (FUNC, must) — The system must generate a recommended action for each property based on its Opportunity Score.
+- **REQ-005** (FUNC, must) — The system must create an AI workspace for properties when a user selects 'Work This Deal'.
+- **REQ-006** (FUNC, must) — The system must include a Research Agent to gather property history, comparable properties, and neighborhood trends.
+- **REQ-007** (FUNC, must) — The system must include a Deal Analyst to calculate ARV, rehab assumptions, and potential returns.
+- **REQ-008** (FUNC, must) — The system must include an Outreach Agent to generate communication materials for contacting property owners.
+- **REQ-009** (FUNC, must) — The system must include a Negotiation Agent to suggest offers and negotiation strategies.
+- **REQ-010** (FUNC, must) — The system must include a Due Diligence Agent to create inspection checklists and identify potential issues.
+- **REQ-011** (FUNC, must) — The system must include a Disposition Agent to suggest strategies for wholesaling, renting, or flipping properties.
+- **REQ-012** (FUNC, must) — The system must provide a 'Why Now?' explanation for each property to justify its current opportunity status.
+- **REQ-013** (FUNC, must) — The system must allow users to view a 'Top 20 Opportunities This Week' list based on their input criteria.
+- **REQ-014** (FUNC, must) — The system must support image recognition to identify properties from user-uploaded photos.
+- **REQ-015** (SAFE, must) — The system must flag uncertain opportunities for human review.
+- **REQ-016** (SAFE, must) — The system must provide a clear rationale for decisions made in property recommendations.
+- **REQ-017** (NFR, should) — The system must monetize through investor subscriptions and transaction-based fees.
+- **REQ-018** (FUNC, should) — The system must allow users to purchase detailed Opportunity Reports for individual properties.
 
 ## Your stories, in build order
-**r0 · Initial Setup and Data Integration**
-- STORY-001 — User Login via Student Portal
-- STORY-002 — Display Student Progress from LMS
-- STORY-003 — Track Attendance via Attendance System
-- STORY-004 — Generate Basic Weekly Report
-**r1 · Advanced Data Analysis**
-- STORY-005 — Analyze Combined Data Signals
-- STORY-006 — Flag Students for Instructor Review
-- STORY-014 — Generate Weekly Report with Student Attention List
-**r2 · Instructor Review and Approval**
-- STORY-007 — Instructor Review and Approval Interface
-- STORY-008 — Deliver Reports via Email Platform
-**r3 · Enhanced Reporting and User Experience**
-- STORY-009 — Enhance Report with Suggested Messages
-- STORY-010 — Improve User Interface for Report Review
-**r4 · System Optimization and Error Handling**
-- STORY-011 — Handle Incomplete Data Gracefully
-- STORY-012 — Optimize System Performance
-- STORY-013 — Provide Clear Error Messages
+**r0 · Initial Property Analysis**
+- STORY-001 — User selects location and receives Opportunity Score
+- STORY-002 — AI Assessment and recommended action for properties
+**r1 · AI Workspace and Agents**
+- STORY-003 — Create AI workspace for selected property
+- STORY-004 — Research Agent gathers property data
+- STORY-005 — Deal Analyst calculates property returns
+- STORY-012 — Due Diligence Agent creates inspection checklists
+- STORY-013 — Disposition Agent suggests property strategies
+**r2 · Enhanced Agent Capabilities**
+- STORY-006 — Outreach Agent generates communication materials
+- STORY-007 — Negotiation Agent suggests offers
+- STORY-014 — Provide 'Why Now?' explanation for properties
+- STORY-015 — Provide rationale for property recommendations
+**r3 · Opportunity Feed and Image Recognition**
+- STORY-008 — Opportunity Feed displays top opportunities
+- STORY-009 — Image recognition identifies properties from photos
+**r4 · Trust and Monetization**
+- STORY-010 — Flag uncertain opportunities for review
+- STORY-011 — User purchases detailed Opportunity Report
 
 ## Done means — these exact lines
 These are the acceptance criteria the platform checks. They go into `.colaberry/progress.json` **word for word** — they are matched by text, so a reworded line does not count.
@@ -264,14 +345,15 @@ These are the acceptance criteria the platform checks. They go into `.colaberry/
 - Build it so the data comes from one place. You will point it at your real system as you build, and you should not be rewriting tabs to do it.
 - Show me the Overview tab first and stop. Get that right before building the other eight.
 - While you are paused there, the other eight tabs must still be REACHABLE and must not look locked, greyed out, or gated. Each one renders a plain "Not built yet — say **build the rest** when Overview looks right" state. Nothing that implies the student lacks permission or has to unlock anything: the build is waiting on them, not the other way round.
-- Put a short banner on Overview itself while you are paused, saying the build is stopped for their review and how to continue. When they say **build the rest**, build the remaining eight and remove the banner.
+- Put a short banner on Overview itself while you are paused, saying the build is stopped for their review and how to continue. When they say **build the rest**, build the remaining eight, remove the banner, and then go straight on to Step 3 and finish the job: tick the criteria that are genuinely true in `.colaberry/progress.json`, commit naming the story, and push. Removing the banner is not the finish — and finishing is not permission to tick a line that is not true yet, so leave any such line unticked and tell them which one and why.
 
 ## Step 3 — finish it, so the platform can confirm it
-A story is confirmed when BOTH halves are true: every acceptance criterion is ticked in `.colaberry/progress.json`, AND a commit names the story. Neither on its own is enough.
-- Create or update `.colaberry/progress.json` so it carries this story with every **Done means** line copied word for word, each marked as passing. Only tick a line when it is actually true — the file is the claim, the commit is the evidence:
+A story is confirmed when BOTH halves are true: every acceptance criterion is ticked in `.colaberry/progress.json` — each one because it is genuinely true — AND a commit names the story. Neither on its own is enough.
+- Create or update `.colaberry/progress.json` so it carries this story with every **Done means** line present word for word. Only tick a line when it is actually true — the file is the claim, the commit is the evidence:
 
 ```json
 {
+  "schema_version": 2,
   "stories": [
     {
       "id": "STORY-000",
@@ -302,6 +384,10 @@ A story is confirmed when BOTH halves are true: every acceptance criterion is ti
 }
 ```
 
+That example is a build where all 5 lines are genuinely true. Yours carries `"passed": false` on every line that is not yet, and a file like that is correct rather than unfinished.
+
+- **If the file already carries this story, reconcile it — do not rewrite it.** Add any **Done means** line that is missing with `"passed": false`, leave the ticks that are already there alone, and change a `false` to `true` only for a line you have just made true. A criterion added after this build started begins unticked like every other one; it does not inherit a tick from the lines around it.
+- **Bringing an older build up to the current standard is not permission to tick the new lines.** A line is ticked because it is true in the repo today — never because the rest of the story is finished, never because the build looks done, and never to make the count come out even. Leave every line you have not actually satisfied unticked, and tell me which ones and why.
 - Commit with the story id in the message — `git commit -m "STORY-000: build the Command Center"` (a `Story: STORY-000` line in the body works too) — then push.
 - Then tell me to watch the portal. If Step 1 worked, the criteria tick themselves within about ten seconds and the story flips to verified without me clicking anything. If I skipped Step 1, I press "Sync from GitHub" and the same thing happens.
 
@@ -318,6 +404,7 @@ Use your default branch if it is not `main`.
 - **If it is already on, GitHub answers 409 — that means it is done, so leave it alone and move on.** Do not delete and recreate it.
 - **If it refuses because the repo is private,** Pages needs a paid plan for private repos. Tell me plainly that it was refused and carry on — do not retry it, and do not ask me to upgrade anything. The story still verifies without it.
 - You do not need to find the address yourself. The first build takes a minute or two; the platform checks after each push and after a Sync, and the **Command Center** link appears in the portal header once the site actually answers.
+- What it asks for is `index.html` at the site root — `https://<your-github-name>.github.io/<your-repo>/`. That is the reason the entry point goes at the root of the repo rather than in a subfolder, and it is the whole of the reason. If yours is one directory down the platform still finds it, but the address in your header is the longer one.
 
 
 ## Acceptance — your stop condition

@@ -1,25 +1,24 @@
-# STORY-003 — Track Attendance via Attendance System
+# STORY-003 — Create AI workspace for selected property
 
-As an instructor, I want to track student attendance, so that I can ensure students are attending classes.
+As an investor, I want to create an AI workspace for a property, so that I can manage its analysis and actions.
 
-**Release:** r0 · Initial Setup and Data Integration (weeks 1–4)
-**Owner:** Data Analyzer
-**Blocked by:** nothing — you can start this now
+**Release:** r1 · AI Workspace and Agents (weeks 3–4)
+**Owner:** AI Workspace Creator
+**Blocked by:** STORY-002
 
 ## The requirement this satisfies
 
-- **REQ-011** (Constraint, must) — The system must integrate with the Attendance Tracking System to read attendance data.
-- **REQ-013** (Safety, must) — The system must ensure data accuracy and consistency across all integrations.
+- **REQ-005** (Functional, must) — The system must create an AI workspace for properties when a user selects 'Work This Deal'.
 
 ## How to build it
 
-Integrate with the Attendance Tracking System to fetch and log attendance data.
+Design AI workspace structure and integrate with property selection.
 
 ## Failure paths you must handle
 
-- Incorrect attendance data
-- Network failure
-- API downtime
+- Workspace creation failure
+- Duplicate workspace
+- Data sync issues
 
 ## Acceptance — your stop condition
 
@@ -28,8 +27,8 @@ the same criteria out of `.colaberry/progress.json`, which Claude Code keeps in
 step (see the managed block in CLAUDE.md). Ticking something you have not
 actually met only misleads you.
 
-- [ ] Given a student attends a class, when the instructor checks attendance, then the attendance should be marked as present.
-- [ ] Given a student misses a class, when the instructor checks attendance, then the attendance should be marked as absent.
-- [ ] Trust: All attendance records must be logged for audit purposes.
+- [ ] Given a user selects 'Work This Deal', when confirmed, then an AI workspace is created.
+- [ ] Given a workspace creation failure, when retried, then it succeeds or provides an error message.
+- [ ] Trust: The system logs workspace creation events.
 
 When every box above is ticked, stop and show the demo.

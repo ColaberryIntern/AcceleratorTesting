@@ -1,24 +1,24 @@
-# STORY-012 — Optimize System Performance
+# STORY-012 — Due Diligence Agent creates inspection checklists
 
-As a developer, I want to optimize system performance, so that it responds quickly to user actions.
+As a property analyst, I want a Due Diligence Agent to create inspection checklists, so that I can identify potential issues with properties.
 
-**Release:** r4 · System Optimization and Error Handling (weeks 17–20)
-**Owner:** System Optimizer
-**Blocked by:** STORY-011
+**Release:** r1 · AI Workspace and Agents (weeks 3–4)
+**Owner:** Due Diligence Agent
+**Blocked by:** STORY-003
 
 ## The requirement this satisfies
 
-- **REQ-017** (Non-functional, should) — The system must operate with a response time that does not exceed 5 seconds for any user action.
+- **REQ-010** (Functional, must) — The system must include a Due Diligence Agent to create inspection checklists and identify potential issues.
 
 ## How to build it
 
-Optimize database queries and API calls to improve system performance.
+Implement the Due Diligence Agent to generate checklists based on property data. Ensure it logs all actions in the audit trail.
 
 ## Failure paths you must handle
 
-- System response time exceeds 5 seconds
-- Performance optimizations fail
-- Performance metrics are not logged
+- Agent fails to generate checklist
+- Checklist misses critical issues
+- Agent logs incorrect data
 
 ## Acceptance — your stop condition
 
@@ -27,8 +27,8 @@ the same criteria out of `.colaberry/progress.json`, which Claude Code keeps in
 step (see the managed block in CLAUDE.md). Ticking something you have not
 actually met only misleads you.
 
-- [ ] Given the system is under load, when a user performs an action, then the response time does not exceed 5 seconds.
-- [ ] Given the system is optimized, when an instructor uses it, then they experience improved performance.
-- [ ] Trust: All performance metrics are logged for audit purposes.
+- [ ] Given a property is selected, When the Due Diligence Agent is activated, Then it creates an inspection checklist for the property.
+- [ ] Given a property with known issues, When the Due Diligence Agent reviews it, Then it identifies potential issues.
+- [ ] Trust: The system logs the checklist creation and identified issues for audit.
 
 When every box above is ticked, stop and show the demo.
