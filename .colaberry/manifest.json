@@ -5,6 +5,30 @@
   "correlation_id": "a831c741-309f-44d4-909f-1060f8b43025",
   "files": [
     {
+      "path": ".colaberry/plan.json",
+      "sha256": "f8e7a707f8f3b26301b92a4f6faa7e568b6ccadd5db288265a9cde00c6d47e67"
+    },
+    {
+      "path": ".colaberry/profile.json",
+      "sha256": "7d8481982561db3aa19fcd4a1b94acdd40ae2118d305fe9e4cc5859347322fd7"
+    },
+    {
+      "path": ".colaberry/progress.json",
+      "sha256": "7b0e48ab257db10551391db5502efb33b2917961590a38328738f366859af2cf"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "64662b09b23f8ff614dee8a63d5ea8f43c1f1ec4872ca55122cbd40d508cf7a4"
+    },
+    {
+      "path": "artifacts/INDEX.md",
+      "sha256": "8dd62851a7c3d2c0ca8c19541802267c104d118e6dd8918f8ac08def615e157c"
+    },
+    {
+      "path": "artifacts/week-10/governance-framework.md",
+      "sha256": "94ca92b49669c80fbcbf0d91e899d9eea1af3ea1f714bb769aeb4c34f1ec039f"
+    },
+    {
       "path": "docs/REQUIREMENTS.md",
       "sha256": "351c51033a57a9e6bf38e9a71c1daba5c45d8b9a1d1dd4929c433f51e6fdfc8b"
     },
@@ -17,8 +41,8 @@
       "sha256": "28d65ddf645eb6f0d5c20087ab2e585f324819d98ab22ab119f9e6665cddb458"
     },
     {
-      "path": "CLAUDE.md",
-      "sha256": "64662b09b23f8ff614dee8a63d5ea8f43c1f1ec4872ca55122cbd40d508cf7a4"
+      "path": "docs/stories/STORY-000.md",
+      "sha256": "d15537e30cb339d4dfc6a6fcb084cf1a34818b7dfa76e19bfcd7a29808fe55fe"
     },
     {
       "path": "docs/stories/STORY-001.md",
@@ -79,22 +103,6 @@
     {
       "path": "docs/stories/STORY-015.md",
       "sha256": "467bff583be21ddb154e78a4534efb5f0209ca06add29da801cb7dd16c3a0b5f"
-    },
-    {
-      "path": "docs/stories/STORY-000.md",
-      "sha256": "d15537e30cb339d4dfc6a6fcb084cf1a34818b7dfa76e19bfcd7a29808fe55fe"
-    },
-    {
-      "path": ".colaberry/plan.json",
-      "sha256": "f8e7a707f8f3b26301b92a4f6faa7e568b6ccadd5db288265a9cde00c6d47e67"
-    },
-    {
-      "path": ".colaberry/progress.json",
-      "sha256": "7b0e48ab257db10551391db5502efb33b2917961590a38328738f366859af2cf"
-    },
-    {
-      "path": ".colaberry/profile.json",
-      "sha256": "7d8481982561db3aa19fcd4a1b94acdd40ae2118d305fe9e4cc5859347322fd7"
     }
   ]
 }
